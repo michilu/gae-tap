@@ -1,0 +1,43 @@
+{% import "admin/version.html" as VERSION %}
+%meta(charset="UTF-8")
+{% block ngCloak %}
+%style [ng-cloak] {display: none;}
+{% endblock ngCloak %}
+%title {% block title %}{{ title }}{% endblock title %}
+%meta(name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0")
+{% block icon %}
+%link(rel="apple-touch-icon-precomposed" href="/static/img/apple-touch-icon.png")
+{% endblock icon %}
+{% block og %}
+%meta(property="og:image" content="https://{{ domain }}/static/img/apple-touch-icon.png")
+%meta(property="og:title" content="{{ title }}")
+%meta(property="og:description" content="{{ description }}")
+%meta(property="og:type" content="website")
+%meta(property="og:url" content="https://{{ domain }}/")
+{% endblock og %}
+%meta(property="fb:app_id" content="{{ fb_app_id }}")
+%script(src="/static/js/utils{% if not DEBUG %}.min{% endif %}.js")
+{% block head %}{% endblock head %}
+{% if translation %}{% include "i18n_js.html" %}{% endif %}
+{% include "ads/analytics.html" %}
+{% block body %}
+%body/
+{% block main %}
+%h1 {{ title }}
+{% endblock main %}
+{% if more %}
+%ul.pager
+ %li.next
+  %a.btn(href="?{{ cursor.to_websafe_string() }}")
+   Next
+   %i.icon-arrow-right
+{% endif %}
+{% block footer %}
+%footer(style="text-align:center;")
+ {% include "admin/feedback.html" %}
+ &copy;
+ %a(href="//{{ domain }}{{ base_path }}" title="{{ title }}")>< {{ title }}
+ &nbsp;{{ since }}
+ %span.muted {{ VERSION }}
+{% endblock footer %}
+{% endblock body %}

@@ -1,0 +1,26 @@
+# for Google App Engine
+PyYAML==3.10
+WebOb==1.2.3
+pycrypto==2.6
+
+# Bundle to Google App Engine
+httplib2==0.7.5
+jinja2==2.6
+MarkupSafe==0.15
+lxml==2.3
+oauth2==1.5.170
+
+# i18n tools
+# Ref. https://github.com/GoogleCloudPlatform/appengine-i18n-sample-python
+babel
+
+minimock
+pytest-cache
+pytest-cov
+#pytest-gae
+https://bitbucket.org/MiCHiLU/pytest_gae/get/default.zip
+testfixtures
+webtest==1.4.3
+watchlion
+jinja2-precompiler
+fanstatic-tools==0.2

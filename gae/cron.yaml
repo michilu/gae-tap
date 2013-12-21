@@ -1,0 +1,11 @@
+cron:
+- description: utils.MaintainResponse
+  url: /_ah/maintain_response
+  schedule: every day 23:45
+  timezone: America/Los_Angeles
+  target: b1
+- description: utils.GenerateSitemap
+  url: /_ah/generate_sitemap
+  schedule: every day 23:55
+  timezone: America/Los_Angeles
+  target: b1

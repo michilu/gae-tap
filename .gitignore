@@ -1,0 +1,34 @@
+syntax: glob
+
+*.css
+*.egg
+*.egg-info
+*.js
+*.mo
+*.pot
+*.py?
+*.so
+*.sw?
+*.tmp
+*~
+.DS_Store
+.cache
+.coverage
+.sass-cache
+Gemfile.lock
+datastore.db
+gae/site-packages/*.zip
+gae/site-packages/packages
+gae/static/lib
+gae/static/sitemap.html
+gae/static/version
+gae/static_root.zip
+gae/templates/*.html
+gae/templates/*.py
+gae/templates/admin/*.html
+gae/templates/mob/*.xhtml
+htmlcov
+node_modules
+tags
+
+syntax: regexp

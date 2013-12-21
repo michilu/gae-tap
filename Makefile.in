@@ -1,0 +1,184 @@
+all: css js mo test
+
+
+GAE_PATH=$(GAE_HOME)/
+GAE_DIR=gae
+GAE_LIB=site-packages
+GAE_LIB_DIR=$(GAE_DIR)/$(GAE_LIB)
+GAE_LIB_PACKAGES_DIR=$(GAE_LIB_DIR)/packages
+TEMPLATE_DIR=templates
+TEMPLATE_DIR_PATH=$(GAE_DIR)/$(TEMPLATE_DIR)
+COMPILED_ZIP=templates_compiled.zip
+COMPILED_ZIP_PATH=$(GAE_LIB_DIR)/$(COMPILED_ZIP)
+STATIC_ROOT_DIR_PATH=$(GAE_DIR)/static_root
+STATIC_ROOT_ZIP_PATH=$(STATIC_ROOT_DIR_PATH).zip
+STATIC_ROOT=$(wildcard $(STATIC_ROOT_DIR_PATH)/**/*)
+STATIC_ROOT_PATH=$(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT))
+JS_DIR=$(GAE_DIR)/static/js
+CSS_DIR=$(GAE_DIR)/static/css
+FANSTATIC_DIR=$(GAE_DIR)/static/lib
+PYTEST_TARGET=$(GAE_DIR)/tests/test*.py
+BIN_COFFEE=node_modules/coffee-script/bin/coffee
+BIN_TESTACULAR=node_modules/testacular/bin/testacular
+BIN_UGLIFYJS=node_modules/uglify-js/bin/uglifyjs
+BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
+TESTACULAR_TARGET=$(GAE_DIR)/tests/test*.coffee
+VERSION=$(GAE_DIR)/static/version
+LOCALES=
+test=
+
+.SUFFIXES: .haml .html
+.haml.html:
+	haml -f html5 -t ugly $< $@
+HAML = $(wildcard $(TEMPLATE_DIR_PATH)/*.haml $(TEMPLATE_DIR_PATH)/admin/*.haml $(GAE_DIR)/static/*.haml)
+HTML = $(HAML:.haml=.html)
+
+.SUFFIXES: .haml .xhtml
+.haml.xhtml:
+	haml -f xhtml -t ugly $< $@
+MOBHAML = $(wildcard $(TEMPLATE_DIR_PATH)/mob/*.haml)
+MOBHTML = $(MOBHAML:.haml=.xhtml)
+
+.SUFFIXES: .coffee .js
+.coffee.js:
+	$(BIN_COFFEE) -b -c $<
+.SUFFIXES: .js .min.js
+.js.min.js:
+	$(BIN_UGLIFYJS) --define PRODUCTION=0 -nc -m -r "$$" -o $@ $<
+COFFEE = $(wildcard $(JS_DIR)/*.coffee)
+JS = $(COFFEE:.coffee=.js)
+MINJS = $(JS:.js=.min.js)
+TESTACULAR_COFFEE = $(wildcard $(TESTACULAR_TARGET))
+TESTACULAR_JS = $(TESTACULAR_COFFEE:.coffee=.js)
+
+.SUFFIXES: .sass .css
+.sass.css:
+	compass compile $< -c $(CSS_DIR)/config.rb
+.SUFFIXES: .sass .min.css
+.sass.min.css:
+	compass compile --environment production $< -c $(CSS_DIR)/config.rb
+	mv $*.css $@
+SASS = $(wildcard $(CSS_DIR)/*.sass)
+CSS = $(SASS:.sass=.css)
+MINCSS = $(SASS:.sass=.min.css)
+
+.SUFFIXES: .mapping .pot
+.mapping.pot:
+	pybabel extract -o $@ -F $< $(GAE_DIR)
+	for locale in $(LOCALES); do\
+		if [ -e $(dir $@)$$locale/LC_MESSAGES/$(notdir $(basename $@)).po ]; then\
+			pybabel update -D $(notdir $*) -i $@ -d $(GAE_DIR)/locales -l $$locale;\
+		else\
+			pybabel init   -D $(notdir $*) -i $@ -d $(GAE_DIR)/locales -l $$locale;\
+		fi;\
+	done
+PY=$(wildcard $(GAE_DIR)/*.py)
+PYMAPPING=$(wildcard $(GAE_DIR)/locales/*.py.mapping)
+$(PYMAPPING:.mapping=.pot): $(HTML) $(MOBHTML) $(PY)
+JSMAPPING=$(wildcard $(GAE_DIR)/locales/*.js.mapping)
+$(JSMAPPING:.mapping=.pot): $(JS)
+POT=$(PYMAPPING:.mapping=.pot) $(JSMAPPING:.mapping=.pot)
+.SUFFIXES: .po .mo
+.po.mo:
+	pybabel compile -d $(GAE_DIR)/locales -D $(notdir $*)
+PO=$(wildcard $(GAE_DIR)/locales/*/LC_MESSAGES/*.po)
+MO=$(PO:.po=.mo)
+
+
+clean:
+	find . -type d -name .cache |xargs rm -rf
+	find . -type d -name .sass-cache |xargs rm -rf
+	find . -type d -name __pycache__ |xargs rm -rf
+	find . -type d -name htmlcov |xargs rm -rf
+	find ./ -name "*.pyc" -delete
+	find ./ -name .DS_Store -delete
+	find ./ -name .coverage -delete
+	find $(TEMPLATE_DIR_PATH) -name "*.py" -delete
+	rm -f $(COMPILED_ZIP_PATH)
+	rm -f $(STATIC_ROOT_ZIP_PATH)
+	rm -f $(CSS)
+	rm -f $(HTML)
+	rm -f $(MOBHTML)
+	rm -f $(JS)
+	rm -f $(MINCSS)
+	rm -f $(MINJS)
+	rm -f $(TESTACULAR_JS)
+	rm -f $(MO)
+	rm -rf $(FANSTATIC_DIR)
+	rm -rf $(GAE_LIB_PACKAGES_DIR)
+
+$(VERSION):
+	git log dev -1 --format="%h" > $@
+
+template: $(VERSION) $(GAE_LIB_PACKAGES_DIR) $(COMPILED_ZIP_PATH)
+
+js: $(JS) $(MINJS) $(TESTACULAR_JS)
+
+css: $(MINCSS) $(CSS)
+
+mo: $(PYMAPPING) $(JSMAPPING) $(POT) $(MO)
+
+$(COMPILED_ZIP_PATH): $(HTML) $(MOBHTML)
+	jinja2precompiler -c $(TEMPLATE_DIR_PATH)/
+	mkdir -p $(GAE_LIB_DIR)
+	zip -FS -j $(COMPILED_ZIP_PATH) $(TEMPLATE_DIR_PATH)/*.pyc
+
+$(STATIC_ROOT_ZIP_PATH): $(STATIC_ROOT)
+	cd $(GAE_DIR); zip -FS -y $(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT_ZIP_PATH)) $(STATIC_ROOT_PATH)
+
+$(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
+	rm -rf $(GAE_LIB_PACKAGES_DIR)
+	pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt
+	pip install --use-mirrors --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
+
+$(FANSTATIC_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
+	rm -rf $(FANSTATIC_DIR)
+	mkdir -p $(FANSTATIC_DIR)
+	cd $(GAE_DIR); mkfanstaticsymlink --sys_path_appends=$(GAE_LIB)/packages --versioning --versioning_use_md5 --base_url=static --publisher_signature=lib
+
+$(GAE_LIB_PACKAGES_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
+	mkdir -p $(GAE_LIB_PACKAGES_DIR)
+	-packages="$(filter-out js %.egg-info %.pth %.py %.pyc %.zip,$(shell ls $(GAE_LIB_PACKAGES_DIR)))";\
+	for package in $$packages; do\
+		if [ -d $(GAE_LIB_PACKAGES_DIR)/$$package ]; then\
+			pip zip --no-pyc --path=$(GAE_LIB_PACKAGES_DIR) $$package;\
+		fi;\
+	done
+
+test: $(GAE_LIB_PACKAGES_DIR) template $(FANSTATIC_DIR) $(STATIC_ROOT_ZIP_PATH)
+	@py.test $(PYTEST_TARGET) --doctest-modules --with-gae --gae-path=$(GAE_PATH) --gae-project-path=`pwd`/$(GAE_DIR) --cov-report=html --cov=$(GAE_DIR) $(test)
+	rm -rf /tmp/dev_appserver.test_datastore
+
+testacular: js
+	PHANTOMJS_BIN=$(BIN_PHANTOMJS) $(BIN_TESTACULAR) start $(GAE_DIR)/tests/testacular.conf.js
+
+runserver: $(GAE_LIB_PACKAGES_DIR) template css js $(FANSTATIC_DIR)
+	python2.7 $$GAE_HOME/dev_appserver.py --require_indexes --datastore_path=datastore.db --show_mail_body=yes --host=0.0.0.0 $(GAE_DIR)/app.yaml
+
+deploy: update_frontends update_backends
+
+update_frontends: all
+	python2.7 $$GAE_HOME/appcfg.py update $(GAE_DIR)
+
+update_backends: all
+	python2.7 $$GAE_HOME/appcfg.py backends $(GAE_DIR) update
+
+update_cron:
+	python2.7 $$GAE_HOME/appcfg.py update_cron $(GAE_DIR)
+
+update_indexes:
+	python2.7 $$GAE_HOME/appcfg.py update_indexes $(GAE_DIR)
+
+update_queues:
+	python2.7 $$GAE_HOME/appcfg.py update_queues $(GAE_DIR)
+
+vacuum_indexes:
+	python2.7 $$GAE_HOME/appcfg.py vacuum_indexes $(GAE_DIR)
+
+watchlion:
+	PYTHONPATH=$$GAE_HOME watchlion
+
+shell:
+	@cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME ipython -c "import utils; get_ipython().magic('doctest_mode')" -i
+
+.PHONY: all template clean test runserver deploy update_cron update_queues
