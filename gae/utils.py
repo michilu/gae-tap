@@ -158,7 +158,7 @@ def sys_path_append():
 sys_path_append()
 
 from gdata.spreadsheet.service import SpreadsheetsService
-from webapp2_extras import jinja2, routes, security
+from webapp2_extras import jinja2, routes, security, sessions
 import gdata.alt.appengine
 import webapp2
 import webob
@@ -480,6 +480,10 @@ def get_app():
       "compiled_path": os.path.join(DIRNAME, config.JINJA2_COMPILED_PATH),
       "template_path": tuple([os.path.join(DIRNAME, path) for path in config.JINJA2_TEMPLATE_PATH]),
       "environment_args": {"extensions": ["jinja2.ext.i18n"]},
+    },
+    "webapp2_extras.sessions": {
+      "cookie_name": "__s",
+      "secret_key": config.SECRET_KEY,
     },
   })
   routes_list = list()
@@ -1011,6 +1015,29 @@ def rate_limit(rate, size, key=None, tag=None):
 
   return decorator
 
+def session(func):
+
+  @wraps(func)
+  @ndb.tasklet
+  def inner(self, *argv, **kwargv):
+    self.session_store = sessions.get_store(request=self.request)
+    try:
+      func(self, *argv, **kwargv)
+    finally:
+      self.session_store.save_sessions(self.response)
+
+  return inner
+
+def session_read_only(func):
+
+  @wraps(func)
+  @ndb.tasklet
+  def inner(self, *argv, **kwargv):
+    self.session_store = sessions.get_store(request=self.request)
+    func(self, *argv, **kwargv)
+
+  return inner
+
 
 # Task Decorators
 
@@ -1098,6 +1125,13 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
   @property
   def language(self):
     return self.request.GET.get("l", self.default_language)
+
+  @webapp2.cached_property
+  def session(self):
+    try:
+      return self.session_store.get_session()
+    except AttributeError:
+      return
 
   @property
   def translation(self):

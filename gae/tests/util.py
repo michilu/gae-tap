@@ -2,6 +2,7 @@ from contextlib import contextmanager
 from functools import wraps
 import abc
 import base64
+import cookielib
 import doctest
 import logging
 import os
@@ -106,10 +107,15 @@ class TestCase(unittest.TestCase):
   root_path = os.path.dirname(os.path.dirname(__file__))
   environ = dict()
   domain = None
+  use_cookie = False
 
   def setUp(self):
     # webtest
-    self.app = TestApp(utils.app, domain=self.domain)
+    if self.use_cookie:
+      cookiejar = cookielib.CookieJar()
+    else:
+      cookiejar = None
+    self.app = TestApp(utils.app, domain=self.domain, cookiejar=cookiejar)
     # os.environ
     self.origin_environ = dict()
     if "HTTP_HOST" not in self.environ.viewkeys():
