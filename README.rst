@@ -3,6 +3,19 @@ A full stack framework for the Google App Engine -based
 
 Let's finish the work quickly and go TAP BEER!
 
+.. image:: http://farm5.staticflickr.com/4114/4809856899_e889084816.jpg
+  :align: center
+  :alt: Man's Beautiful Creation by Idoknow19, on Flickr
+  :height: 281
+  :width: 500
+
+Looking for sponsors:
+
+#. `$120 - I will get 30L barrel beer!!!  <https://www.gittip.com/MiCHiLU/>`_
+#. `$60 - I will get 15L barrel beer!!    <https://www.gittip.com/MiCHiLU/>`_
+#. `$12 - I will get 1 pint beer!         <https://www.gittip.com/MiCHiLU/>`_
+#. `$6 - I will get 1/2 pint beer!        <https://www.gittip.com/MiCHiLU/>`_
+
 Features
 --------
 
