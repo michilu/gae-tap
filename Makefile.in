@@ -108,7 +108,7 @@ clean:
 	rm -rf $(GAE_LIB_PACKAGES_DIR)
 
 $(VERSION):
-	git log dev -1 --format="%h" > $@
+	git log -1 --format="%h" > $@
 
 template: $(VERSION) $(GAE_LIB_PACKAGES_DIR) $(COMPILED_ZIP_PATH)
 
