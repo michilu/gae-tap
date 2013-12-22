@@ -99,6 +99,7 @@ class ConfigDefaults(object):
     (r"^/_ah/response_cache$", "utils.ResponseCache"),
   )
   SECRET_KEY = None
+  SESSION_MAX_AGE = 3600 # 1h
   SITEMAP_QUEUE = "sitemap"
   SITE_PACKAGES = "site-packages"
   URI_AUTHORITY = "localhost:8080" if DEBUG else "{0}.appspot.com".format(app_identity.get_application_id())
@@ -492,6 +493,7 @@ def get_app():
     "webapp2_extras.sessions": {
       "cookie_name": "__s",
       "secret_key": config.SECRET_KEY,
+      "session_max_age": config.SESSION_MAX_AGE,
     },
   })
   config_WEBAPP2_CONFIG = config_dict.pop("WEBAPP2_CONFIG")
