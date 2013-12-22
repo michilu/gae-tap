@@ -1573,14 +1573,14 @@ class OAuth(RequestHandler, SimpleAuthHandler):
 
   def _get_consumer_info_for(self, provider):
     try:
-      secrets = webapp2.import_string("oauth_secrets.{0}".format(self.request.host.replace(":", "_")))
+      oauth_config = webapp2.import_string("oauth_config.{0}".format(self.request.host.replace(":", "_")))
     except webapp2.ImportStringError:
       try:
-        secrets = webapp2.import_string("oauth_secrets.{0}".format(self.request.host.split(":", 1)[0]))
+        oauth_config = webapp2.import_string("oauth_config.{0}".format(self.request.host.split(":", 1)[0]))
       except webapp2.ImportStringError as e:
         logging.warning(e)
-        from oauth_secrets import default as secrets
-    return secrets.AUTH_CONFIG[provider]
+        from oauth_config import default as oauth_config
+    return oauth_config.AUTH_CONFIG[provider]
 
 # admin console views
 
