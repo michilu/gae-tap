@@ -1572,6 +1572,10 @@ class OAuth(RequestHandler, SimpleAuthHandler):
     return self.uri_for('oauth_callback', provider=provider, _full=True)
 
   def _get_consumer_info_for(self, provider):
+    return self.oauth_config.AUTH_CONFIG[provider]
+
+  @webapp2.cached_property
+  def oauth_config(self):
     try:
       oauth_config = webapp2.import_string("oauth_config.{0}".format(self.request.host.replace(":", "_")))
     except webapp2.ImportStringError:
@@ -1580,7 +1584,7 @@ class OAuth(RequestHandler, SimpleAuthHandler):
       except webapp2.ImportStringError as e:
         logging.warning(e)
         from oauth_config import default as oauth_config
-    return oauth_config.AUTH_CONFIG[provider]
+    return oauth_config
 
 # admin console views
 
