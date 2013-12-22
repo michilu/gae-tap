@@ -502,8 +502,8 @@ def get_app():
   routes_list = list()
   routes_list.extend(config.ROUTES)
   routes_list.extend((
-    webapp2.Route("/oauth/signout", handler="utils.OAuth:_signout", name="oauth_logout"),
-    webapp2.Route("/oauth/<provider>", handler="utils.OAuth:_simple_auth", name="oauth_login"),
+    webapp2.Route("/oauth/signout", handler="utils.OAuth:_signout", name="oauth_signout"),
+    webapp2.Route("/oauth/<provider>", handler="utils.OAuth:_simple_auth", name="oauth_signin"),
     webapp2.Route("/oauth/<provider>/callback", handler="utils.OAuth:_auth_callback", name="oauth_callback"),
   ))
   if config.BANG_REDIRECTOR:
