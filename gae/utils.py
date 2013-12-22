@@ -1526,13 +1526,13 @@ class AuthHandler(BaseRequestHandler, SimpleAuthHandler):
 
   def _on_signin(self, data, auth_info, provider):
     auth_id = '%s:%s' % (provider, data['id'])
-    logging.info('Looking for a user with id %s', auth_id)
+    logging.debug('Looking for a user with id %s', auth_id)
 
     user = self.auth.store.user_model.get_by_auth_id(auth_id)
     _attrs = self._to_user_model_attrs(data, self.USER_ATTRS[provider])
 
     if user:
-      logging.info('Found existing user to log in')
+      logging.debug('Found existing user to log in')
       user.populate(**_attrs)
       user.put()
       self.auth.set_session(
@@ -1541,14 +1541,14 @@ class AuthHandler(BaseRequestHandler, SimpleAuthHandler):
     else:
 
       if self.logged_in:
-        logging.info('Updating currently logged in user')
+        logging.debug('Updating currently logged in user')
 
         u = self.current_user
         u.populate(**_attrs)
         u.add_auth_id(auth_id)
 
       else:
-        logging.info('Creating a brand new user')
+        logging.debug('Creating a brand new user')
         ok, user = self.auth.store.user_model.create_user(auth_id, **_attrs)
         if ok:
           self.auth.set_session(self.auth.store.user_to_dict(user))
