@@ -6,9 +6,24 @@ import urlparse
 
 import tests.util
 
+from google.appengine.api import urlfetch_stub
+from minimock import mock, restore
+
+def Dummy_RetrieveURL(self, url, payload, method, headers, request, response,
+                      follow_redirects, deadline, validate_certificate):
+  response.set_content("{}")
+
 class OAuthTest(tests.util.TestCase):
   root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
   domain = "sample"
+
+  def setUp(self):
+    super(OAuthTest, self).setUp()
+    mock("urlfetch_stub.URLFetchServiceStub._RetrieveURL", mock_obj=Dummy_RetrieveURL)
+
+  def tearDown(self):
+    restore()
+    super(OAuthTest, self).tearDown()
 
   def test_oauth(self):
     response = self.app.get("/oauth/google", status=302)
