@@ -1552,14 +1552,9 @@ class OAuth(RequestHandler, SimpleAuthHandler):
   def _simple_auth(self, *argv, **kwargv):
     return super(OAuth, self)._simple_auth(*argv, **kwargv)
 
-  #@session
   def _on_signin(self, data, auth_info, provider):
     oauth_id = '%s:%s' % (provider, data['id'])
     logging.debug('Looking for a user with id %s', oauth_id)
-    #logging.debug(data)
-    #logging.debug(auth_info)
-    #self.session.add_flash(data, 'data - from _on_signin(...)')
-    #self.session.add_flash(auth_info, 'auth_info - from _on_signin(...)')
     self.redirect('/')
 
   #@session
