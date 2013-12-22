@@ -164,6 +164,11 @@ import gdata.alt.appengine
 import webapp2
 import webob
 
+try:
+  from simpleauth import SimpleAuthHandler
+except ImportError:
+  class SimpleAuthHandler(): pass
+
 METHOD_NAMES = tuple(webapp2._normalize_handler_method(method_name) for method_name in webapp2.WSGIApplication.allowed_methods)
 
 
