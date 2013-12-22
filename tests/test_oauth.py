@@ -30,7 +30,10 @@ class OAuthTest(tests.util.TestCase):
     assert response.location.startswith("https://accounts.google.com/o/oauth2/auth?")
     state = urlparse.parse_qs(response.location)["state"][0]
     self.app.get("/oauth/google/callback?state={0}".format(state), status=500)
-    self.expected_logs = [('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', "'access_token'")]
+    self.expected_logs = [
+      ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', "'access_token'"),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', "suspended generator _oauth2_callback(handler.py:230) raised KeyError('access_token')"),
+    ]
 
 class OAuthSecretsTest(tests.util.TestCase):
   root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
