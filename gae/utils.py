@@ -502,7 +502,7 @@ def get_app():
   routes_list = list()
   routes_list.extend(config.ROUTES)
   routes_list.extend((
-    webapp2.Route("/oauth/logout", handler="utils.OAuth:logout", name="oauth_logout"),
+    webapp2.Route("/oauth/signout", handler="utils.OAuth:_signout", name="oauth_logout"),
     webapp2.Route("/oauth/<provider>", handler="utils.OAuth:_simple_auth", name="oauth_login"),
     webapp2.Route("/oauth/<provider>/callback", handler="utils.OAuth:_auth_callback", name="oauth_callback"),
   ))
@@ -1563,10 +1563,12 @@ class OAuth(RequestHandler, SimpleAuthHandler):
       referer = "/"
     self.redirect(referer)
 
-  #@session
-  def logout(self):
-    self.auth.unset_session()
-    self.redirect('/')
+  @session
+  def _signout(self):
+    if hasattr(self.oauth_config, "on_signout"):
+      self.oauth_config.on_signout(self)
+    #clean session
+    self.redirect(self.request.referer or "/")
 
   def _callback_uri_for(self, provider):
     return self.uri_for('oauth_callback', provider=provider, _full=True)
