@@ -1575,7 +1575,11 @@ class OAuth(RequestHandler, SimpleAuthHandler):
     try:
       secrets = webapp2.import_string("oauth_secrets.{0}".format(self.request.host.replace(":", "_")))
     except webapp2.ImportStringError:
-      from oauth_secrets import default as secrets
+      try:
+        secrets = webapp2.import_string("oauth_secrets.{0}".format(self.request.host.split(":", 1)[0]))
+      except webapp2.ImportStringError as e:
+        logging.warning(e)
+        from oauth_secrets import default as secrets
     return secrets.AUTH_CONFIG[provider]
 
   def _to_user_model_attrs(self, data, attrs_map):
