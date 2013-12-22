@@ -13,6 +13,7 @@ config_APPS = {
 #config_GA_ACCOUNT = ""
 #config_JOB_EMAIL_RECIPIENT = "email@example.com"
 #config_FEEDBACK_FORMKEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+config_SECRET_KEY = "SECRET_KEY"
 #config_WEBAPP2_CONFIG = {}
 
 def webapp_add_wsgi_middleware(app):

@@ -167,7 +167,9 @@ import webob
 try:
   from simpleauth import SimpleAuthHandler
 except ImportError:
-  class SimpleAuthHandler(): pass
+  class SimpleAuthHandler(object):
+    def _auth_callback(self, *argv, **kwargv): raise NotImplementedError
+    def _simple_auth(self, *argv, **kwargv): raise NotImplementedError
 
 METHOD_NAMES = tuple(webapp2._normalize_handler_method(method_name) for method_name in webapp2.WSGIApplication.allowed_methods)
 
@@ -497,6 +499,11 @@ def get_app():
     config_dict.update(config_WEBAPP2_CONFIG)
   routes_list = list()
   routes_list.extend(config.ROUTES)
+  routes_list.extend((
+    webapp2.Route("/oauth/logout", handler="utils.OAuth:logout", name="oauth_logout"),
+    webapp2.Route("/oauth/<provider>", handler="utils.OAuth:_simple_auth", name="oauth_login"),
+    webapp2.Route("/oauth/<provider>/callback", handler="utils.OAuth:_auth_callback", name="oauth_callback"),
+  ))
   if config.BANG_REDIRECTOR:
     routes_list.append(webapp2.Route("/!<key:[^/]+>", BangRedirector, name="bang-redirector"))
   for domain, values in config.APPS.viewitems():
@@ -1478,7 +1485,7 @@ class DropboxProxy(RequestHandler):
 
 # OAuth views
 
-class AuthHandler(BaseRequestHandler, SimpleAuthHandler):
+class OAuth(RequestHandler, SimpleAuthHandler):
   """Authentication handler for OAuth 2.0, 1.0(a) and OpenID."""
   """
   copy AuthHandler from simpleauth
@@ -1535,52 +1542,37 @@ class AuthHandler(BaseRequestHandler, SimpleAuthHandler):
     }
   }
 
+  @session
+  def _auth_callback(self, *argv, **kwargv):
+    return super(OAuth, self)._auth_callback(*argv, **kwargv)
+
+  @session
+  def _simple_auth(self, *argv, **kwargv):
+    return super(OAuth, self)._simple_auth(*argv, **kwargv)
+
+  #@session
   def _on_signin(self, data, auth_info, provider):
-    auth_id = '%s:%s' % (provider, data['id'])
-    logging.debug('Looking for a user with id %s', auth_id)
+    oauth_id = '%s:%s' % (provider, data['id'])
+    logging.debug('Looking for a user with id %s', oauth_id)
+    #logging.debug(data)
+    #logging.debug(auth_info)
+    #self.session.add_flash(data, 'data - from _on_signin(...)')
+    #self.session.add_flash(auth_info, 'auth_info - from _on_signin(...)')
+    self.redirect('/')
 
-    user = self.auth.store.user_model.get_by_auth_id(auth_id)
-    _attrs = self._to_user_model_attrs(data, self.USER_ATTRS[provider])
-
-    if user:
-      logging.debug('Found existing user to log in')
-      user.populate(**_attrs)
-      user.put()
-      self.auth.set_session(
-        self.auth.store.user_to_dict(user))
-
-    else:
-
-      if self.logged_in:
-        logging.debug('Updating currently logged in user')
-
-        u = self.current_user
-        u.populate(**_attrs)
-        u.add_auth_id(auth_id)
-
-      else:
-        logging.debug('Creating a brand new user')
-        ok, user = self.auth.store.user_model.create_user(auth_id, **_attrs)
-        if ok:
-          self.auth.set_session(self.auth.store.user_to_dict(user))
-
-    self.session.add_flash(data, 'data - from _on_signin(...)')
-    self.session.add_flash(auth_info, 'auth_info - from _on_signin(...)')
-
-    self.redirect('/profile')
-
+  #@session
   def logout(self):
     self.auth.unset_session()
     self.redirect('/')
 
-  def handle_exception(self, exception, debug):
-    logging.error(exception)
-    self.render('error.html', {'exception': exception})
-
   def _callback_uri_for(self, provider):
-    return self.uri_for('auth_callback', provider=provider, _full=True)
+    return self.uri_for('oauth_callback', provider=provider, _full=True)
 
   def _get_consumer_info_for(self, provider):
+    try:
+      secrets = webapp2.import_string("oauth_secrets.{0}".format(self.request.host.replace(":", "_")))
+    except webapp2.ImportStringError:
+      from oauth_secrets import default as secrets
     return secrets.AUTH_CONFIG[provider]
 
   def _to_user_model_attrs(self, data, attrs_map):
