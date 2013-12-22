@@ -1480,6 +1480,12 @@ class DropboxProxy(RequestHandler):
 
 class AuthHandler(BaseRequestHandler, SimpleAuthHandler):
   """Authentication handler for OAuth 2.0, 1.0(a) and OpenID."""
+  """
+  copy AuthHandler from simpleauth
+
+  https://github.com/crhym3/simpleauth/blob/ed342a572b357bacd08ef4cea9fdee43716b3ce8/example/handlers.py
+  ed342a572b357bacd08ef4cea9fdee43716b3ce8 (Oct 29, 2013)
+  """
 
   OAUTH2_CSRF_STATE = True
 
