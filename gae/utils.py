@@ -103,6 +103,7 @@ class ConfigDefaults(object):
   SITE_PACKAGES = "site-packages"
   URI_AUTHORITY = "localhost:8080" if DEBUG else "{0}.appspot.com".format(app_identity.get_application_id())
   WAIT_MAP_SIZE = 10
+  WEBAPP2_CONFIG = None
 config = lib_config.register("config", ConfigDefaults.__dict__)
 config.LOCALE_PATH = os.path.join(DIRNAME, config.I18N_TRANSLATIONS_PATH)
 
@@ -486,6 +487,9 @@ def get_app():
       "secret_key": config.SECRET_KEY,
     },
   })
+  config_WEBAPP2_CONFIG = config_dict.pop("WEBAPP2_CONFIG")
+  if config_WEBAPP2_CONFIG is not None:
+    config_dict.update(config_WEBAPP2_CONFIG)
   routes_list = list()
   routes_list.extend(config.ROUTES)
   if config.BANG_REDIRECTOR:

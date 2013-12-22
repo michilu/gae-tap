@@ -8,10 +8,12 @@ config_APPS = {
   "<:localhost|gae-tap.appspot.com>": (("", "app_sample"),),
   #r"<subdomain:(?!www\.)[^.]+>.local": (("/test", "app_sample"),),
 }
+
 #config_APPSTATS_INCLUDE_ERROR_STATUS = False
 #config_GA_ACCOUNT = ""
 #config_JOB_EMAIL_RECIPIENT = "email@example.com"
 #config_FEEDBACK_FORMKEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+#config_WEBAPP2_CONFIG = {}
 
 def webapp_add_wsgi_middleware(app):
   return recording.appstats_wsgi_middleware(app)
