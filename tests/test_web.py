@@ -43,8 +43,8 @@ class AppTest(tests.util.TestCase):
     self.app.post("/_ah/response_cache", {"csrf": "fake"}, status=403)
 
   def test_domain_routing(self):
-    self.app.get("http://www.example.com/", status=404)
-    self.app.get("http://foo.example.com/").mustcontain("foo")
+    self.app.get("http://www.localhost/", status=404)
+    self.app.get("http://foo.localhost/").mustcontain("foo")
 
   def test_featurephone(self):
     headers = {"User-Agent": "Googlebot-Mobile"}
@@ -59,7 +59,7 @@ class AppTest(tests.util.TestCase):
 
   def test_namespace(self):
     self.app.get("/test/namespace").mustcontain("namespace")
-    self.app.get("http://foo.example.com/namespace").mustcontain("example.com")
+    self.app.get("http://foo.localhost/namespace").mustcontain("localhost")
 
   def test_response_cache(self):
     response = self.app.get("/_ah/response_cache")
