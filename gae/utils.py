@@ -1567,7 +1567,7 @@ class OAuth(RequestHandler, SimpleAuthHandler):
   def _signout(self):
     if hasattr(self.oauth_config, "on_signout"):
       self.oauth_config.on_signout(self)
-    #clean session
+    self.session.clear()
     self.redirect(self.request.referer or "/")
 
   def _callback_uri_for(self, provider):
