@@ -46,3 +46,10 @@ AUTH_CONFIG = {
 
   # OpenID doesn't need any key/secret
 }
+
+#def on_signin(self, data, auth_info, provider):
+#  self.session["uid"] = ":".join((provider, data["id"]))
+#  self.session["name"] = data["name"]
+#
+#def on_signout(self):
+#  pass
