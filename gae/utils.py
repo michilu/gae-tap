@@ -1052,6 +1052,7 @@ def session(func):
   @ndb.tasklet
   def inner(self, *argv, **kwargv):
     self.session_store = sessions.get_store(request=self.request)
+    self.session_store.config["secret_key"] = "".join((config.SECRET_KEY, namespace_manager.get_namespace()))
     try:
       func(self, *argv, **kwargv)
     finally:
@@ -1065,6 +1066,7 @@ def session_read_only(func):
   @ndb.tasklet
   def inner(self, *argv, **kwargv):
     self.session_store = sessions.get_store(request=self.request)
+    self.session_store.config["secret_key"] = "".join((config.SECRET_KEY, namespace_manager.get_namespace()))
     func(self, *argv, **kwargv)
 
   return inner

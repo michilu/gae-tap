@@ -78,3 +78,6 @@ class OAuthSignoutTest(tests.util.TestCase):
         break
       else:
         raise
+    self.expected_logs = [
+      ('WARNING', 'lib/webapp2-2.5.2/webapp2_extras/securecookie.py', 'deserialize', "Invalid cookie signature u'...'"),
+    ]
