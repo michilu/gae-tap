@@ -30,7 +30,9 @@ Supports:
 - Google Analytics for feature phone
 - I18N / Python, HTML and JavaScript
 - Japanese han-kaku characters / 半角
+- OAuth login / gae-simpleauth
 - generating sitemaps
+- sessions
 
 Low cost operating:
 
@@ -38,6 +40,7 @@ Low cost operating:
 - hosting DropBox as a proxy
 - hostname-based multitenancy
 - just a few costs permanent caching
+- minimum OAuth accounting
 - redirecting to Google URL Shortener
 
 Performance:
