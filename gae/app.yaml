@@ -13,6 +13,8 @@ libraries:
   version: latest
 - name: pycrypto
   version: latest
+- name: webapp2
+  version: latest
 - name: webob
   version: latest
 

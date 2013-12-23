@@ -20,7 +20,7 @@ pytest-cov
 #pytest-gae
 https://bitbucket.org/MiCHiLU/pytest_gae/get/default.zip
 testfixtures
-webtest==1.4.3
+webtest>=2
 watchlion
 jinja2-precompiler
 fanstatic-tools==0.2

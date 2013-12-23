@@ -99,10 +99,12 @@ class ConfigDefaults(object):
     (r"^/_ah/response_cache$", "utils.ResponseCache"),
   )
   SECRET_KEY = None
+  SESSION_MAX_AGE = 3600 # 1h
   SITEMAP_QUEUE = "sitemap"
   SITE_PACKAGES = "site-packages"
   URI_AUTHORITY = "localhost:8080" if DEBUG else "{0}.appspot.com".format(app_identity.get_application_id())
   WAIT_MAP_SIZE = 10
+  WEBAPP2_CONFIG = None
 config = lib_config.register("config", ConfigDefaults.__dict__)
 config.LOCALE_PATH = os.path.join(DIRNAME, config.I18N_TRANSLATIONS_PATH)
 
@@ -158,10 +160,17 @@ def sys_path_append():
 sys_path_append()
 
 from gdata.spreadsheet.service import SpreadsheetsService
-from webapp2_extras import jinja2, routes, security
+from webapp2_extras import jinja2, routes, security, sessions
 import gdata.alt.appengine
 import webapp2
 import webob
+
+try:
+  from simpleauth import SimpleAuthHandler
+except ImportError:
+  class SimpleAuthHandler(object):
+    def _auth_callback(self, *argv, **kwargv): raise NotImplementedError
+    def _simple_auth(self, *argv, **kwargv): raise NotImplementedError
 
 METHOD_NAMES = tuple(webapp2._normalize_handler_method(method_name) for method_name in webapp2.WSGIApplication.allowed_methods)
 
@@ -481,9 +490,22 @@ def get_app():
       "template_path": tuple([os.path.join(DIRNAME, path) for path in config.JINJA2_TEMPLATE_PATH]),
       "environment_args": {"extensions": ["jinja2.ext.i18n"]},
     },
+    "webapp2_extras.sessions": {
+      "cookie_name": "__s",
+      "secret_key": config.SECRET_KEY,
+      "session_max_age": config.SESSION_MAX_AGE,
+    },
   })
+  config_WEBAPP2_CONFIG = config_dict.pop("WEBAPP2_CONFIG")
+  if config_WEBAPP2_CONFIG is not None:
+    config_dict.update(config_WEBAPP2_CONFIG)
   routes_list = list()
   routes_list.extend(config.ROUTES)
+  routes_list.extend((
+    webapp2.Route("/oauth/signout", handler="utils.OAuth:_signout", name="oauth_signout"),
+    webapp2.Route("/oauth/<provider>", handler="utils.OAuth:_simple_auth", name="oauth_signin"),
+    webapp2.Route("/oauth/<provider>/callback", handler="utils.OAuth:_auth_callback", name="oauth_callback"),
+  ))
   if config.BANG_REDIRECTOR:
     routes_list.append(webapp2.Route("/!<key:[^/]+>", BangRedirector, name="bang-redirector"))
   for domain, values in config.APPS.viewitems():
@@ -505,6 +527,10 @@ def get_app():
   if config.DROPBOX_PROXY_UID is not None:
     routes_list.append(routes.DomainRoute(r"<domain:^.+?\.[a-zA-Z]{2,5}$>", [webapp2.Route(r"<path:.*>", DropboxProxy)]))
   return webapp2.WSGIApplication(routes=routes_list, debug=config.DEBUG, config=config_dict)
+
+@memoize()
+def get_namespaced_secret_key(namespace):
+  return "".join((config.SECRET_KEY, namespace))
 
 @memoize()
 def get_resource_code(resources):
@@ -1011,6 +1037,44 @@ def rate_limit(rate, size, key=None, tag=None):
 
   return decorator
 
+def same_domain_referer(func):
+
+  @wraps(func)
+  @ndb.tasklet
+  def inner(self, *argv, **kwargv):
+    referer = self.request.referer
+    if referer is not None and referer.startswith(self.request.host_url):
+      func(self, *argv, **kwargv)
+    else:
+      self.error(401)
+
+  return inner
+
+def session(func):
+
+  @wraps(func)
+  @ndb.tasklet
+  def inner(self, *argv, **kwargv):
+    self.session_store = sessions.get_store(request=self.request)
+    self.session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
+    try:
+      func(self, *argv, **kwargv)
+    finally:
+      self.session_store.save_sessions(self.response)
+
+  return inner
+
+def session_read_only(func):
+
+  @wraps(func)
+  @ndb.tasklet
+  def inner(self, *argv, **kwargv):
+    self.session_store = sessions.get_store(request=self.request)
+    self.session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
+    func(self, *argv, **kwargv)
+
+  return inner
+
 
 # Task Decorators
 
@@ -1098,6 +1162,13 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
   @property
   def language(self):
     return self.request.GET.get("l", self.default_language)
+
+  @webapp2.cached_property
+  def session(self):
+    try:
+      return self.session_store.get_session()
+    except AttributeError:
+      return
 
   @property
   def translation(self):
@@ -1432,6 +1503,110 @@ class DropboxProxy(RequestHandler):
     self.proxy(url=url)
     if self.response.status_code >= 400:
       self.response.body = ""
+
+# OAuth views
+
+class OAuth(RequestHandler, SimpleAuthHandler):
+  """Authentication handler for OAuth 2.0, 1.0(a) and OpenID."""
+  """
+  copy AuthHandler from simpleauth
+
+  https://github.com/crhym3/simpleauth/blob/ed342a572b357bacd08ef4cea9fdee43716b3ce8/example/handlers.py
+  ed342a572b357bacd08ef4cea9fdee43716b3ce8 (Oct 29, 2013)
+  """
+
+  OAUTH2_CSRF_STATE = True
+
+  USER_ATTRS = {
+    'facebook' : {
+      'id'     : lambda id: ('avatar_url',
+        'http://graph.facebook.com/{0}/picture?type=large'.format(id)),
+      'name'   : 'name',
+      'link'   : 'link'
+    },
+    'google'   : {
+      'picture': 'avatar_url',
+      'name'   : 'name',
+      'profile': 'link'
+    },
+    'windows_live': {
+      'avatar_url': 'avatar_url',
+      'name'      : 'name',
+      'link'      : 'link'
+    },
+    'twitter'  : {
+      'profile_image_url': 'avatar_url',
+      'screen_name'      : 'name',
+      'link'             : 'link'
+    },
+    'linkedin' : {
+      'picture-url'       : 'avatar_url',
+      'first-name'        : 'name',
+      'public-profile-url': 'link'
+    },
+    'linkedin2' : {
+      'picture-url'       : 'avatar_url',
+      'first-name'        : 'name',
+      'public-profile-url': 'link'
+    },
+    'foursquare'   : {
+      'photo'    : lambda photo: ('avatar_url', photo.get('prefix') + '100x100' + photo.get('suffix')),
+      'firstName': 'firstName',
+      'lastName' : 'lastName',
+      'contact'  : lambda contact: ('email',contact.get('email')),
+      'id'       : lambda id: ('link', 'http://foursquare.com/user/{0}'.format(id))
+    },
+    'openid'   : {
+      'id'      : lambda id: ('avatar_url', '/img/missing-avatar.png'),
+      'nickname': 'name',
+      'email'   : 'link'
+    }
+  }
+
+  @session
+  def _auth_callback(self, *argv, **kwargv):
+    return super(OAuth, self)._auth_callback(*argv, **kwargv)
+
+  @session
+  def _simple_auth(self, *argv, **kwargv):
+    self.session.add_flash(self.request.referer)
+    return super(OAuth, self)._simple_auth(*argv, **kwargv)
+
+  def _on_signin(self, data, auth_info, provider):
+    if hasattr(self.oauth_config, "on_signin"):
+      self.oauth_config.on_signin(self, data, auth_info, provider)
+    for referer, _label in self.session.get_flashes():
+      referer = referer.encode("utf-8")
+      break
+    else:
+      referer = "/"
+    self.redirect(referer)
+
+  @same_domain_referer
+  @session
+  def _signout(self):
+    if hasattr(self.oauth_config, "on_signout"):
+      self.oauth_config.on_signout(self)
+    self.session.clear()
+    self.redirect(self.request.referer or "/")
+
+  def _callback_uri_for(self, provider):
+    return self.uri_for('oauth_callback', provider=provider, _full=True)
+
+  def _get_consumer_info_for(self, provider):
+    return self.oauth_config.AUTH_CONFIG[provider]
+
+  @webapp2.cached_property
+  def oauth_config(self):
+    try:
+      oauth_config = webapp2.import_string("oauth_config.{0}".format(self.request.host.replace(":", "_")))
+    except webapp2.ImportStringError:
+      try:
+        oauth_config = webapp2.import_string("oauth_config.{0}".format(self.request.host.split(":", 1)[0]))
+      except webapp2.ImportStringError as e:
+        logging.warning(e)
+        from oauth_config import default as oauth_config
+    return oauth_config
 
 # admin console views
 

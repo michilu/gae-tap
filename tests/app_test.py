@@ -75,6 +75,22 @@ class Proxy(utils.RequestHandler):
   def get(self):
     self.proxy()
 
+class Sessions(utils.RequestHandler):
+  def get(self):
+    assert self.session is None
+
+  @utils.session_read_only
+  def post(self):
+    self.session["TEST"] = "POST"
+
+  @utils.session
+  def put(self):
+    self.session["TEST"] = "PUT"
+
+  @utils.session
+  def delete(self):
+    self.session["TEST"] = "DELETE"
+
 class Namespace(utils.RequestHandler):
   def get(self):
     self.response.write(namespace_manager.get_namespace())
@@ -100,6 +116,7 @@ routes = [
   webapp2.Route("/rate_limit", RateLimit),
   webapp2.Route("/cache_temporary", CacheTemporary),
   webapp2.Route("/proxy", Proxy),
+  webapp2.Route("/sessions", Sessions),
   webapp2.Route("/namespace", Namespace),
   webapp2.Route("/zipfile", ZipFile),
 ]

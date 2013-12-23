@@ -5,6 +5,9 @@ from js.bootstrap import bootstrap
 import webapp2
 
 class Index(utils.RequestHandler):
+  i18n = True
+  i18n_domain = "sample"
+
   @utils.head(bootstrap)
   def get(self, subdomain=None):
     self.render_response("sample.html", locals())
