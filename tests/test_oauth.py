@@ -44,3 +44,37 @@ class OAuthSecretsTest(tests.util.TestCase):
       ('WARNING', 'gae/utils.py', '_get_consumer_info_for', "import_string() failed for 'oauth_config.localhost'. Possible ...found in '/Users/endoh/Documents/works/gogom/gae/oauth_config/__init__.pyc'.\n- 'oauth_config.localhost' not found."),
       ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', 'cannot import name default'),
     ]
+
+class OAuthSignoutTest(tests.util.TestCase):
+  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  domain = "sample"
+  use_cookie = True
+
+  def test_signout(self):
+    assert len(self.app.cookiejar) == 0
+    self.app.put("/test/sessions")
+    assert len(self.app.cookiejar) == 1
+    for cookie in self.app.cookiejar:
+      if cookie.name == "__s":
+        assert cookie.value is not None
+        value = cookie.value
+        break
+      else:
+        raise
+    self.app.get("/oauth/signout", status=401)
+    assert len(self.app.cookiejar) == 1
+    for cookie in self.app.cookiejar:
+      if cookie.name == "__s":
+        assert cookie.value == value
+        break
+      else:
+        raise
+    self.app.get("/oauth/signout", headers={"Referer":"http://sample/"})
+    assert len(self.app.cookiejar) == 1
+    for cookie in self.app.cookiejar:
+      if cookie.name == "__s":
+        assert cookie.value != value
+        assert len(cookie.value) == 61
+        break
+      else:
+        raise

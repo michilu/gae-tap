@@ -1033,6 +1033,19 @@ def rate_limit(rate, size, key=None, tag=None):
 
   return decorator
 
+def same_domain_referer(func):
+
+  @wraps(func)
+  @ndb.tasklet
+  def inner(self, *argv, **kwargv):
+    referer = self.request.referer
+    if referer is not None and referer.startswith(self.request.host_url):
+      func(self, *argv, **kwargv)
+    else:
+      self.error(401)
+
+  return inner
+
 def session(func):
 
   @wraps(func)
@@ -1563,6 +1576,7 @@ class OAuth(RequestHandler, SimpleAuthHandler):
       referer = "/"
     self.redirect(referer)
 
+  @same_domain_referer
   @session
   def _signout(self):
     if hasattr(self.oauth_config, "on_signout"):
