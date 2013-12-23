@@ -18,6 +18,3 @@ config_SECRET_KEY = "SECRET_KEY"
 
 def webapp_add_wsgi_middleware(app):
   return recording.appstats_wsgi_middleware(app)
-
-#GOOGLE_USERNAME = "email@example.com"
-#GOOGLE_PASSWORD = "password"
