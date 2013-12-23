@@ -529,6 +529,10 @@ def get_app():
   return webapp2.WSGIApplication(routes=routes_list, debug=config.DEBUG, config=config_dict)
 
 @memoize()
+def get_namespaced_secret_key(namespace):
+  return "".join((config.SECRET_KEY, namespace))
+
+@memoize()
 def get_resource_code(resources):
   import fanstatic
   needed = fanstatic.NeededResources(**config.FANSTATIC)
@@ -1052,7 +1056,7 @@ def session(func):
   @ndb.tasklet
   def inner(self, *argv, **kwargv):
     self.session_store = sessions.get_store(request=self.request)
-    self.session_store.config["secret_key"] = "".join((config.SECRET_KEY, namespace_manager.get_namespace()))
+    self.session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
     try:
       func(self, *argv, **kwargv)
     finally:
@@ -1066,7 +1070,7 @@ def session_read_only(func):
   @ndb.tasklet
   def inner(self, *argv, **kwargv):
     self.session_store = sessions.get_store(request=self.request)
-    self.session_store.config["secret_key"] = "".join((config.SECRET_KEY, namespace_manager.get_namespace()))
+    self.session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
     func(self, *argv, **kwargv)
 
   return inner
