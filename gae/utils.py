@@ -407,19 +407,6 @@ def get_random_string(length=12,
                 ).digest())
     return ''.join([random.choice(allowed_chars) for i in range(length)])
 
-def constant_time_compare(val1, val2):
-    """
-    Returns True if the two strings are equal, False otherwise.
-
-    The time taken is independent of the number of characters that match.
-    """
-    if len(val1) != len(val2):
-        return False
-    result = 0
-    for x, y in zip(val1, val2):
-        result |= ord(x) ^ ord(y)
-    return result == 0
-
 
 # Functions
 
@@ -969,7 +956,7 @@ def cors(origin=None):
           allow_origin = origin()
       if allow_origin:
         self.response.headers["Access-Control-Allow-Origin"] = allow_origin
-      if constant_time_compare(self.request.method, "OPTIONS"):
+      if security.compare_hashes(self.request.method, "OPTIONS"):
         self.response.headers["Access-Control-Max-Age"] = config.CORS_Access_Control_Max_Age
         method = self.request.headers.get("Access-Control-Request-Method")
         if method:
@@ -988,7 +975,7 @@ def csrf(func):
   @wraps(func)
   @ndb.tasklet
   def inner(self, *argv, **kwargv):
-    if constant_time_compare(self.request.method, "GET"):
+    if security.compare_hashes(self.request.method, "GET"):
       token = uuid.uuid4().get_hex()
       with on_namespace(namespace):
         ndb.get_context().memcache_set(token, "", time=config.CSRF_TIME)
@@ -1855,13 +1842,13 @@ class AppEngineHttpClient(gdata.alt.appengine.AppEngineHttpClient):
       all_headers['Content-Type'] = 'application/atom+xml'
     if operation is None:
       method = None
-    elif constant_time_compare(operation, 'GET'):
+    elif security.compare_hashes(operation, 'GET'):
       method = urlfetch.GET
-    elif constant_time_compare(operation, 'POST'):
+    elif security.compare_hashes(operation, 'POST'):
       method = urlfetch.POST
-    elif constant_time_compare(operation, 'PUT'):
+    elif security.compare_hashes(operation, 'PUT'):
       method = urlfetch.PUT
-    elif constant_time_compare(operation, 'DELETE'):
+    elif security.compare_hashes(operation, 'DELETE'):
       method = urlfetch.DELETE
     else:
       method = None
@@ -1901,7 +1888,7 @@ class GoogleVisualization(object):
   def query(self, query_string, key=None):
     uri = "?".join((self._endpoint, urllib.urlencode({"key": key or self.key, "tq": query_string})))
     result = self.client.GetWithRetries(uri, converter=self._converter, logger=logging.getLogger())
-    if constant_time_compare(result["status"], "error"):
+    if security.compare_hashes(result["status"], "error"):
       logging.error(result["errors"])
       return
     cols = tuple([col["label"] or col["id"] for col in result["table"]["cols"]])

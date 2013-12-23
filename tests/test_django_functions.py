@@ -28,8 +28,3 @@ class TestDjangoFunctions(unittest.TestCase):
     finally:
       utils.using_sysrandom = origin_using_sysrandom
       utils.random = origin_random
-
-  def test_constant_time_compare(self):
-    assert utils.constant_time_compare("A", "") == False
-    assert utils.constant_time_compare("A", "B") == False
-    assert utils.constant_time_compare("A", "A") == True
