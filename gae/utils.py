@@ -1087,6 +1087,98 @@ def no_retry(func):
   return inner
 
 
+class User(object):
+  _auth_info = _data = _id = _provider = None
+  _session_key = "_u"
+  _save_attributes = {
+    "_id": "i",
+    "_provider": "p",
+  }
+  default_provider = "google"
+  save_attributes = {
+    "name": "n",
+  }
+
+  def __init__(self, auth_info=None, data=None, provider=None):
+    if data is None:
+      data = dict()
+    if provider == self.default_provider:
+      provider = None
+    self._auth_info = auth_info
+    self._data = data
+    self._id = data.get("id")
+    self._provider = provider
+
+  def __getattribute__(self, name):
+    try:
+      return super(User, self).__getattribute__(name)
+    except AttributeError as e:
+      try:
+        return self._data[name]
+      except KeyError:
+        raise AttributeError(e)
+
+  def __setattr__(self, name, value):
+    try:
+      super(User, self).__getattribute__(name)
+    except AttributeError:
+      self._data[name] = value
+    else:
+      super(User, self).__setattr__(name, value)
+
+  def __delattr__(self, name):
+    try:
+      super(User, self).__getattribute__(name)
+    except AttributeError as e:
+      try:
+        del self._data[name]
+      except KeyError:
+        raise AttributeError(e)
+    else:
+      super(User, self).__delattr__(name)
+
+  @classmethod
+  def load_from_session(cls, request):
+    session_u = session.get(cls._session_key)
+    if session_u is None:
+      return
+    user = cls()
+    for attribute_name, session_key in user._save_attributes.items():
+      value = session_u.get(session_key)
+      if value is not None:
+        setattr(user, attribute_name, value)
+    for data_key, session_key in user.save_attributes.items():
+      value = session_u.get(session_key)
+      if value is not None:
+        user._data[data_key] = value
+    return user
+
+  def set_to_session(self, request):
+    session_u = request.session.get(self._session_key, dict())
+    for data_key, session_key in self.save_attributes.items():
+      value = self._data.get(data_key)
+      if value is None:
+        del session_u[session_key]
+      else:
+        session_u[session_key] = value
+    for attribute_name, session_key in self._save_attributes.items():
+      value = getattr(self, attribute_name, None)
+      if value is None:
+        del session_u[session_key]
+      else:
+        session_u[session_key] = value
+    request.session[self._session_key] = session_u
+
+  def nickname(self):
+    return self._data.get("name")
+
+  def email(self):
+    return self._data.get("email")
+
+  def user_id(self):
+    assert self._id
+    return ":".join((self._provider or self.default_provider, self._id))
+
 # View Classes
 
 class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
