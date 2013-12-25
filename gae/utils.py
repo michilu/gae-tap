@@ -1138,7 +1138,7 @@ class User(object):
       super(User, self).__delattr__(name)
 
   @classmethod
-  def load_from_session(cls, request):
+  def load_from_session(cls, session):
     session_u = session.get(cls._session_key)
     if session_u is None:
       return
@@ -1153,21 +1153,21 @@ class User(object):
         user._data[data_key] = value
     return user
 
-  def set_to_session(self, request):
-    session_u = request.session.get(self._session_key, dict())
+  def set_to_session(self, session):
+    session_u = session.get(self._session_key, dict())
     for data_key, session_key in self.save_attributes.items():
       value = self._data.get(data_key)
-      if value is None:
+      if value is None and session_u.has_key(session_key):
         del session_u[session_key]
       else:
         session_u[session_key] = value
     for attribute_name, session_key in self._save_attributes.items():
       value = getattr(self, attribute_name, None)
-      if value is None:
+      if value is None and session_u.has_key(session_key):
         del session_u[session_key]
       else:
         session_u[session_key] = value
-    request.session[self._session_key] = session_u
+    session[self._session_key] = session_u
 
   def nickname(self):
     return self._data.get("name")
@@ -1197,6 +1197,25 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
   urlfetch_deadline = MAX_URLFETCH_DEADLINE
   use_zipfile = False
   with_google_analytics_tracking = False
+
+  class users(object):
+
+    @memoize
+    @staticmethod
+    def create_login_url(provider="google"):
+      return webapp2.uri_for("oauth_signin", provider=provider)
+
+    @memoize
+    @staticmethod
+    def create_logout_url():
+      return webapp2.uri_for("oauth_signout")
+
+    @webapp2.cached_property
+    def _get_current_user(self):
+      return User.load_from_session(webapp2.get_request())
+
+    def get_current_user(self):
+      return self._get_current_user
 
   def __init__(self, *argv, **kwargv):
     for method_name in METHOD_NAMES:

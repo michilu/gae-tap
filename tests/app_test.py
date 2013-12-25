@@ -91,6 +91,21 @@ class Sessions(utils.RequestHandler):
   def delete(self):
     self.session["TEST"] = "DELETE"
 
+class Users(utils.RequestHandler):
+  @utils.session_read_only
+  def get(self):
+    user = utils.User.load_from_session(self.session)
+    assert user is not None
+    assert user.user_id() == u"google:ID"
+    assert getattr(user, "locale", None) is None
+
+  @utils.session
+  def post(self):
+    assert utils.User.load_from_session(self.session) is None
+    user = utils.User(data={"id": u"ID", u"locale": u"ja"})
+    assert user is not None
+    user.set_to_session(self.session)
+
 class Namespace(utils.RequestHandler):
   def get(self):
     self.response.write(namespace_manager.get_namespace())
@@ -117,6 +132,7 @@ routes = [
   webapp2.Route("/cache_temporary", CacheTemporary),
   webapp2.Route("/proxy", Proxy),
   webapp2.Route("/sessions", Sessions),
+  webapp2.Route("/users", Users),
   webapp2.Route("/namespace", Namespace),
   webapp2.Route("/zipfile", ZipFile),
 ]

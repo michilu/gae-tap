@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import unittest
 
 import pytest
@@ -8,8 +9,8 @@ import pytest
 import tests.util
 import utils
 
-class TestUsers(unittest.TestCase):
-  def test_users(self):
+class UserTest(unittest.TestCase):
+  def test_user(self):
     user = utils.User()
     with pytest.raises(AssertionError):
       user.user_id()
@@ -29,3 +30,11 @@ class TestUsers(unittest.TestCase):
     with pytest.raises(AttributeError):
       user.gender
     del user._id
+
+class UsersTest(tests.util.TestCase):
+  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  use_cookie = True
+
+  def test_users(self):
+    self.app.post("/test/users")
+    self.app.get("/test/users")
