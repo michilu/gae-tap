@@ -94,9 +94,9 @@ class ConfigDefaults(object):
   ROUTES = (
     (r"^/sitemap[^/]+\.xml$", "utils.Sitemap"),
     (r"^/_ah/(start|stop|warmup)$", "utils.Dummy"),
-    (r"^/_ah/generate_sitemap$", "utils.GenerateSitemap"),
-    (r"^/_ah/maintain_response$", "utils.MaintainResponse"),
-    (r"^/_ah/response_cache$", "utils.ResponseCache"),
+    (r"^/_tap/generate_sitemap$", "utils.GenerateSitemap"),
+    (r"^/_tap/maintain_response$", "utils.MaintainResponse"),
+    (r"^/_tap/response_cache$", "utils.ResponseCache"),
   )
   SECRET_KEY = None
   SESSION_MAX_AGE = 3600 # 1h

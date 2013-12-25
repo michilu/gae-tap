@@ -48,7 +48,7 @@ handlers:
   login: admin
 - url: /_ah/(start|stop|warmup)
   script: utils.app
-- url: /_ah/(generate_sitemap|maintain_response|response_cache)
+- url: /_tap/(generate_sitemap|maintain_response|response_cache)
   script: utils.app
   login: admin
 - url: /robots.txt
@@ -61,7 +61,7 @@ admin_console:
   - name: Appstats
     url: /_ah/stats
   - name: Response Cache
-    url: /_ah/response_cache
+    url: /_tap/response_cache
 
 skip_files: |
   ^(.*/)?(

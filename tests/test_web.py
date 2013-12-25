@@ -16,7 +16,7 @@ class AppTest(tests.util.TestCase):
     self.app.get("/sample/?q")
     self.app.get("/_ah/start")
     self.app.get("/_ah/stop")
-    self.app.post("/_ah/response_cache", status=403)
+    self.app.post("/_tap/response_cache", status=403)
 
   def test_app_sample(self):
     response = self.app.get("/sample/")
@@ -36,11 +36,11 @@ class AppTest(tests.util.TestCase):
     assert queue.lease_tasks(0, 1)[0].name[:10] == cache.name[:10]
 
   def test_csrf(self):
-    response = self.app.get("/_ah/response_cache?path=/")
+    response = self.app.get("/_tap/response_cache?path=/")
     assert response.forms[1]["csrf"].value != ""
     csrf = response.forms[1]["csrf"].value
-    self.app.post("/_ah/response_cache", {"csrf": csrf})
-    self.app.post("/_ah/response_cache", {"csrf": "fake"}, status=403)
+    self.app.post("/_tap/response_cache", {"csrf": csrf})
+    self.app.post("/_tap/response_cache", {"csrf": "fake"}, status=403)
 
   def test_domain_routing(self):
     self.app.get("http://www.localhost/", status=404)
@@ -62,9 +62,9 @@ class AppTest(tests.util.TestCase):
     self.app.get("http://foo.localhost/namespace").mustcontain("localhost")
 
   def test_response_cache(self):
-    response = self.app.get("/_ah/response_cache")
+    response = self.app.get("/_tap/response_cache")
     assert len(response.forms) == 1
-    response = self.app.get("/_ah/response_cache?path=/")
+    response = self.app.get("/_tap/response_cache?path=/")
     assert len(response.forms) == 2
     response.mustcontain("Do you want to delete it from caches?")
 
@@ -78,7 +78,7 @@ class AppTest(tests.util.TestCase):
     assert queue.fetch_statistics().tasks == 2
 
     csrf = response.forms[1]["csrf"].value
-    response = self.app.post("/_ah/response_cache?host={0}&path={1}".format("localhost:80", path), {"csrf": csrf})
+    response = self.app.post("/_tap/response_cache?host={0}&path={1}".format("localhost:80", path), {"csrf": csrf})
     response.mustcontain("Deleted the key from caches.")
     assert "Do you want to delete it from caches?" not in response.body
     assert queue.fetch_statistics().tasks == 1
@@ -152,10 +152,10 @@ class AppTest(tests.util.TestCase):
     ]
 
   def test_maintain_response(self):
-    response = self.app.get("/_ah/maintain_response")
+    response = self.app.get("/_tap/maintain_response")
     response.mustcontain("MaintainResponse: 0 entities deleted")
     self.app.get("/sample/")
-    response = self.app.get("/_ah/maintain_response")
+    response = self.app.get("/_tap/maintain_response")
     response.mustcontain("MaintainResponse: 1 entities deleted")
 
   def test_internal_server_error(self):

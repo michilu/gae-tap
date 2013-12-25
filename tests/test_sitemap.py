@@ -47,7 +47,7 @@ class AppTest(tests.util.TestCase):
     self.app.get("/sitemapindex.xml", status=410)
 
     Sitemap()._post_put_hook(None)
-    self.app.get("/_ah/generate_sitemap")
+    self.app.get("/_tap/generate_sitemap")
 
     response = self.app.get("/sitemapindex.xml")
     assert response.headers["Content-Type"] == "text/xml"
@@ -75,7 +75,7 @@ class AppTest(tests.util.TestCase):
     assert tasks[0].payload.startswith("<url><loc>http://localhost/loc</loc><lastmod>")
     assert tasks[0].payload.endswith("</lastmod><changefreq>daily</changefreq><priority>0.5</priority></url>")
 
-    self.app.get("/_ah/generate_sitemap")
+    self.app.get("/_tap/generate_sitemap")
 
     sitemaps = queue.lease_tasks(0, 1000)
     assert len(sitemaps) == 2
@@ -98,7 +98,7 @@ class AppTest(tests.util.TestCase):
     assert blob["body"].endswith(".xml</loc></sitemap></sitemapindex>")
 
     Sitemap()._post_put_hook(None)
-    self.app.get("/_ah/generate_sitemap")
+    self.app.get("/_tap/generate_sitemap")
     tasks = queue.lease_tasks(0, 1000)
     assert len(tasks) == 3
     assert not filter(lambda x: (x != "/sitemapindex.xml") and not re.match(r"^/sitemap_\d{8}-\d{6}\.xml$", x), [i.tag for i in tasks])
