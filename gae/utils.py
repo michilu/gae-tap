@@ -794,6 +794,119 @@ class TokenBucket(object):
       ctx.memcache_incr(bucket_key)
     raise ndb.Return(True)
 
+class User(object):
+  _auth_info = _data = _id = _provider = None
+  _session_key = "_u"
+  _save_attributes = {
+    "_id": "i",
+    "_provider": "p",
+  }
+  default_provider = "google"
+  save_attributes = {
+    "name": "n",
+  }
+
+  def __init__(self, data=None, auth_info=None, provider=None):
+    if data is None:
+      data = dict()
+    if provider == self.default_provider:
+      provider = None
+    self._auth_info = auth_info
+    self._data = data
+    self._id = data.get("id")
+    self._provider = provider
+
+  def __getattribute__(self, name):
+    try:
+      return super(User, self).__getattribute__(name)
+    except AttributeError as e:
+      try:
+        return self._data[name]
+      except KeyError:
+        raise AttributeError(e)
+
+  def __setattr__(self, name, value):
+    try:
+      super(User, self).__getattribute__(name)
+    except AttributeError:
+      self._data[name] = value
+    else:
+      super(User, self).__setattr__(name, value)
+
+  def __delattr__(self, name):
+    try:
+      super(User, self).__getattribute__(name)
+    except AttributeError as e:
+      try:
+        del self._data[name]
+      except KeyError:
+        raise AttributeError(e)
+    else:
+      super(User, self).__delattr__(name)
+
+  @classmethod
+  def load_from_session(cls, session):
+    session_u = session.get(cls._session_key)
+    if session_u is None:
+      return
+    user = cls()
+    for attribute_name, session_key in user._save_attributes.items():
+      value = session_u.get(session_key)
+      if value is not None:
+        setattr(user, attribute_name, value)
+    for data_key, session_key in user.save_attributes.items():
+      value = session_u.get(session_key)
+      if value is not None:
+        user._data[data_key] = value
+    return user
+
+  def set_to_session(self, session):
+    session_u = session.get(self._session_key, dict())
+    for data_key, session_key in self.save_attributes.items():
+      value = self._data.get(data_key)
+      if value is None and session_u.has_key(session_key):
+        del session_u[session_key]
+      else:
+        session_u[session_key] = value
+    for attribute_name, session_key in self._save_attributes.items():
+      value = getattr(self, attribute_name, None)
+      if value is None and session_u.has_key(session_key):
+        del session_u[session_key]
+      else:
+        session_u[session_key] = value
+    session[self._session_key] = session_u
+
+  def nickname(self):
+    return self._data.get("name")
+
+  def email(self):
+    return self._data.get("email")
+
+  def user_id(self):
+    assert self._id
+    return ":".join((self._provider or self.default_provider, self._id))
+
+class Users(object):
+  def __init__(self, app):
+    self._app = app
+
+  def create_login_url(self, provider="google"):
+    return webapp2.uri_for("oauth_signin", _request= self._app.request, provider=provider)
+
+  def create_logout_url(self):
+    return self._create_logout_url
+
+  def get_current_user(self):
+    return self._get_current_user
+
+  @webapp2.cached_property
+  def _create_logout_url(self):
+    return webapp2.uri_for("oauth_signout", _request= self._app.request)
+
+  @webapp2.cached_property
+  def _get_current_user(self):
+    return User.load_from_session(self._app.session)
+
 
 # Model Mixins
 
@@ -1086,119 +1199,6 @@ def no_retry(func):
     logging.warning("Aborted, because this task is set no-retry.")
   return inner
 
-
-class User(object):
-  _auth_info = _data = _id = _provider = None
-  _session_key = "_u"
-  _save_attributes = {
-    "_id": "i",
-    "_provider": "p",
-  }
-  default_provider = "google"
-  save_attributes = {
-    "name": "n",
-  }
-
-  def __init__(self, data=None, auth_info=None, provider=None):
-    if data is None:
-      data = dict()
-    if provider == self.default_provider:
-      provider = None
-    self._auth_info = auth_info
-    self._data = data
-    self._id = data.get("id")
-    self._provider = provider
-
-  def __getattribute__(self, name):
-    try:
-      return super(User, self).__getattribute__(name)
-    except AttributeError as e:
-      try:
-        return self._data[name]
-      except KeyError:
-        raise AttributeError(e)
-
-  def __setattr__(self, name, value):
-    try:
-      super(User, self).__getattribute__(name)
-    except AttributeError:
-      self._data[name] = value
-    else:
-      super(User, self).__setattr__(name, value)
-
-  def __delattr__(self, name):
-    try:
-      super(User, self).__getattribute__(name)
-    except AttributeError as e:
-      try:
-        del self._data[name]
-      except KeyError:
-        raise AttributeError(e)
-    else:
-      super(User, self).__delattr__(name)
-
-  @classmethod
-  def load_from_session(cls, session):
-    session_u = session.get(cls._session_key)
-    if session_u is None:
-      return
-    user = cls()
-    for attribute_name, session_key in user._save_attributes.items():
-      value = session_u.get(session_key)
-      if value is not None:
-        setattr(user, attribute_name, value)
-    for data_key, session_key in user.save_attributes.items():
-      value = session_u.get(session_key)
-      if value is not None:
-        user._data[data_key] = value
-    return user
-
-  def set_to_session(self, session):
-    session_u = session.get(self._session_key, dict())
-    for data_key, session_key in self.save_attributes.items():
-      value = self._data.get(data_key)
-      if value is None and session_u.has_key(session_key):
-        del session_u[session_key]
-      else:
-        session_u[session_key] = value
-    for attribute_name, session_key in self._save_attributes.items():
-      value = getattr(self, attribute_name, None)
-      if value is None and session_u.has_key(session_key):
-        del session_u[session_key]
-      else:
-        session_u[session_key] = value
-    session[self._session_key] = session_u
-
-  def nickname(self):
-    return self._data.get("name")
-
-  def email(self):
-    return self._data.get("email")
-
-  def user_id(self):
-    assert self._id
-    return ":".join((self._provider or self.default_provider, self._id))
-
-class Users(object):
-  def __init__(self, app):
-    self._app = app
-
-  def create_login_url(self, provider="google"):
-    return webapp2.uri_for("oauth_signin", _request= self._app.request, provider=provider)
-
-  def create_logout_url(self):
-    return self._create_logout_url
-
-  def get_current_user(self):
-    return self._get_current_user
-
-  @webapp2.cached_property
-  def _create_logout_url(self):
-    return webapp2.uri_for("oauth_signout", _request= self._app.request)
-
-  @webapp2.cached_property
-  def _get_current_user(self):
-    return User.load_from_session(self._app.session)
 
 # View Classes
 
