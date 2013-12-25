@@ -1099,7 +1099,7 @@ class User(object):
     "name": "n",
   }
 
-  def __init__(self, auth_info=None, data=None, provider=None):
+  def __init__(self, data=None, auth_info=None, provider=None):
     if data is None:
       data = dict()
     if provider == self.default_provider:
