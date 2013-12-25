@@ -1671,13 +1671,13 @@ class OAuth(RequestHandler, SimpleAuthHandler):
     return super(OAuth, self)._simple_auth(*argv, **kwargv)
 
   def _on_signin(self, data, auth_info, provider):
-    if hasattr(self.oauth_config, "on_signin"):
-      self.oauth_config.on_signin(self, data, auth_info, provider)
     for referer, _label in self.session.get_flashes():
       referer = referer.encode("utf-8")
       break
     else:
       referer = "/"
+    if hasattr(self.oauth_config, "on_signin"):
+      self.oauth_config.on_signin(self, data, auth_info, provider)
     self.redirect(referer)
 
   @same_domain_referer
