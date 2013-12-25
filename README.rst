@@ -31,6 +31,7 @@ Supports:
 - I18N / Python, HTML and JavaScript
 - Japanese han-kaku characters / 半角
 - OAuth login / gae-simpleauth
+- Google OAuth authentication-based Users API (alternate of Google App Engine Users API)
 - generating sitemaps
 - sessions
 
