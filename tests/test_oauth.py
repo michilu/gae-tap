@@ -41,7 +41,7 @@ class OAuthSecretsTest(tests.util.TestCase):
   def test_secrets(self):
     self.app.get("/oauth/google", status=500)
     self.expected_logs = [
-      ('WARNING', 'gae/utils.py', '_get_consumer_info_for', "import_string() failed for 'oauth_config.localhost'. Possible ...found in '/Users/endoh/Documents/works/gogom/gae/oauth_config/__init__.pyc'.\n- 'oauth_config.localhost' not found."),
+      ('WARNING', 'gae/utils.py', 'oauth_config', "import_string() failed for 'oauth_config.localhost'. Possible reasons are...g' found in '.../gae/oauth_config/__init__.py...'.\n- 'oauth_config.localhost' not found."),
       ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', 'cannot import name default'),
     ]
 
