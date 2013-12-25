@@ -1179,6 +1179,27 @@ class User(object):
     assert self._id
     return ":".join((self._provider or self.default_provider, self._id))
 
+class Users(object):
+  def __init__(self, app):
+    self._app = app
+
+  def create_login_url(self, provider="google"):
+    return webapp2.uri_for("oauth_signin", _request= self._app.request, provider=provider)
+
+  def create_logout_url(self):
+    return self._create_logout_url
+
+  def get_current_user(self):
+    return self._get_current_user
+
+  @webapp2.cached_property
+  def _create_logout_url(self):
+    return webapp2.uri_for("oauth_signout", _request= self._app.request)
+
+  @webapp2.cached_property
+  def _get_current_user(self):
+    return User.load_from_session(self._app.session)
+
 # View Classes
 
 class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
@@ -1198,25 +1219,6 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
   use_zipfile = False
   with_google_analytics_tracking = False
 
-  class users(object):
-
-    @memoize
-    @staticmethod
-    def create_login_url(provider="google"):
-      return webapp2.uri_for("oauth_signin", provider=provider)
-
-    @memoize
-    @staticmethod
-    def create_logout_url():
-      return webapp2.uri_for("oauth_signout")
-
-    @webapp2.cached_property
-    def _get_current_user(self):
-      return User.load_from_session(webapp2.get_request())
-
-    def get_current_user(self):
-      return self._get_current_user
-
   def __init__(self, *argv, **kwargv):
     for method_name in METHOD_NAMES:
       method = getattr(self, method_name, None)
@@ -1231,6 +1233,7 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
     namespace = inspect.getmodule(self).__dict__.get(NAMESPACE_KEY)
     if namespace is not None:
       self.dispatch = in_namespace(namespace)(self.dispatch)
+    self.users = Users(self)
 
 
   # for WebOb.Response

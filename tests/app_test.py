@@ -94,7 +94,9 @@ class Sessions(utils.RequestHandler):
 class Users(utils.RequestHandler):
   @utils.session_read_only
   def get(self):
-    user = utils.User.load_from_session(self.session)
+    assert self.users.create_login_url() == "/oauth/google"
+    assert self.users.create_logout_url() == "/oauth/signout"
+    user = self.users.get_current_user()
     assert user is not None
     assert user.user_id() == u"google:ID"
     assert getattr(user, "locale", None) is None
