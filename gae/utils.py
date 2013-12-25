@@ -1676,8 +1676,11 @@ class OAuth(RequestHandler, SimpleAuthHandler):
       break
     else:
       referer = "/"
+    UserClass = getattr(self.oauth_config, "User", User)
     if hasattr(self.oauth_config, "on_signin"):
       self.oauth_config.on_signin(self, data, auth_info, provider)
+    else:
+      UserClass(data, auth_info, provider).set_to_session(self.session)
     self.redirect(referer)
 
   @same_domain_referer
