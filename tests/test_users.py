@@ -18,7 +18,9 @@ class UserTest(unittest.TestCase):
     assert user._provider is None
     assert user.nickname() is None
     assert user.email() is None
-    assert user.user_id() == u"google:ID"
+    assert user.user_id() == u"ID"
+    user._provider = "test"
+    assert user.user_id() == u"test:ID"
     assert user.locale == u"ja"
     with pytest.raises(AttributeError):
       user.gender

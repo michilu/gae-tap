@@ -98,7 +98,7 @@ class Users(utils.RequestHandler):
     assert self.users.create_logout_url() == "/oauth/signout"
     user = self.users.get_current_user()
     assert user is not None
-    assert user.user_id() == u"google:ID"
+    assert user.user_id() == u"ID"
     assert getattr(user, "locale", None) is None
 
   @utils.session

@@ -884,7 +884,10 @@ class User(object):
 
   def user_id(self):
     assert self._id
-    return ":".join((self._provider or self.default_provider, self._id))
+    if self._provider:
+      return ":".join((self._provider, self._id))
+    else:
+      return self._id
 
 class Users(object):
   def __init__(self, app):
