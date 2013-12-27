@@ -40,3 +40,6 @@ class UsersTest(tests.util.TestCase):
   def test_users(self):
     self.app.post("/test/users")
     self.app.get("/test/users")
+
+  def test_login_required(self):
+    self.app.get("/test/login_required")

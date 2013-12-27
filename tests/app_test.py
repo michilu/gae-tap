@@ -108,6 +108,11 @@ class Users(utils.RequestHandler):
     assert user is not None
     user.set_to_session(self.session)
 
+class LoginRequired(utils.RequestHandler):
+  @utils.login_required
+  def get(self):
+    pass
+
 class Namespace(utils.RequestHandler):
   def get(self):
     self.response.write(namespace_manager.get_namespace())
@@ -135,6 +140,7 @@ routes = [
   webapp2.Route("/proxy", Proxy),
   webapp2.Route("/sessions", Sessions),
   webapp2.Route("/users", Users),
+  webapp2.Route("/login_required", LoginRequired),
   webapp2.Route("/namespace", Namespace),
   webapp2.Route("/zipfile", ZipFile),
 ]
