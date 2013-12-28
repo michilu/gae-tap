@@ -433,6 +433,7 @@ def config_to_dict(config):
 
 def divide(sequence, size):
   """ 3 times faster than idivide
+
   >>> [i for i in divide(range(10), 3)]
   [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
   """
@@ -443,6 +444,7 @@ def divide(sequence, size):
 
 def idivide(iterable, size):
   """ Yields items from an iterator in iterable chunks
+
   >>> [list(i) for i in idivide(iter(xrange(10)), 3)]
   [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
   """
@@ -452,6 +454,7 @@ def idivide(iterable, size):
 
 def idivide2(iterable, size):
   """ 2 times faster than idivide
+
   >>> [i for i in idivide2(iter(xrange(10)), 3)]
   [(0, 1, 2), (3, 4, 5), (6, 7, 8)]
   """
