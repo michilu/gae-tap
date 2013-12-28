@@ -181,4 +181,7 @@ watchlion:
 shell:
 	@cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME ipython -c "import utils; get_ipython().magic('doctest_mode')" -i
 
-.PHONY: all template clean test runserver deploy update_cron update_queues
+doc:
+	cd doc; PYTHONPATH=$$GAE_HOME make html
+
+.PHONY: all template clean test runserver deploy update_cron update_queues doc

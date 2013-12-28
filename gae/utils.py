@@ -146,7 +146,7 @@ def sys_path_append():
           zipfile_path = os.path.join(path, zipfile)
           if zipfile_path not in sys.path:
             sys.path.append(zipfile_path)
-  if is_shell:
+  if is_shell or sys.argv[0].endswith("/sphinx-build"):
     import google
     base = os.path.join(os.path.dirname(google.__file__), "../lib/")
     for webapp2 in ["webapp2-2.5.2", "webapp2"]:
@@ -433,6 +433,7 @@ def config_to_dict(config):
 
 def divide(sequence, size):
   """ 3 times faster than idivide
+
   >>> [i for i in divide(range(10), 3)]
   [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
   """
@@ -443,6 +444,7 @@ def divide(sequence, size):
 
 def idivide(iterable, size):
   """ Yields items from an iterator in iterable chunks
+
   >>> [list(i) for i in idivide(iter(xrange(10)), 3)]
   [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
   """
@@ -452,6 +454,7 @@ def idivide(iterable, size):
 
 def idivide2(iterable, size):
   """ 2 times faster than idivide
+
   >>> [i for i in idivide2(iter(xrange(10)), 3)]
   [(0, 1, 2), (3, 4, 5), (6, 7, 8)]
   """

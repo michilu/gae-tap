@@ -17,6 +17,7 @@ syntax: glob
 .sass-cache
 Gemfile.lock
 datastore.db
+doc/_*
 gae/oauth_config/*.py
 gae/site-packages/*.zip
 gae/site-packages/packages
