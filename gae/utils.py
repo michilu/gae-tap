@@ -1157,12 +1157,11 @@ def same_domain_referer(func):
 def session(func):
 
   @wraps(func)
-  @ndb.tasklet
   def inner(self, *argv, **kwargv):
     self.session_store = sessions.get_store(request=self.request)
     self.session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
     try:
-      func(self, *argv, **kwargv)
+      ndb.toplevel(func)(self, *argv, **kwargv)
     finally:
       self.session_store.save_sessions(self.response)
 
@@ -1171,7 +1170,6 @@ def session(func):
 def session_read_only(func):
 
   @wraps(func)
-  @ndb.tasklet
   def inner(self, *argv, **kwargv):
     self.session_store = sessions.get_store(request=self.request)
     self.session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
@@ -1182,7 +1180,6 @@ def session_read_only(func):
 def login_required(func):
 
   @wraps(func)
-  @ndb.tasklet
   def inner(self, *argv, **kwargv):
     self.session_store = sessions.get_store(request=self.request)
     self.session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
