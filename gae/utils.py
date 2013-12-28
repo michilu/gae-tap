@@ -146,7 +146,7 @@ def sys_path_append():
           zipfile_path = os.path.join(path, zipfile)
           if zipfile_path not in sys.path:
             sys.path.append(zipfile_path)
-  if is_shell:
+  if is_shell or sys.argv[0].endswith("/sphinx-build"):
     import google
     base = os.path.join(os.path.dirname(google.__file__), "../lib/")
     for webapp2 in ["webapp2-2.5.2", "webapp2"]:

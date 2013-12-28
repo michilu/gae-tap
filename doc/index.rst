@@ -11,7 +11,12 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+.. contents::
+  :local:
 
+.. automodule:: utils
+  :members:
+  :undoc-members:
 
 Indices and tables
 ==================
