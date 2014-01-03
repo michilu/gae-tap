@@ -33,11 +33,13 @@
    %i.icon-arrow-right
 {% endif %}
 {% block footer %}
-%footer(style="text-align:center;")
- {% include "admin/feedback.html" %}
- &copy;
- %a(href="//{{ domain }}{{ base_path }}" title="{{ title }}")>< {{ title }}
- &nbsp;{{ since }}
- %span.text-muted {{ VERSION }}
+%footer(style="margin-top:100px;")
+ %div(style="text-align:center;")
+  &copy;
+  %a(href="//{{ domain }}{{ base_path }}" title="{{ title }}")>< {{ title }}
+  &nbsp;{{ since }}
+  %span.text-muted {{ VERSION }}
+  {% include "admin/feedback_link.html" %}
+{% include "admin/feedback_form.html" %}
 {% endblock footer %}
 {% endblock body %}

@@ -1,0 +1,18 @@
+{% if FEEDBACK_FORMKEY %}
+{% if not gettext %}{% set gettext = NULL_GETTEXT %}{%set _ = NULL_GETTEXT %}{% endif %}
+%form#feedback.modal.fade(name="feedbackForm" action="https://docs.google.com/spreadsheet/formResponse?formkey={{ FEEDBACK_FORMKEY }}" method="POST"
+                          form-background style="width:600px;" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                          style="text-align:none;")
+ .modal-dialog
+  .modal-content
+   .modal-header
+    %a.close(data-dismiss="modal" aria-hidden="true") &times;
+    %h3#modalLabel.modal-title {{ _("feedback") }}
+   .modal-body
+    %textarea#entry_0.form-control(name="entry.0.single" rows="8" ng-model="description" required)
+    %input#entry_1(type="hidden" name="entry.1.single" value="{{ VERSION }}")
+    %input#entry_2(type="hidden" name="entry.2.single")
+   .modal-footer
+    %a.btn(data-dismiss="modal" aria-hidden="true") {{ _("close") }}
+    %button.btn.btn-primary(type="submit" ng-disabled="!feedbackForm.$valid") {{ _("send feedback") }}
+{% endif %}
