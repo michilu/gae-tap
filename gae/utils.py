@@ -154,9 +154,13 @@ def sys_path_append():
       if os.path.exists(path):
         sys.path.append(path)
         break
-    for path in ["jinja2"]:
+    for path in ["endpoints-1.0", "protorpc-1.0", "jinja2"]:
       sys.path.append(os.path.join(base, path))
-    #TODO: fix path protorpc...
+  elif config.IS_TEST:
+    import google
+    base = os.path.join(os.path.dirname(google.__file__), "../lib/")
+    for path in ["endpoints-1.0"]:
+      sys.path.append(os.path.join(base, path))
   return True
 sys_path_append()
 
