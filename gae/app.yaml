@@ -48,6 +48,8 @@ handlers:
   login: admin
 - url: /_ah/(start|stop|warmup)
   script: utils.app
+- url: /_ah/spi/.*
+  script: api.app
 - url: /_tap/(generate_sitemap|maintain_response|response_cache)
   script: utils.app
   login: admin
