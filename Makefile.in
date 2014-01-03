@@ -108,9 +108,12 @@ clean:
 	rm -rf $(GAE_LIB_PACKAGES_DIR)
 
 $(VERSION):
-	git log -1 --format="%h" > $@
+	@if [ "$(strip $(shell git log -1 --format='%h'))" != "$(strip $(shell [ -f $@ ] && cat $@))" ] ; then\
+		echo 'git log -1 --format="%h" > $@' ;\
+		git log -1 --format="%h" > $@ ;\
+	fi;
 
-template: $(VERSION) $(GAE_LIB_PACKAGES_DIR) $(COMPILED_ZIP_PATH)
+template: $(GAE_LIB_PACKAGES_DIR) $(COMPILED_ZIP_PATH)
 
 js: $(JS) $(MINJS) $(TESTACULAR_JS)
 
@@ -118,9 +121,12 @@ css: $(MINCSS) $(CSS)
 
 mo: $(PYMAPPING) $(JSMAPPING) $(POT) $(MO)
 
-$(COMPILED_ZIP_PATH): $(HTML) $(MOBHTML)
+
+$(GAE_LIB_DIR):
+	mkdir -p $@
+
+$(COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION)
 	jinja2precompiler -c $(TEMPLATE_DIR_PATH)/
-	mkdir -p $(GAE_LIB_DIR)
 	zip -FS -j $(COMPILED_ZIP_PATH) $(TEMPLATE_DIR_PATH)/*.pyc
 
 $(STATIC_ROOT_ZIP_PATH): $(STATIC_ROOT)
@@ -132,16 +138,16 @@ $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAG
 	pip install --use-mirrors --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
 
 $(FANSTATIC_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
-	rm -rf $(FANSTATIC_DIR)
-	mkdir -p $(FANSTATIC_DIR)
+	rm -rf $@
+	mkdir -p $@
 	cd $(GAE_DIR); mkfanstaticsymlink --sys_path_appends=$(GAE_LIB)/packages --versioning --versioning_use_md5 --base_url=static --publisher_signature=lib
 
 $(GAE_LIB_PACKAGES_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
-	mkdir -p $(GAE_LIB_PACKAGES_DIR)
-	-packages="$(filter-out js %.egg-info %.pth %.py %.pyc %.zip,$(shell ls $(GAE_LIB_PACKAGES_DIR)))";\
+	mkdir -p $@
+	-packages="$(filter-out js %.egg-info %.pth %.py %.pyc %.zip,$(shell ls $@))";\
 	for package in $$packages; do\
-		if [ -d $(GAE_LIB_PACKAGES_DIR)/$$package ]; then\
-			pip zip --no-pyc --path=$(GAE_LIB_PACKAGES_DIR) $$package;\
+		if [ -d $@/$$package ]; then\
+			pip zip --no-pyc --path=$@ $$package;\
 		fi;\
 	done
 
@@ -157,7 +163,7 @@ runserver: $(GAE_LIB_PACKAGES_DIR) template css js $(FANSTATIC_DIR)
 
 deploy: update_frontends update_backends
 
-update_frontends: all
+update_frontends: all $(COMPILED_ZIP_PATH)
 	python2.7 $$GAE_HOME/appcfg.py update $(GAE_DIR)
 
 update_backends: all
@@ -184,4 +190,4 @@ shell:
 doc:
 	cd doc; PYTHONPATH=$$GAE_HOME make html
 
-.PHONY: all template clean test runserver deploy update_cron update_queues doc
+.PHONY: all template clean test runserver deploy update_cron update_queues doc $(VERSION)
