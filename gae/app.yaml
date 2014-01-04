@@ -70,6 +70,7 @@ skip_files: |
   (#.*#)|
   (.*\.coffee)|
   (.*\.haml)|
+  (.*\.mapping)|
   (.*\.po)|
   (.*\.pot)|
   (.*\.py[co])|
@@ -79,6 +80,7 @@ skip_files: |
   (.*\.yaml)|
   (.*~)|
   (\..*)|
+  (static/version)|
   # if skip raw template files, define `config_JINJA2_FORCE_COMPILED = True` in appengine_config.py for dev_appserver
   #(templates\/.*)|
   (htmlcov\/.*)|
