@@ -24,6 +24,7 @@ Supports:
 - Google App Engine / Python 2.7
 
   - Appstats
+  - Google Cloud Endpoints API
   - NDB Asynchronous Operation
   - Python Module Configuration
 
