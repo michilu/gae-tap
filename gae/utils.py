@@ -89,6 +89,7 @@ class ConfigDefaults(object):
   IS_TEST = "unittest" in sys.modules.keys()
   JINJA2_COMPILED_PATH = "site-packages/templates_compiled.zip"
   JINJA2_TEMPLATE_PATH = ("templates",)
+  JINJA2_FORCE_COMPILED = not DEBUG
   JOB_EMAIL_RECIPIENT = None
   MEDIA_URL = ""
   RESPONSE_CACHE_SIZE = 0x10000 # 65536
@@ -484,6 +485,7 @@ def get_app():
       "compiled_path": os.path.join(DIRNAME, config.JINJA2_COMPILED_PATH),
       "template_path": tuple([os.path.join(DIRNAME, path) for path in config.JINJA2_TEMPLATE_PATH]),
       "environment_args": {"extensions": ["jinja2.ext.i18n"]},
+      "force_compiled": config.JINJA2_FORCE_COMPILED,
     },
     "webapp2_extras.sessions": {
       "cookie_name": "__s",
@@ -690,7 +692,7 @@ class Jinja2Factory(jinja2.Jinja2):
     if "loader" not in kwargs:
       template_path = jinja2_config["template_path"]
       compiled_path = jinja2_config["compiled_path"]
-      use_compiled = not app.debug or jinja2_config["force_compiled"]
+      use_compiled = jinja2_config["force_compiled"]
 
       if compiled_path and use_compiled:
         kwargs["loader"] = jinja2.jinja2.ModuleLoader(compiled_path)
