@@ -1165,8 +1165,7 @@ def session(func):
 
   @wraps(func)
   def inner(self, *argv, **kwargv):
-    self.session_store = sessions.get_store(request=self.request)
-    self.session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
+    self.set_session_store()
     try:
       ndb.toplevel(func)(self, *argv, **kwargv)
     finally:
@@ -1178,9 +1177,8 @@ def session_read_only(func):
 
   @wraps(func)
   def inner(self, *argv, **kwargv):
-    self.session_store = sessions.get_store(request=self.request)
-    self.session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
-    func(self, *argv, **kwargv)
+    self.set_session_store()
+    ndb.toplevel(func)(self, *argv, **kwargv)
 
   return inner
 
@@ -1303,6 +1301,11 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
       return self.session_store.get_session()
     except AttributeError:
       return
+
+  def set_session_store(self):
+    if not hasattr(self, "session_store"):
+      self.session_store = sessions.get_store(request=self.request)
+      self.session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
 
   @property
   def translation(self):
