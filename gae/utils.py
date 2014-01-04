@@ -1341,6 +1341,8 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
           else:
             location = "{0}?l={1}".format(self.request.path_qs, language)
           return self.redirect(location)
+      else:
+        self.set_session_store()
       self.translation
 
     try:
