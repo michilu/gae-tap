@@ -9,7 +9,14 @@
 {% block main %}
 %h1 {{ title }}
 %ul
- i18n
+ i18n: &rArr;
+
+ {% if language == "ja" %}
+ %a(href="?") English
+ {% else %}
+ %a(href="?l=ja") 日本語
+ {% endif %}
+
  %li {{ i18n_ }}
  %li {{ i18n_gettext }}
  %li {{ _("Boa") }}
