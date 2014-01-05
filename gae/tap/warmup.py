@@ -74,12 +74,16 @@ def sys_path_append():
 sys_path_append()
 
 
+from js.angular import angular_cookies, angular_resource
+from js.bootstrap import bootstrap
+import tap
 
-class WarmUp(webapp2.RequestHandler):
+class WarmUp(tap.RequestHandler):
 
+  @tap.head(angular_cookies, angular_resource, bootstrap)
   def get(self):
     pass
 
 app = webapp2.WSGIApplication([
-    ("/_ah/warmup", WarmUp),
+  ("/_ah/warmup", WarmUp),
 ])
