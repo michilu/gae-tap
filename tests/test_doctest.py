@@ -5,7 +5,7 @@ from doctest import testmod
 import sys
 
 import tests.util
-import utils
+import tap
 
-if testmod(utils).failed:
+if testmod(tap).failed:
   sys.exit(1)

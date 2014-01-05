@@ -6,7 +6,7 @@ from random import random
 import os
 
 import tests.util
-import utils
+import tap
 
 from google.appengine.api import taskqueue
 from google.appengine.ext import ndb
@@ -17,8 +17,8 @@ class CacheTest(tests.util.TestCase):
 
   def test_cache(self):
 
-    class App(utils.RequestHandler):
-      @utils.cache(60)
+    class App(tap.RequestHandler):
+      @tap.cache(60)
       def get(self):
         self.response.write(random())
 
@@ -38,8 +38,8 @@ class CacheTest(tests.util.TestCase):
 
   def test_period(self):
 
-    class App(utils.RequestHandler):
-      @utils.cache(1)
+    class App(tap.RequestHandler):
+      @tap.cache(1)
       def get(self):
         self.response.write(random())
 
@@ -49,8 +49,8 @@ class CacheTest(tests.util.TestCase):
 
   def test_period_zero(self):
 
-    class App(utils.RequestHandler):
-      @utils.cache(0)
+    class App(tap.RequestHandler):
+      @tap.cache(0)
       def get(self):
         self.response.write(random())
 
@@ -60,8 +60,8 @@ class CacheTest(tests.util.TestCase):
 
   def test_period_minus(self):
 
-    class App(utils.RequestHandler):
-      @utils.cache(-1)
+    class App(tap.RequestHandler):
+      @tap.cache(-1)
       def get(self):
         self.response.write(random())
 
@@ -71,8 +71,8 @@ class CacheTest(tests.util.TestCase):
 
   def test_period_none(self):
 
-    class App(utils.RequestHandler):
-      @utils.cache()
+    class App(tap.RequestHandler):
+      @tap.cache()
       def get(self):
         self.response.write(random())
 
@@ -82,8 +82,8 @@ class CacheTest(tests.util.TestCase):
 
   def test_expire(self):
 
-    class App(utils.RequestHandler):
-      @utils.cache(60, expire=datetime(2100, 1, 1))
+    class App(tap.RequestHandler):
+      @tap.cache(60, expire=datetime(2100, 1, 1))
       def get(self):
         self.response.write(random())
 
@@ -93,8 +93,8 @@ class CacheTest(tests.util.TestCase):
 
   def test_expired(self):
 
-    class App(utils.RequestHandler):
-      @utils.cache(60, expire=datetime(2000, 1, 1))
+    class App(tap.RequestHandler):
+      @tap.cache(60, expire=datetime(2000, 1, 1))
       def get(self):
         self.response.write(random())
 
@@ -104,8 +104,8 @@ class CacheTest(tests.util.TestCase):
 
   def test_empty(self):
 
-    class App(utils.RequestHandler):
-      @utils.cache(60)
+    class App(tap.RequestHandler):
+      @tap.cache(60)
       def get(self):
         pass
 
@@ -118,8 +118,8 @@ class CacheTest(tests.util.TestCase):
 
   def test_empty_true(self):
 
-    class App(utils.RequestHandler):
-      @utils.cache(60, empty=True)
+    class App(tap.RequestHandler):
+      @tap.cache(60, empty=True)
       def get(self):
         pass
 

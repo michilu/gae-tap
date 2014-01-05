@@ -7,7 +7,7 @@ import unittest
 import pytest
 
 import tests.util
-import utils
+import tap
 
 from google.appengine.api import taskqueue
 from google.appengine.ext import ndb
@@ -20,12 +20,12 @@ class TestRingBuffer(tests.util.TestCase):
   @ndb.synctasklet
   def test(self):
     with pytest.raises(ValueError):
-      utils.RingBuffer(tag="tag", size=0)
+      tap.RingBuffer(tag="tag", size=0)
     with pytest.raises(ValueError):
-      utils.RingBuffer(tag="tag", size=1000)
-    utils.RingBuffer(tag="tag", size=999)
+      tap.RingBuffer(tag="tag", size=1000)
+    tap.RingBuffer(tag="tag", size=999)
 
-    buf = utils.RingBuffer(tag="tag")
+    buf = tap.RingBuffer(tag="tag")
     assert list(buf.get()) == []
     self.execute_tasks("default")
     yield buf.clear()
@@ -41,10 +41,10 @@ class TestRingBuffer(tests.util.TestCase):
     self.execute_tasks("default")
 
     queue = taskqueue.Queue("ringbuffer")
-    buf = utils.RingBuffer(tag="tag", size=1)
+    buf = tap.RingBuffer(tag="tag", size=1)
     assert list(buf.get()) == [2]
     assert queue.fetch_statistics().tasks == 3
-    assert [utils.loads(task.payload) for task in queue.lease_tasks(0, 1000)] == [0, 1, 2]
+    assert [tap.loads(task.payload) for task in queue.lease_tasks(0, 1000)] == [0, 1, 2]
     self.execute_tasks("default")
     assert queue.fetch_statistics().tasks == 1
     assert list(buf.get()) == [2]
@@ -57,7 +57,7 @@ class TestRingBuffer(tests.util.TestCase):
     cache = buf._get._cache
     key = buf._get._key
     args = (buf.queue_name, buf.tag, buf.size)
-    yield utils.memoize_clear(cache, key, args, use_memcache=True)
+    yield tap.memoize_clear(cache, key, args, use_memcache=True)
 
 class TestTransientError(tests.util.TestCase):
   root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
@@ -72,4 +72,4 @@ class TestTransientError(tests.util.TestCase):
 
   def test(self):
     args = ("ringbuffer", "tag", "999")
-    assert list(utils.RingBuffer(tag="tag")._get._func(*args)) == []
+    assert list(tap.RingBuffer(tag="tag")._get._func(*args)) == []

@@ -13,10 +13,10 @@ from google.appengine.api import taskqueue
 import pytest
 
 import tests.util
-from utils import SitemapMixin
-import utils
+from tap import SitemapMixin
+import tap
 
-class Sitemap(utils.SitemapMixin):
+class Sitemap(tap.SitemapMixin):
   changefreq = "daily"
   priority = 0.5
 

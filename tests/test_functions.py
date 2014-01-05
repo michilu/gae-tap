@@ -9,7 +9,7 @@ import unittest
 import pytest
 
 import tests.util
-import utils
+import tap
 
 from google.appengine.api import mail, taskqueue
 from google.appengine.ext import deferred, ndb
@@ -40,36 +40,36 @@ class OverQuotaError():
 
 class TestFunctions(unittest.TestCase):
   def test_base_encode(self):
-    assert utils.base_encode("test", 0) == "t"
+    assert tap.base_encode("test", 0) == "t"
 
   def test_encodeURI(self):
-    assert utils.encodeURI(" /;") == "%20/;"
+    assert tap.encodeURI(" /;") == "%20/;"
 
   def test_encodeURIComponent(self):
-    assert utils.encodeURIComponent(" /;") == "%20%2F%3B"
+    assert tap.encodeURIComponent(" /;") == "%20%2F%3B"
 
   @ndb.synctasklet
   def test_get_keys_only(self):
-    result = yield utils.get_keys_only(Model.query())
+    result = yield tap.get_keys_only(Model.query())
     assert result is None
-    result =  yield utils.get_keys_only(OverQuotaError())
+    result =  yield tap.get_keys_only(OverQuotaError())
     assert result
 
   @ndb.synctasklet
   def test_fetch_keys_only(self):
-    result = yield utils.fetch_keys_only(Model.query())
+    result = yield tap.fetch_keys_only(Model.query())
     assert result == []
-    result = yield utils.fetch_keys_only(OverQuotaError())
+    result = yield tap.fetch_keys_only(OverQuotaError())
     assert result
 
   def test_send_exception_report(self):
     with tests.util.set_config(DEBUG=False, JOB_EMAIL_RECIPIENT=True):
       with pytest.raises(mail.InvalidEmailError):
-        assert utils.send_exception_report() == ""
+        assert tap.send_exception_report() == ""
 
   def test_exception_report(self):
 
-    @utils.exception_report
+    @tap.exception_report
     def f():
       raise
 
@@ -78,7 +78,7 @@ class TestFunctions(unittest.TestCase):
 
   def test_no_retry(self):
 
-    @utils.no_retry
+    @tap.no_retry
     def f():
       raise
 
@@ -90,7 +90,7 @@ class TestFunctions(unittest.TestCase):
   def test_memoize(self):
 
     @ndb.toplevel
-    @utils.memoize(use_memcache=True)
+    @tap.memoize(use_memcache=True)
     def f(x):
       return random()
 
@@ -102,17 +102,17 @@ class TestFunctions(unittest.TestCase):
 
 class TestCacheMixin(unittest.TestCase):
   def test_get_key_name(self):
-    assert utils.CacheMixin.get_key_name("") == "1B2M2Y8AsgTpgAmY7PhCfg"
-    assert utils.CacheMixin.get_key_name("/") == "/"
-    assert utils.CacheMixin.get_key_name("/"*22) == "//////////////////////"
-    assert utils.CacheMixin.get_key_name("/"*23) == "qaf6bjEFhOwOKQzsIeCiIA"
+    assert tap.CacheMixin.get_key_name("") == "1B2M2Y8AsgTpgAmY7PhCfg"
+    assert tap.CacheMixin.get_key_name("/") == "/"
+    assert tap.CacheMixin.get_key_name("/"*22) == "//////////////////////"
+    assert tap.CacheMixin.get_key_name("/"*23) == "qaf6bjEFhOwOKQzsIeCiIA"
 
 class TestRequestHandler(unittest.TestCase):
   def test_to_cache_key(self):
-    assert utils.RequestHandler.to_cache_key("") == "1B2M2Y8AsgTpgAmY7PhCfg"
-    assert utils.RequestHandler.to_cache_key("/") == "/"
-    assert utils.RequestHandler.to_cache_key("/"*22) == "//////////////////////"
-    assert utils.RequestHandler.to_cache_key("/"*23) == "qaf6bjEFhOwOKQzsIeCiIA"
+    assert tap.RequestHandler.to_cache_key("") == "1B2M2Y8AsgTpgAmY7PhCfg"
+    assert tap.RequestHandler.to_cache_key("/") == "/"
+    assert tap.RequestHandler.to_cache_key("/"*22) == "//////////////////////"
+    assert tap.RequestHandler.to_cache_key("/"*23) == "qaf6bjEFhOwOKQzsIeCiIA"
 
 class AppTest(tests.util.TestCase):
   root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
@@ -146,16 +146,16 @@ class AppTest(tests.util.TestCase):
 class TestTokenBucket(unittest.TestCase):
   def test_is_acceptable(self):
     with pytest.raises(ValueError):
-      utils.TokenBucket(rate=3, size=10)
+      tap.TokenBucket(rate=3, size=10)
 
-    b = utils.TokenBucket(rate=1, size=2)
-    b.is_acceptable = ndb.toplevel(utils.make_synctasklet(b.is_acceptable_async))
+    b = tap.TokenBucket(rate=1, size=2)
+    b.is_acceptable = ndb.toplevel(tap.make_synctasklet(b.is_acceptable_async))
     assert b.is_acceptable() is True
     assert b.is_acceptable() is True
     assert b.is_acceptable() is False
 
-    b = utils.TokenBucket(rate=1, size=1, prefix="test")
-    b.is_acceptable = ndb.toplevel(utils.make_synctasklet(b.is_acceptable_async))
+    b = tap.TokenBucket(rate=1, size=1, prefix="test")
+    b.is_acceptable = ndb.toplevel(tap.make_synctasklet(b.is_acceptable_async))
     assert b.is_acceptable() is True
     assert b.is_acceptable() is False
     assert b.is_acceptable(key="test") is True
@@ -169,12 +169,12 @@ class TestDeferredRun(tests.util.TestCase):
 
   def test(self):
     with pytest.raises(deferred.PermanentTaskFailure):
-      assert utils.deferred_run(None) is None
+      assert tap.deferred_run(None) is None
 
     data = pickle.dumps((func, tuple(), dict()))
     queue = taskqueue.Queue("default")
     assert queue.fetch_statistics().tasks == 0
-    assert utils.deferred_run(data) is None
+    assert tap.deferred_run(data) is None
     assert queue.fetch_statistics().tasks == 1
 
 class TestWaitEach(tests.util.TestCase):
@@ -195,11 +195,11 @@ class TestWaitEach(tests.util.TestCase):
     raise ndb.Return("success")
 
   def test_wait_each(self):
-    futures = utils.wait_each([self.failer(), self.succeser()])
+    futures = tap.wait_each([self.failer(), self.succeser()])
     assert futures.next() == "success"
     self.expected_logs = [
       ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator failer(test_functions.py:...) raised Exception()'),
-      ('WARNING', 'gae/utils.py', 'wait_each', ''),
+      ('WARNING', 'gae/tap/__init__.py', 'wait_each', ''),
     ]
 
 class TestWaitMap(tests.util.TestCase):
@@ -207,11 +207,11 @@ class TestWaitMap(tests.util.TestCase):
 
   def setUp(self):
     super(TestWaitMap, self).setUp()
-    self._WAIT_MAP_SIZE_org = utils.config.WAIT_MAP_SIZE
-    utils.config.WAIT_MAP_SIZE = 1
+    self._WAIT_MAP_SIZE_org = tap.config.WAIT_MAP_SIZE
+    tap.config.WAIT_MAP_SIZE = 1
 
   def tearDown(self):
-    utils.config.WAIT_MAP_SIZE = self._WAIT_MAP_SIZE_org
+    tap.config.WAIT_MAP_SIZE = self._WAIT_MAP_SIZE_org
     super(TestWaitMap, self).tearDown()
 
   @ndb.tasklet
@@ -229,9 +229,9 @@ class TestWaitMap(tests.util.TestCase):
     raise ndb.Return("success")
 
   def test_wait_map(self):
-    futures = utils.wait_map(lambda x:x, [self.failer(), self.succeser()])
+    futures = tap.wait_map(lambda x:x, [self.failer(), self.succeser()])
     assert futures.next() == "success"
     self.expected_logs = [
       ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator failer(test_functions.py:...) raised Exception()'),
-      ('WARNING', 'gae/utils.py', 'wait_map', ''),
+      ('WARNING', 'gae/tap/__init__.py', 'wait_map', ''),
     ]

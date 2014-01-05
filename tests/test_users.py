@@ -7,14 +7,14 @@ import unittest
 import pytest
 
 import tests.util
-import utils
+import tap
 
 class UserTest(unittest.TestCase):
   def test_user(self):
-    user = utils.User()
+    user = tap.User()
     with pytest.raises(AssertionError):
       user.user_id()
-    user = utils.User(data={"id": u"ID", u"locale": u"ja"}, provider="google")
+    user = tap.User(data={"id": u"ID", u"locale": u"ja"}, provider="google")
     assert user._provider is None
     assert user.nickname() is None
     assert user.email() is None

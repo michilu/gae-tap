@@ -25,13 +25,13 @@ is_server_error = re.compile(r"^.*?\s5\d{2}\s.*?$").match
 # initialize
 if os.path.basename(os.path.abspath(".")) != "gae":
   os.chdir("gae")
-import utils
+import tap
 if os.path.basename(os.path.abspath(".")) == "gae":
   os.chdir("../")
 
 @contextmanager
 def set_config(**kwargv):
-  config = utils.config
+  config = tap.config
   origin = dict()
   for key, value in kwargv.iteritems():
     if hasattr(config, key):
@@ -115,7 +115,7 @@ class TestCase(unittest.TestCase):
       cookiejar = cookielib.CookieJar()
     else:
       cookiejar = None
-    self.app = TestApp(utils.app, domain=self.domain, cookiejar=cookiejar)
+    self.app = TestApp(tap.app, domain=self.domain, cookiejar=cookiejar)
     # os.environ
     self.origin_environ = dict()
     if "HTTP_HOST" not in self.environ.viewkeys():

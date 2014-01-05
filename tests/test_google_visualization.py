@@ -9,7 +9,7 @@ import atom.service
 import pytest
 
 import tests.util
-import utils
+import tap
 
 from google.appengine.ext import ndb
 from minimock import mock, restore
@@ -37,7 +37,7 @@ class TestGoogleVisualization(tests.util.TestCase):
 
   def setUp(self):
     super(TestGoogleVisualization, self).setUp()
-    mock("utils.AppEngineHttpClient.request", returns=AuthResponse())
+    mock("tap.AppEngineHttpClient.request", returns=AuthResponse())
     mock("atom.service.AtomService.request", returns=EndpointResponse())
 
   def tearDown(self):
@@ -45,24 +45,24 @@ class TestGoogleVisualization(tests.util.TestCase):
     super(TestGoogleVisualization, self).tearDown()
 
   def test(self):
-    gv = utils.GoogleVisualization(username="username", password="password", key="dummy")
-    assert isinstance(gv, utils.GoogleVisualization)
+    gv = tap.GoogleVisualization(username="username", password="password", key="dummy")
+    assert isinstance(gv, tap.GoogleVisualization)
     assert list(gv.query("select *")) == [{u'A': u'Japan', u'Population Density': 339.0}]
 
     mock("atom.service.AtomService.request", returns=ErrorResponse())
     assert list(gv.query("select *")) == []
-    self.expected_logs = [('ERROR', 'gae/utils.py', 'query', "[{u'reason': u'invalid_query', u'detailed_message': u'Query parse error: Encountered...', u'message': u'Invalid query'}]")]
+    self.expected_logs = [('ERROR', 'gae/tap/__init__.py', 'query', "[{u'reason': u'invalid_query', u'detailed_message': u'Query parse error: Encountered...', u'message': u'Invalid query'}]")]
 
   def test_converter(self):
-    gv = utils.GoogleVisualization()
+    gv = tap.GoogleVisualization()
     assert gv._converter("// Data table response\ngoogle.visualization.Query.setResponse({});") == {}
     assert gv._converter("// Data table response\n/*\n*/\nconsole.log(/*//*/{});//)") == {}
 
   def test_converter_raises(self):
-    gv = utils.GoogleVisualization()
+    gv = tap.GoogleVisualization()
     with pytest.raises(ValueError):
       assert gv._converter("") == {}
-    self.expected_logs = [('WARNING', 'gae/utils.py', '_converter', 'GoogleVisualization._converter: data is below.\n')]
+    self.expected_logs = [('WARNING', 'gae/tap/__init__.py', '_converter', 'GoogleVisualization._converter: data is below.\n')]
 
 class UrlfetchResult(object):
   content = ""
@@ -85,7 +85,7 @@ class TestAppEngineHttpClient(tests.util.TestCase):
     super(TestAppEngineHttpClient, self).tearDown()
 
   def test(self):
-    client = utils.AppEngineHttpClient()
+    client = tap.AppEngineHttpClient()
     assert client.request("GET", "", data=list("TEST"), headers={"TEST": "TEST"})
     assert client.request("POST", "", data="TEST")
     assert client.request("PUT", "")

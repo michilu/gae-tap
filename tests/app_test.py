@@ -1,6 +1,6 @@
 from random import random
 import zipfile
-import utils
+import tap
 
 from google.appengine.api import namespace_manager
 from google.appengine.ext import ndb
@@ -10,11 +10,11 @@ import webapp2
 class Model(ndb.Model):
   pass
 
-class FetchPage(utils.RequestHandler):
+class FetchPage(tap.RequestHandler):
   def get(self):
     self.fetch_page_async(Model.query())
 
-class Translation(utils.RequestHandler):
+class Translation(tap.RequestHandler):
   i18n = True
   i18n_domain = "sample"
   i18n_redirect = True
@@ -24,36 +24,36 @@ class Translation(utils.RequestHandler):
     i18n_gettext = gettext("Anaconda")
     self.render_response("sample.html", locals())
 
-class ForMobile(utils.RequestHandler):
-  @utils.cache(60)
+class ForMobile(tap.RequestHandler):
+  @tap.cache(60)
   def get(self):
     ndb.get_context().memcache_get("sample")
     self.render_response("sample.html", locals(), featurephone=True)
 
-class OverQuotaError(utils.RequestHandler):
+class OverQuotaError(tap.RequestHandler):
   def get(self):
     raise apiproxy_errors.OverQuotaError
 
-class InternalServerError(utils.RequestHandler):
+class InternalServerError(tap.RequestHandler):
   def get(self):
     assert False
 
-class Head(utils.RequestHandler):
-  @utils.head()
+class Head(tap.RequestHandler):
+  @tap.head()
   def get(self):
     self.response._app_iter = []
 
-class CORS(utils.RequestHandler):
-  @utils.cors()
+class CORS(tap.RequestHandler):
+  @tap.cors()
   def options(self):
     pass
 
-  @utils.cors(origin=lambda:"test")
+  @tap.cors(origin=lambda:"test")
   def get(self):
     pass
 
-rate_limit = utils.rate_limit(rate=1, size=2, key=lambda self: self.request.remote_addr, tag="RateLimit")
-class RateLimit(utils.RequestHandler):
+rate_limit = tap.rate_limit(rate=1, size=2, key=lambda self: self.request.remote_addr, tag="RateLimit")
+class RateLimit(tap.RequestHandler):
   @rate_limit
   def get(self):
     pass
@@ -62,37 +62,37 @@ class RateLimit(utils.RequestHandler):
   def post(self):
     pass
 
-  @utils.rate_limit(rate=1, size=1)
+  @tap.rate_limit(rate=1, size=1)
   def put(self):
     pass
 
-class CacheTemporary(utils.RequestHandler):
-  @utils.cache(temporary=True)
+class CacheTemporary(tap.RequestHandler):
+  @tap.cache(temporary=True)
   def get(self):
     self.response.write(random())
 
-class Proxy(utils.RequestHandler):
+class Proxy(tap.RequestHandler):
   def get(self):
     self.proxy()
 
-class Sessions(utils.RequestHandler):
+class Sessions(tap.RequestHandler):
   def get(self):
     assert self.session is None
 
-  @utils.session_read_only
+  @tap.session_read_only
   def post(self):
     self.session["TEST"] = "POST"
 
-  @utils.session
+  @tap.session
   def put(self):
     self.session["TEST"] = "PUT"
 
-  @utils.session
+  @tap.session
   def delete(self):
     self.session["TEST"] = "DELETE"
 
-class Users(utils.RequestHandler):
-  @utils.session_read_only
+class Users(tap.RequestHandler):
+  @tap.session_read_only
   def get(self):
     assert self.users.create_login_url() == "/oauth/google"
     assert self.users.create_logout_url() == "/oauth/signout"
@@ -101,23 +101,23 @@ class Users(utils.RequestHandler):
     assert user.user_id() == u"ID"
     assert getattr(user, "locale", None) is None
 
-  @utils.session
+  @tap.session
   def post(self):
-    assert utils.User.load_from_session(self.session) is None
-    user = utils.User(data={"id": u"ID", u"locale": u"ja"})
+    assert tap.User.load_from_session(self.session) is None
+    user = tap.User(data={"id": u"ID", u"locale": u"ja"})
     assert user is not None
     user.set_to_session(self.session)
 
-class LoginRequired(utils.RequestHandler):
-  @utils.login_required
+class LoginRequired(tap.RequestHandler):
+  @tap.login_required
   def get(self):
     pass
 
-class Namespace(utils.RequestHandler):
+class Namespace(tap.RequestHandler):
   def get(self):
     self.response.write(namespace_manager.get_namespace())
 
-class ZipFile(utils.RequestHandler):
+class ZipFile(tap.RequestHandler):
   use_zipfile = True
 
   def get(self):
