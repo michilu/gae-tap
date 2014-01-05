@@ -5,7 +5,6 @@ import os
 import sys
 
 from google.appengine.api import lib_config
-import webapp2
 
 
 # Config
@@ -72,18 +71,3 @@ def sys_path_append():
       sys.path.append(os.path.join(base, path))
   return True
 sys_path_append()
-
-
-from js.angular import angular_cookies, angular_resource
-from js.bootstrap import bootstrap
-import tap
-
-class WarmUp(tap.RequestHandler):
-
-  @tap.head(angular_cookies, angular_resource, bootstrap)
-  def get(self):
-    pass
-
-app = webapp2.WSGIApplication([
-  ("/_ah/warmup", WarmUp),
-])
