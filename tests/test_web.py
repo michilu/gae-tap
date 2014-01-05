@@ -148,7 +148,7 @@ class AppTest(tests.util.TestCase):
   def test_mobile(self):
     self.app.get("/test/index.html", headers={"User-Agent": "MOT-"})
     self.expected_logs = [
-      ('WARNING', 'gae/site-packages/packages/ga.py', '_google_analytics_tracking', "GoogleAnalyticsMixin._google_analytics_tracking: http://www.google-analytics.com/__utm.gif?utmac=test..., {'Accepts-Language': '', 'User-Agent': 'MOT-'}"),
+      ('WARNING', 'site-packages/packages/ga.py', '_google_analytics_tracking', "GoogleAnalyticsMixin._google_analytics_tracking: http://www.google-analytics.com/__utm.gif?utmac=test..., {'Accepts-Language': '', 'User-Agent': 'MOT-'}"),
     ]
 
   def test_maintain_response(self):
