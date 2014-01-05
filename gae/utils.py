@@ -48,7 +48,7 @@ from google.appengine.runtime import apiproxy_errors
 # Global
 
 AHEAD_HTML5 = "<!DOCTYPE html>\n<html>"
-DIRNAME = os.path.dirname(__file__)
+ROOT_DIR_PATH = os.path.abspath(os.path.curdir)
 EMAIL_TRIM_SIZE = 0x3000 #12kB
 MAX_URLFETCH_DEADLINE = 60
 NAMESPACE_KEY = "NAMESPACE"
@@ -108,7 +108,7 @@ class ConfigDefaults(object):
   WAIT_MAP_SIZE = 10
   WEBAPP2_CONFIG = None
 config = lib_config.register("config", ConfigDefaults.__dict__)
-config.LOCALE_PATH = os.path.join(DIRNAME, config.I18N_TRANSLATIONS_PATH)
+config.LOCALE_PATH = os.path.join(ROOT_DIR_PATH, config.I18N_TRANSLATIONS_PATH)
 
 
 # Search Path
@@ -482,8 +482,8 @@ def get_app():
   config_dict = config_to_dict(config)
   config_dict.update({
     "webapp2_extras.jinja2": {
-      "compiled_path": os.path.join(DIRNAME, config.JINJA2_COMPILED_PATH),
-      "template_path": tuple([os.path.join(DIRNAME, path) for path in config.JINJA2_TEMPLATE_PATH]),
+      "compiled_path": os.path.join(ROOT_DIR_PATH, config.JINJA2_COMPILED_PATH),
+      "template_path": tuple([os.path.join(ROOT_DIR_PATH, path) for path in config.JINJA2_TEMPLATE_PATH]),
       "environment_args": {"extensions": ["jinja2.ext.i18n"]},
       "force_compiled": config.JINJA2_FORCE_COMPILED,
     },
