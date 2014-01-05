@@ -5,11 +5,6 @@ import os
 import sys
 
 
-# Global
-
-IS_TEST = sys.modules.has_key("unittest")
-
-
 # Search Path
 
 def execute_once(func):
@@ -26,6 +21,7 @@ def execute_once(func):
 
 @execute_once
 def sys_path_append():
+  is_test = sys.modules.has_key("unittest")
   try:
     import __main__ as main
   except ImportError:
@@ -33,7 +29,7 @@ def sys_path_append():
   else:
     is_shell = not hasattr(main, "__file__")
   base_path = os.environ.get("SITE_PACKAGES", "site-packages")
-  if IS_TEST or is_shell:
+  if is_test or is_shell:
     base_path = os.path.abspath(base_path)
   path = base_path
   if path not in sys.path and os.path.exists(path):
@@ -58,7 +54,7 @@ def sys_path_append():
         break
     for path in ["endpoints-1.0", "protorpc-1.0", "jinja2"]:
       sys.path.append(os.path.join(base, path))
-  elif IS_TEST:
+  elif is_test:
     import google
     base = os.path.join(os.path.dirname(google.__file__), "../lib/")
     for path in ["endpoints-1.0"]:
