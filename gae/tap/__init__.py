@@ -68,7 +68,7 @@ class ConfigDefaults(object):
     "localhost": (("/sample", "app_sample"),),
   }
   APPSTATS_INCLUDE_ERROR_STATUS = True
-  ASSOCIATE_TAG = "gogom-22"
+  ASSOCIATE_TAG = "gaetap-22"
   BACKENDS_NAME = "b1"
   BANG_REDIRECTOR = "http://goo.gl/"
   CORS_Access_Control_Max_Age = "3628800" # 30d
