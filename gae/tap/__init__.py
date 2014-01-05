@@ -124,6 +124,7 @@ def execute_once(func):
   return inner
 
 
+from django.utils.functional import memoize as _memoize
 from gdata.spreadsheet.service import SpreadsheetsService
 from webapp2_extras import jinja2, routes, security, sessions
 import gdata.alt.appengine
@@ -152,25 +153,6 @@ def logging_exception_traceback(func):
       logging.error(traceback.format_exc())
       raise
 
-  return wrapper
-
-def _memoize(func, cache, num_args):
-  """ Copied django.utils.functional.memoize
-
-  Wrap a function so that results for any argument tuple are stored in
-  'cache'. Note that the args to the function must be usable as dictionary
-  keys.
-
-  Only the first num_args are considered when creating the key.
-  """
-  @wraps(func)
-  def wrapper(*args):
-    mem_args = args[:num_args]
-    if mem_args in cache:
-      return cache[mem_args]
-    result = func(*args)
-    cache[mem_args] = result
-    return result
   return wrapper
 
 def memoize(num_args=None, use_memcache=False):
