@@ -31,7 +31,7 @@ def sys_path_append():
       break
   else:
     raise
-  for path in ["endpoints-1.0", "protorpc-1.0", "jinja2-2.6"]:
+  for path in ["django-1.5", "endpoints-1.0", "protorpc-1.0", "jinja2-2.6"]:
     path = os.path.join(base, path)
     if os.path.exists(path):
       sys.path.append(path)
