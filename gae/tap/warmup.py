@@ -22,17 +22,16 @@ def execute_once(func):
 @execute_once
 def sys_path_append():
   base_path = os.environ.get("SITE_PACKAGES", "site-packages")
-  path = base_path
-  if path not in sys.path and os.path.exists(path):
-    sys.path.append(path)
+  if base_path not in sys.path and os.path.exists(base_path):
+    sys.path.append(base_path)
   if os.path.exists(base_path):
-    path = os.path.join(base_path, "packages")
-    if path not in sys.path:
-      sys.path.append(path)
-    if os.path.exists(path):
-      for zipfile in os.listdir(path):
+    packages_path = os.path.join(base_path, "packages")
+    if packages_path not in sys.path:
+      sys.path.append(packages_path)
+    if os.path.exists(packages_path):
+      for zipfile in os.listdir(packages_path):
         if zipfile.endswith(".zip"):
-          zipfile_path = os.path.join(path, zipfile)
+          zipfile_path = os.path.join(packages_path, zipfile)
           if zipfile_path not in sys.path:
             sys.path.append(zipfile_path)
   return True
