@@ -94,11 +94,11 @@ class ConfigDefaults(object):
   MEDIA_URL = ""
   RESPONSE_CACHE_SIZE = 0x10000 # 65536
   ROUTES = (
-    (r"^/sitemap[^/]+\.xml$", "utils.Sitemap"),
-    (r"^/_ah/(start|stop|warmup)$", "utils.Dummy"),
-    (r"^/_tap/generate_sitemap$", "utils.GenerateSitemap"),
-    (r"^/_tap/maintain_response$", "utils.MaintainResponse"),
-    (r"^/_tap/response_cache$", "utils.ResponseCache"),
+    (r"^/sitemap[^/]+\.xml$", "tap.Sitemap"),
+    (r"^/_ah/(start|stop|warmup)$", "tap.Dummy"),
+    (r"^/_tap/generate_sitemap$", "tap.GenerateSitemap"),
+    (r"^/_tap/maintain_response$", "tap.MaintainResponse"),
+    (r"^/_tap/response_cache$", "tap.ResponseCache"),
   )
   SECRET_KEY = None
   SESSION_MAX_AGE = 3600 # 1h
@@ -499,9 +499,9 @@ def get_app():
   routes_list = list()
   routes_list.extend(config.ROUTES)
   routes_list.extend((
-    webapp2.Route("/oauth/signout", handler="utils.OAuth:_signout", name="oauth_signout"),
-    webapp2.Route("/oauth/<provider>", handler="utils.OAuth:_simple_auth", name="oauth_signin"),
-    webapp2.Route("/oauth/<provider>/callback", handler="utils.OAuth:_auth_callback", name="oauth_callback"),
+    webapp2.Route("/oauth/signout", handler="tap.OAuth:_signout", name="oauth_signout"),
+    webapp2.Route("/oauth/<provider>", handler="tap.OAuth:_simple_auth", name="oauth_signin"),
+    webapp2.Route("/oauth/<provider>/callback", handler="tap.OAuth:_auth_callback", name="oauth_callback"),
   ))
   if config.BANG_REDIRECTOR:
     routes_list.append(webapp2.Route("/!<key:[^/]+>", BangRedirector, name="bang-redirector"))
@@ -1615,7 +1615,7 @@ def bang_redirector_for(key):
   try:
     return webapp2.uri_for("bang-redirector", key=key, _full=True).replace("/%21", "/!", 1)
   except AssertionError:
-    logging.info("utils.bang_redirector_for: Could not be retrieved URI for `{0}`.".format(key))
+    logging.info("tap.bang_redirector_for: Could not be retrieved URI for `{0}`.".format(key))
     raise
 
 class BangRedirector(RequestHandler):

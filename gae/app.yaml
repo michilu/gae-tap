@@ -46,17 +46,19 @@ handlers:
 - url: /_ah/stats.*
   script: google.appengine.ext.appstats.ui.app
   login: admin
-- url: /_ah/(start|stop|warmup)
-  script: utils.app
+- url: /_ah/(start|stop)
+  script: tap.app
+- url: /_ah/warmup
+  script: warmup.app
 - url: /_ah/spi/.*
   script: api.app
 - url: /_tap/(generate_sitemap|maintain_response|response_cache)
-  script: utils.app
+  script: tap.app
   login: admin
 - url: /robots.txt
-  script: utils.app_static_root
+  script: tap.app_static_root
 - url: /.*
-  script: utils.app
+  script: tap.app
 
 admin_console:
   pages:
