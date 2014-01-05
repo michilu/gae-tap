@@ -22,21 +22,6 @@ def execute_once(func):
 
 @execute_once
 def sys_path_append():
-  base_path = os.environ.get("SITE_PACKAGES", "site-packages")
-  base_path = os.path.abspath(base_path)
-  path = base_path
-  if path not in sys.path and os.path.exists(path):
-    sys.path.append(path)
-  if os.path.exists(base_path):
-    path = os.path.join(base_path, "packages")
-    if path not in sys.path:
-      sys.path.append(path)
-    if os.path.exists(path):
-      for zipfile in os.listdir(path):
-        if zipfile.endswith(".zip"):
-          zipfile_path = os.path.join(path, zipfile)
-          if zipfile_path not in sys.path:
-            sys.path.append(zipfile_path)
   import google
   base = os.path.join(os.path.dirname(google.__file__), "../lib/")
   for webapp2 in ["webapp2-2.5.2", "webapp2"]:
@@ -44,10 +29,18 @@ def sys_path_append():
     if os.path.exists(path):
       sys.path.append(path)
       break
-  for path in ["endpoints-1.0", "protorpc-1.0", "jinja2"]:
-    sys.path.append(os.path.join(base, path))
+  else:
+    raise
+  for path in ["endpoints-1.0", "protorpc-1.0", "jinja2-2.6"]:
+    path = os.path.join(base, path)
+    if os.path.exists(path):
+      sys.path.append(path)
+    else:
+      raise
   return True
 sys_path_append()
+
+import warmup
 
 if __name__ == "__main__":
   try:

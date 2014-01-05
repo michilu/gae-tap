@@ -14,7 +14,7 @@ Contents:
 .. contents::
   :local:
 
-.. automodule:: utils
+.. automodule:: tap
   :members:
   :undoc-members:
 
