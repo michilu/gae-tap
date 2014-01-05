@@ -8,8 +8,10 @@ import tests.util
 
 from google.appengine.api import taskqueue
 
+import conf
+
 class AppTest(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   def test_status(self):
     self.app.head("/", status=404)

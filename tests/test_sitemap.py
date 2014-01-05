@@ -16,6 +16,8 @@ import tests.util
 from tap import SitemapMixin
 import tap
 
+import conf
+
 class Sitemap(tap.SitemapMixin):
   changefreq = "daily"
   priority = 0.5
@@ -41,7 +43,7 @@ class TestSitemapMixin(unittest.TestCase):
       SitemapMixin().loc
 
 class AppTest(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   def test_sitemapindex(self):
     self.app.get("/sitemapindex.xml", status=410)

@@ -13,8 +13,10 @@ from google.appengine.api import taskqueue
 from google.appengine.ext import ndb
 from minimock import mock, restore
 
+import conf
+
 class TestRingBuffer(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   @ndb.toplevel
   @ndb.synctasklet
@@ -60,7 +62,7 @@ class TestRingBuffer(tests.util.TestCase):
     yield tap.memoize_clear(cache, key, args, use_memcache=True)
 
 class TestTransientError(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   def setUp(self):
     super(TestTransientError, self).setUp()

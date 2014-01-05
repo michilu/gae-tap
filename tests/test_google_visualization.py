@@ -14,6 +14,8 @@ import tap
 from google.appengine.ext import ndb
 from minimock import mock, restore
 
+import conf
+
 class AuthResponse(object):
   status = 200
 
@@ -33,7 +35,7 @@ class ErrorResponse(object):
     return """google.visualization.Query.setResponse({"version":"0.6","status":"error","errors":[{"reason":"invalid_query","message":"Invalid query","detailed_message":"Query parse error: Encountered..."}]});"""
 
 class TestGoogleVisualization(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   def setUp(self):
     super(TestGoogleVisualization, self).setUp()
@@ -74,7 +76,7 @@ def urlfetch(*argv, **kwargv):
   raise ndb.Return(UrlfetchResult())
 
 class TestAppEngineHttpClient(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   def setUp(self):
     super(TestAppEngineHttpClient, self).setUp()

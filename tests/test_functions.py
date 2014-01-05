@@ -17,6 +17,8 @@ from google.appengine.ext.appstats import recording
 from google.appengine.runtime import apiproxy_errors
 from minimock import mock, restore
 
+import conf
+
 class Model(ndb.Model):
   pass
 
@@ -115,7 +117,7 @@ class TestRequestHandler(unittest.TestCase):
     assert tap.RequestHandler.to_cache_key("/"*23) == "qaf6bjEFhOwOKQzsIeCiIA"
 
 class AppTest(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   class Rec(object):
     def json(self): pass
@@ -165,7 +167,7 @@ def func():
   raise apiproxy_errors.OverQuotaError
 
 class TestDeferredRun(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   def test(self):
     with pytest.raises(deferred.PermanentTaskFailure):
@@ -178,7 +180,7 @@ class TestDeferredRun(tests.util.TestCase):
     assert queue.fetch_statistics().tasks == 1
 
 class TestWaitEach(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   @ndb.tasklet
   def task(self):
@@ -203,7 +205,7 @@ class TestWaitEach(tests.util.TestCase):
     ]
 
 class TestWaitMap(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   def setUp(self):
     super(TestWaitMap, self).setUp()

@@ -5,8 +5,10 @@ import os
 
 import tests.util
 
+import conf
+
 class SessionsTest(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
   use_cookie = True
 
   def test_sessions(self):

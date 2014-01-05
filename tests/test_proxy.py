@@ -8,6 +8,8 @@ import tests.util
 from google.appengine.api import urlfetch, urlfetch_stub
 from minimock import mock, restore
 
+import conf
+
 def Dummy_RetrieveURL(self, url, payload, method, headers, request, response,
                       follow_redirects, deadline, validate_certificate):
   response.set_statuscode(200)
@@ -16,7 +18,7 @@ def Dummy_RetrieveURL(self, url, payload, method, headers, request, response,
   header_proto.set_value("0")
 
 class ProxyTest(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   def setUp(self):
     super(ProxyTest, self).setUp()
@@ -38,7 +40,7 @@ class ProxyTest(tests.util.TestCase):
     ]
 
 class ProxyErrorTest(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   def setUp(self):
     super(ProxyErrorTest, self).setUp()

@@ -9,6 +9,8 @@ import pytest
 import tests.util
 import tap
 
+import conf
+
 class UserTest(unittest.TestCase):
   def test_user(self):
     user = tap.User()
@@ -34,7 +36,7 @@ class UserTest(unittest.TestCase):
     del user._id
 
 class UsersTest(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
   use_cookie = True
 
   def test_users(self):

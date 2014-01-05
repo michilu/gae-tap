@@ -9,12 +9,14 @@ import tests.util
 from google.appengine.api import urlfetch_stub
 from minimock import mock, restore
 
+import conf
+
 def Dummy_RetrieveURL(self, url, payload, method, headers, request, response,
                       follow_redirects, deadline, validate_certificate):
   response.set_content("{}")
 
 class OAuthTest(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
   domain = "sample"
 
   def setUp(self):
@@ -36,7 +38,7 @@ class OAuthTest(tests.util.TestCase):
     ]
 
 class OAuthSecretsTest(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
 
   def test_secrets(self):
     self.app.get("/oauth/google", status=500)
@@ -46,7 +48,7 @@ class OAuthSecretsTest(tests.util.TestCase):
     ]
 
 class OAuthSignoutTest(tests.util.TestCase):
-  root_path = os.path.dirname(os.path.dirname( __file__ )) + "/gae"
+  root_path = conf.root_path
   domain = "sample"
   use_cookie = True
 
