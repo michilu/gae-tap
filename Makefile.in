@@ -90,9 +90,10 @@ clean:
 	find . -type d -name .sass-cache |xargs rm -rf
 	find . -type d -name __pycache__ |xargs rm -rf
 	find . -type d -name htmlcov |xargs rm -rf
-	find ./ -name "*.pyc" -delete
-	find ./ -name .DS_Store -delete
-	find ./ -name .coverage -delete
+	find . -name "*.pyc" -delete
+	find . -name "*.sw?" -delete
+	find . -name .DS_Store -delete
+	find . -name .coverage -delete
 	find $(TEMPLATE_DIR_PATH) -name "*.py" -delete
 	rm -f $(COMPILED_ZIP_PATH)
 	rm -f $(STATIC_ROOT_ZIP_PATH)
