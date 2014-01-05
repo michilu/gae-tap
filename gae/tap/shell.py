@@ -1,3 +1,4 @@
+#!/usr/bin/env ipython -i
 # -*- coding: utf-8 -*-
 
 from functools import wraps
@@ -21,16 +22,8 @@ def execute_once(func):
 
 @execute_once
 def sys_path_append():
-  is_test = sys.modules.has_key("unittest")
-  try:
-    import __main__ as main
-  except ImportError:
-    is_shell = False
-  else:
-    is_shell = not hasattr(main, "__file__")
   base_path = os.environ.get("SITE_PACKAGES", "site-packages")
-  if is_test or is_shell:
-    base_path = os.path.abspath(base_path)
+  base_path = os.path.abspath(base_path)
   path = base_path
   if path not in sys.path and os.path.exists(path):
     sys.path.append(path)
@@ -44,20 +37,20 @@ def sys_path_append():
           zipfile_path = os.path.join(path, zipfile)
           if zipfile_path not in sys.path:
             sys.path.append(zipfile_path)
-  if is_shell or sys.argv[0].endswith("/sphinx-build"):
-    import google
-    base = os.path.join(os.path.dirname(google.__file__), "../lib/")
-    for webapp2 in ["webapp2-2.5.2", "webapp2"]:
-      path = os.path.join(base, webapp2)
-      if os.path.exists(path):
-        sys.path.append(path)
-        break
-    for path in ["endpoints-1.0", "protorpc-1.0", "jinja2"]:
-      sys.path.append(os.path.join(base, path))
-  elif is_test:
-    import google
-    base = os.path.join(os.path.dirname(google.__file__), "../lib/")
-    for path in ["endpoints-1.0"]:
-      sys.path.append(os.path.join(base, path))
+  import google
+  base = os.path.join(os.path.dirname(google.__file__), "../lib/")
+  for webapp2 in ["webapp2-2.5.2", "webapp2"]:
+    path = os.path.join(base, webapp2)
+    if os.path.exists(path):
+      sys.path.append(path)
+      break
+  for path in ["endpoints-1.0", "protorpc-1.0", "jinja2"]:
+    sys.path.append(os.path.join(base, path))
   return True
 sys_path_append()
+
+if __name__ == "__main__":
+  try:
+    get_ipython().magic("doctest_mode")
+  except NameError:
+    pass

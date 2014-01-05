@@ -186,7 +186,7 @@ watchlion:
 	PYTHONPATH=$$GAE_HOME watchlion
 
 shell:
-	@cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME ipython -c "import tap.shell; get_ipython().magic('doctest_mode')" -i
+	@cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME ./tap/shell.py
 
 doc:
 	cd doc; PYTHONPATH=$$GAE_HOME make html
