@@ -22,5 +22,5 @@ https://bitbucket.org/MiCHiLU/pytest_gae/get/default.zip
 testfixtures
 webtest>2
 watchlion
-jinja2-precompiler
+jinja2-precompiler>0.2
 fanstatic-tools==0.2

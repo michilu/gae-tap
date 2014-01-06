@@ -86,7 +86,7 @@ skip_files: |
   (\..*)|
   (static/version)|
   # if skip raw template files, define `config_JINJA2_FORCE_COMPILED = True` in appengine_config.py for dev_appserver
-  #(templates\/.*)|
+  (templates\/.*)|
   (htmlcov\/.*)|
   (site-packages\/.+[.](?!py|zip$))|
   (tests\/.*)|
