@@ -16,10 +16,10 @@
 %meta(property="og:url" content="https://{{ domain }}/")
 {% endblock og %}
 %meta(property="fb:app_id" content="{{ fb_app_id }}")
-%script(src="/static/js/utils{% if not DEBUG %}.min{% endif %}.js")
+%script(src="/static/tap/js/utils{% if not DEBUG %}.min{% endif %}.js")
 {% block head %}{% endblock head %}
-{% if translation %}{% include "i18n_js.html" %}{% endif %}
-{% include "ads/analytics.html" %}
+{% if translation %}{% include "tap/i18n_js.html" %}{% endif %}
+{% include "tap/ads/analytics.html" %}
 {% block body %}
 %body/
 {% block main %}

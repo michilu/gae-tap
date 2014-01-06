@@ -1,4 +1,4 @@
-{% set i18n_js = "i18n/i18n.js.html" if DEBUG else "i18n/i18n.min.js.html" %}
+{% set i18n_js = "tap/i18n/i18n.js.html" if DEBUG else "tap/i18n/i18n.min.js.html" %}
 %script
  var language = "{{ language }}";
  var translation = {{ translation|safe }};

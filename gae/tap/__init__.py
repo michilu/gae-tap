@@ -1263,10 +1263,10 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
         message = zenhan.z2he(message)
       message = message.encode("Shift_JIS", "xmlcharrefreplace")
       index = "/index.html"
-      template_path = "mob/error.xhtml"
+      template_path = "tap/mob/error.xhtml"
     else:
       index = "/"
-      template_path = "error.html"
+      template_path = "tap/error.html"
       self.response.write(AHEAD_HTML5)
       try:
         from js.bootstrap import bootstrap

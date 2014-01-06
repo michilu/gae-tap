@@ -14,7 +14,7 @@ STATIC_ROOT_DIR_PATH=$(GAE_DIR)/static_root
 STATIC_ROOT_ZIP_PATH=$(STATIC_ROOT_DIR_PATH).zip
 STATIC_ROOT=$(wildcard $(STATIC_ROOT_DIR_PATH)/**/*)
 STATIC_ROOT_PATH=$(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT))
-JS_DIR=$(GAE_DIR)/static/js
+JS_DIR=$(GAE_DIR)/static/js $(GAE_DIR)/static/tap/js
 CSS_DIR=$(GAE_DIR)/static/css
 FANSTATIC_DIR=$(GAE_DIR)/static/lib
 PYTEST_TARGET=$(GAE_DIR)/tests/test*.py
@@ -36,7 +36,7 @@ HTML = $(HAML:.haml=.html)
 .SUFFIXES: .haml .xhtml
 .haml.xhtml:
 	haml -f xhtml -t ugly $< $@
-MOBHAML = $(wildcard $(TEMPLATE_DIR_PATH)/mob/*.haml)
+MOBHAML = $(wildcard $(TEMPLATE_DIR_PATH)/mob/*.haml $(TEMPLATE_DIR_PATH)/tap/mob/*.haml)
 MOBHTML = $(MOBHAML:.haml=.xhtml)
 
 .SUFFIXES: .coffee .js
@@ -45,7 +45,7 @@ MOBHTML = $(MOBHAML:.haml=.xhtml)
 .SUFFIXES: .js .min.js
 .js.min.js:
 	$(BIN_UGLIFYJS) --define PRODUCTION=0 -nc -m -r "$$" -o $@ $<
-COFFEE = $(wildcard $(JS_DIR)/*.coffee)
+COFFEE = $(foreach dir,$(JS_DIR),$(wildcard $(dir)/*.coffee))
 JS = $(COFFEE:.coffee=.js)
 MINJS = $(JS:.js=.min.js)
 TESTACULAR_COFFEE = $(wildcard $(TESTACULAR_TARGET))
