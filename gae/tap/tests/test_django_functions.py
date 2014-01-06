@@ -15,16 +15,3 @@ class TestDjangoFunctions(unittest.TestCase):
 
   def test_get_random_string(self):
     assert len(tap.get_random_string()) == 12
-
-  @pytest.mark.skipif("tap.using_sysrandom == False")
-  def test_get_random_string_2(self):
-    import random
-    origin_using_sysrandom = tap.using_sysrandom
-    origin_random = tap.random
-    tap.using_sysrandom = False
-    tap.random = random
-    try:
-      assert len(tap.get_random_string()) == 12
-    finally:
-      tap.using_sysrandom = origin_using_sysrandom
-      tap.random = origin_random
