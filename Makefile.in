@@ -30,7 +30,7 @@ test=
 .SUFFIXES: .haml .html
 .haml.html:
 	haml -f html5 -t ugly $< $@
-HAML = $(wildcard $(TEMPLATE_DIR_PATH)/*.haml $(TEMPLATE_DIR_PATH)/admin/*.haml $(GAE_DIR)/static/*.haml)
+HAML = $(wildcard $(TEMPLATE_DIR_PATH)/*.haml $(TEMPLATE_DIR_PATH)/tap/*.haml $(GAE_DIR)/static/*.haml)
 HTML = $(HAML:.haml=.html)
 
 .SUFFIXES: .haml .xhtml

@@ -27,7 +27,7 @@ gae/static/version
 gae/static_root.zip
 gae/templates/*.html
 gae/templates/*.py
-gae/templates/admin/*.html
+gae/templates/tap/*.html
 gae/templates/mob/*.xhtml
 htmlcov
 node_modules

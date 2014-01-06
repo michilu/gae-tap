@@ -1654,7 +1654,7 @@ class ResponseCache(RequestHandler):
       cache_key = self.to_cache_key("".join((host, path)))
       template_args.append(cache_key)
     app_id = app_identity.get_application_id()
-    self.render_response("admin/response_cache.html",
+    self.render_response("tap/response_cache.html",
                          args=template_args + [host, path, app_id])
 
   @head(angular, bootstrap)
@@ -1675,7 +1675,7 @@ class ResponseCache(RequestHandler):
           break
     app_id = app_identity.get_application_id()
     message = "Deleted the key from caches."
-    self.render_response("admin/response_cache.html",
+    self.render_response("tap/response_cache.html",
                          args=template_args + [host, path, app_id, message])
 
 

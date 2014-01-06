@@ -1,4 +1,4 @@
-{% import "admin/version.html" as VERSION %}
+{% import "tap/version.html" as VERSION %}
 %meta(charset="UTF-8")
 {% block ngCloak %}
 %style [ng-cloak] {display: none;}
@@ -39,7 +39,7 @@
   %a(href="//{{ domain }}{{ base_path }}" title="{{ title }}")>< {{ title }}
   &nbsp;{{ since }}
   %span.text-muted {{ VERSION }}
-  {% include "admin/feedback_link.html" %}
-{% include "admin/feedback_form.html" %}
+  {% include "tap/feedback_link.html" %}
+{% include "tap/feedback_form.html" %}
 {% endblock footer %}
 {% endblock body %}
