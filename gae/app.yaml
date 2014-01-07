@@ -57,6 +57,8 @@ handlers:
 - url: /_tap/(generate_sitemap|maintain_response|response_cache)
   script: tap.app
   login: admin
+- url: /_tap/.*
+  script: tap.app
 - url: /robots.txt
   script: tap.app_static_root
 - url: /.*
@@ -85,6 +87,7 @@ skip_files: |
   (.*~)|
   (\..*)|
   (static/version)|
+  (static/tap/js/i18n.*)|
   # if skip raw template files, define `config_JINJA2_FORCE_COMPILED = True` in appengine_config.py for dev_appserver
   (templates\/.*)|
   (htmlcov\/.*)|

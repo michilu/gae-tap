@@ -385,6 +385,7 @@ def get_app():
     webapp2.Route("/oauth/signout", handler="tap.OAuth:_signout", name="oauth_signout"),
     webapp2.Route("/oauth/<provider>", handler="tap.OAuth:_simple_auth", name="oauth_signin"),
     webapp2.Route("/oauth/<provider>/callback", handler="tap.OAuth:_auth_callback", name="oauth_callback"),
+    webapp2.Route("/_tap/i18n/<domain>.<language>.js", "tap.I18Njs", name="I18Njs"),
   ))
   if config.BANG_REDIRECTOR:
     routes_list.append(webapp2.Route("/!<key:[^/]+>", BangRedirector, name="bang-redirector"))
@@ -1421,8 +1422,9 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
     for key, value in context.items():
       dictionary.setdefault(key, value)
     if self.i18n:
-      dictionary["language"] = self.language
-      dictionary["translation"] = get_translation("{0}.js".format(self.i18n_domain), (self.language,), False, "json")
+      dictionary["I18N"] = True
+      dictionary["I18N_DOMAIN"] = self.i18n_domain
+      dictionary["LANGUAGE"] = self.language
     if "self" in dictionary:
       del dictionary["self"]
     body = self.jinja2.render_template(template_path, **dictionary)
@@ -1677,6 +1679,15 @@ class ResponseCache(RequestHandler):
     message = "Deleted the key from caches."
     self.render_response("tap/response_cache.html",
                          args=template_args + [host, path, app_id, message])
+
+
+# i18n.js views
+
+class I18Njs(RequestHandler):
+  @cache(60)
+  def get(self, domain, language):
+    translation = get_translation("{0}.js".format(domain), (language,), False, "json")
+    self.render_response("tap/i18n_js.html", args=[translation], mimetype="text/javascript")
 
 
 # cron job views

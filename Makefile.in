@@ -114,7 +114,7 @@ $(VERSION):
 		git log -1 --format="%h" > $@ ;\
 	fi;
 
-template: $(GAE_LIB_PACKAGES_DIR) $(COMPILED_ZIP_PATH)
+template: $(MINJS) mo $(GAE_LIB_PACKAGES_DIR) $(COMPILED_ZIP_PATH)
 
 js: $(JS) $(MINJS) $(TESTACULAR_JS)
 

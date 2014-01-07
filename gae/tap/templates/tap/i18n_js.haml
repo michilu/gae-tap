@@ -1,5 +1,1 @@
-{% set i18n_js = "tap/i18n/i18n.js.html" if DEBUG else "tap/i18n/i18n.min.js.html" %}
-%script
- var language = "{{ language }}";
- var translation = {{ translation|safe }};
- {% include i18n_js %}
+!function(){var get_value_from_translation,plural_index,translation;translation={{ translation|safe }},window.gettext=function(n){var t;return t=get_value_from_translation(translation,n),null!=t?"string"==typeof t?t:t[0]:n},window.ngettext=function(n,t,a){var l;return l=get_value_from_translation(translation,n),null!=l?l[plural_index(a,translation)]:1===a?n:t},get_value_from_translation=function(n,t){var a,l;return a=null!=(l=n.catalog)?l[t]:void 0,null==a&&null!=n.fallback&&(a=get_value_from_translation(n.fallback,t)),a},plural_index=function(count,translation){return eval("var n = "+count+"; var v = "+translation.plural),v}}();

@@ -206,11 +206,27 @@ class AppTest(tests.util.TestCase):
 
   def test_translation(self):
     response = self.app.get("/test/translation")
-    response.mustcontain("var translation = {};")
+    response.mustcontain("""
+<script>
+window.gettext=function(t){return t},window.ngettext=function(t,n,e){return 1===e?t:n};
+</script>
+<script src="/_tap/i18n/sample.en.js"></script>
+""")
     response.mustcontain("<li>Python</li>\n<li>Anaconda</li>\n<li>Boa</li>\n<li>Cobra</li>")
     response = self.app.get("/test/translation", headers=[("Accept-Language", "ja-JP,ja;q=0.8")], status=302)
     assert response.headers.get("Location") == "http://localhost/test/translation?l=ja"
     response = self.app.get("/test/translation?l=ja")
-    response.mustcontain('var translation = {"catalog": {"Dumeril": "\u30c7\u30e5\u30e1\u30ea\u30eb"}, "plural": "0", "fallback": null};')
+    response.mustcontain("""
+<script>
+window.gettext=function(t){return t},window.ngettext=function(t,n,e){return 1===e?t:n};
+</script>
+<script src="/_tap/i18n/sample.ja.js"></script>
+""")
     response.mustcontain("<li>ニシキヘビ</li>\n<li>アナコンダ</li>\n<li>ボア</li>\n<li>コブラ</li>")
     self.app.get("/test/translation?test", headers=[("Accept-Language", "ja-JP,ja;q=0.8")], status=302)
+
+  def test_i18n_js(self):
+    response = self.app.get("/_tap/i18n/sample.en.js")
+    response.mustcontain(";translation={},")
+    response = self.app.get("/_tap/i18n/sample.ja.js")
+    response.mustcontain(';translation={"catalog": {"Dumeril": "\u30c7\u30e5\u30e1\u30ea\u30eb"}, "plural": "0", "fallback": null},')
