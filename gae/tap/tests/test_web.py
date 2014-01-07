@@ -35,7 +35,7 @@ class AppTest(tests.util.TestCase):
 
     assert self.app.get("/sample/").body == response.body
     assert queue.fetch_statistics().tasks == 1
-    assert queue.lease_tasks(0, 1)[0].name[:10] == cache.name[:10]
+    assert int(queue.lease_tasks(0, 1)[0].name[:10]) - int(cache.name[:10]) in (0, 1)
 
   def test_csrf(self):
     response = self.app.get("/_tap/response_cache?path=/")
