@@ -89,7 +89,7 @@ class ConfigDefaults(object):
   I18N_TRANSLATIONS_PATH = "locales"
   IMAGE_URL = ""
   IS_TEST = "unittest" in sys.modules.keys()
-  JINJA2_COMPILED_PATH = ("site-packages/tap.zip", "site-packages/templates_compiled.zip")
+  JINJA2_COMPILED_PATH = ("site-packages/tap_templates_compiled.zip", "site-packages/templates_compiled.zip")
   JINJA2_TEMPLATE_PATH = ("tap/templates", "templates")
   JINJA2_FORCE_COMPILED = True
   JOB_EMAIL_RECIPIENT = None
