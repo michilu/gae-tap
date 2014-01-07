@@ -34,5 +34,6 @@ gae/templates/mob/*.xhtml
 htmlcov
 node_modules
 tags
+tests
 
 syntax: regexp
