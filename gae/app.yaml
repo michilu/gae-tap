@@ -86,11 +86,14 @@ skip_files: |
   (.*\.yaml)|
   (.*~)|
   (\..*)|
-  (static/version)|
   (static/tap/js/i18n.*)|
+  (static/version)|
+  (static_root)|
   # if skip raw template files, define `config_JINJA2_FORCE_COMPILED = True` in appengine_config.py for dev_appserver
   (templates\/.*)|
   (htmlcov\/.*)|
+  (site-packages\/.*\.txt)|
   (site-packages\/.+[.](?!py|zip$))|
+  (site-packages\/packages\/.*\.egg-info)|
   (tests\/.*)|
   )$
