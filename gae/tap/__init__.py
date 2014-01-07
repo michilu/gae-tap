@@ -89,9 +89,9 @@ class ConfigDefaults(object):
   I18N_TRANSLATIONS_PATH = "locales"
   IMAGE_URL = ""
   IS_TEST = "unittest" in sys.modules.keys()
-  JINJA2_COMPILED_PATH = "site-packages/templates_compiled.zip"
-  JINJA2_TEMPLATE_PATH = ("templates",)
-  JINJA2_FORCE_COMPILED = not DEBUG
+  JINJA2_COMPILED_PATH = ("site-packages/tap.zip", "site-packages/templates_compiled.zip")
+  JINJA2_TEMPLATE_PATH = ("tap/templates", "templates")
+  JINJA2_FORCE_COMPILED = True
   JOB_EMAIL_RECIPIENT = None
   MEDIA_URL = ""
   RESPONSE_CACHE_SIZE = 0x10000 # 65536
@@ -365,7 +365,7 @@ def get_app():
   config_dict = config_to_dict(config)
   config_dict.update({
     "webapp2_extras.jinja2": {
-      "compiled_path": os.path.join(ROOT_DIR_PATH, config.JINJA2_COMPILED_PATH),
+      "compiled_path": tuple([os.path.join(ROOT_DIR_PATH, path) for path in config.JINJA2_COMPILED_PATH]),
       "template_path": tuple([os.path.join(ROOT_DIR_PATH, path) for path in config.JINJA2_TEMPLATE_PATH]),
       "environment_args": {"extensions": ["jinja2.ext.i18n"]},
       "force_compiled": config.JINJA2_FORCE_COMPILED,
