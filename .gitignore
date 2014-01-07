@@ -25,8 +25,9 @@ gae/static/lib
 gae/static/sitemap.html
 gae/static/version
 gae/static_root.zip
-gae/tap/templates/*.html
-gae/tap/templates/mob/*.xhtml
+gae/tap/templates/tap/*.html
+gae/tap/templates/tap/*.py
+gae/tap/templates/tap/mob/*.xhtml
 gae/templates/*.html
 gae/templates/*.py
 gae/templates/mob/*.xhtml
