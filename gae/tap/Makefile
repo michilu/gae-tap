@@ -63,7 +63,6 @@ template: $(MINJS) $(TEMPLATES_COMPILED_ZIP_PATH)
 
 js: $(JS) $(MINJS)
 
-
 $(GAE_LIB_DIR):
 	mkdir -p $@
 
@@ -71,13 +70,7 @@ $(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION)
 	jinja2precompiler -c $(TEMPLATE_DIR_PATH)
 	zip -FS -j $(TEMPLATES_COMPILED_ZIP_PATH) $(TEMPLATE_DIR_PATH)/*.pyc
 
-$(GAE_LIB_PACKAGES_DIR):
-	mkdir -p $@
-
 shell:
 	@cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME ./tap/shell.py
 
-doc:
-	cd doc; PYTHONPATH=$$GAE_HOME make html
-
-.PHONY: all template clean runserver deploy update_cron update_queues doc $(VERSION)
+.PHONY: all clean $(VERSION)
