@@ -10,15 +10,11 @@ TEMPLATE_DIR=templates
 TEMPLATE_DIR_PATH=$(GAE_DIR)/$(TEMPLATE_DIR)
 TEMPLATES_COMPILED_ZIP=templates_compiled.zip
 TEMPLATES_COMPILED_ZIP_PATH=$(GAE_LIB_DIR)/$(TEMPLATES_COMPILED_ZIP)
-TAP_TEMPLATE_DIR=tap/templates
-TAP_TEMPLATE_DIR_PATH=$(GAE_DIR)/$(TAP_TEMPLATE_DIR)
-TAP_TEMPLATES_COMPILED_ZIP=tap_templates_compiled.zip
-TAP_TEMPLATES_COMPILED_ZIP_PATH=$(GAE_LIB_DIR)/$(TAP_TEMPLATES_COMPILED_ZIP)
 STATIC_ROOT_DIR_PATH=$(GAE_DIR)/static_root
 STATIC_ROOT_ZIP_PATH=$(STATIC_ROOT_DIR_PATH).zip
 STATIC_ROOT=$(wildcard $(STATIC_ROOT_DIR_PATH)/**/*)
 STATIC_ROOT_PATH=$(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT))
-JS_DIR=$(GAE_DIR)/static/js $(GAE_DIR)/static/tap/js
+JS_DIR=$(GAE_DIR)/static/js
 CSS_DIR=$(GAE_DIR)/static/css
 FANSTATIC_DIR=$(GAE_DIR)/static/lib
 PYTEST_TARGET=$(GAE_DIR)/tests/test*.py
@@ -36,16 +32,12 @@ test=
 	haml -f html5 -t ugly $< $@
 HAML = $(wildcard $(TEMPLATE_DIR_PATH)/*.haml $(GAE_DIR)/static/*.haml)
 HTML = $(HAML:.haml=.html)
-TAP_HAML = $(wildcard $(TAP_TEMPLATE_DIR_PATH)/*.haml)
-TAP_HTML = $(TAP_HAML:.haml=.html)
 
 .SUFFIXES: .haml .xhtml
 .haml.xhtml:
 	haml -f xhtml -t ugly $< $@
 MOBHAML = $(wildcard $(TEMPLATE_DIR_PATH)/mob/*.haml)
 MOBHTML = $(MOBHAML:.haml=.xhtml)
-TAP_MOBHAML = $(wildcard $(TAP_TEMPLATE_DIR_PATH)/mob/*.haml)
-TAP_MOBHTML = $(MOBHAML:.haml=.xhtml)
 
 .SUFFIXES: .coffee .js
 .coffee.js:
@@ -104,7 +96,6 @@ clean:
 	find . -name .coverage -delete
 	find $(TEMPLATE_DIR_PATH) -name "*.py" -delete
 	rm -f $(TEMPLATES_COMPILED_ZIP_PATH)
-	rm -f $(TAP_TEMPLATES_COMPILED_ZIP_PATH)
 	rm -f $(STATIC_ROOT_ZIP_PATH)
 	rm -f $(CSS)
 	rm -f $(HTML)
@@ -123,7 +114,7 @@ $(VERSION):
 		git log -1 --format="%h" > $@ ;\
 	fi;
 
-template: $(MINJS) mo $(GAE_LIB_PACKAGES_DIR) $(TEMPLATES_COMPILED_ZIP_PATH) $(TAP_TEMPLATES_COMPILED_ZIP_PATH)
+template: $(MINJS) mo $(GAE_LIB_PACKAGES_DIR) $(TEMPLATES_COMPILED_ZIP_PATH)
 
 js: $(JS) $(MINJS) $(TESTACULAR_JS)
 
@@ -138,10 +129,6 @@ $(GAE_LIB_DIR):
 $(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION)
 	jinja2precompiler -c $(TEMPLATE_DIR_PATH)
 	zip -FS -j $(TEMPLATES_COMPILED_ZIP_PATH) $(TEMPLATE_DIR_PATH)/*.pyc
-
-$(TAP_TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(TAP_HTML) $(TAP_MOBHTML)
-	jinja2precompiler -c $(TAP_TEMPLATE_DIR_PATH)
-	zip -FS -j $(TAP_TEMPLATES_COMPILED_ZIP_PATH) $(TAP_TEMPLATE_DIR_PATH)/*.pyc
 
 $(STATIC_ROOT_ZIP_PATH): $(STATIC_ROOT)
 	cd $(GAE_DIR); zip -FS -y $(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT_ZIP_PATH)) $(STATIC_ROOT_PATH)
