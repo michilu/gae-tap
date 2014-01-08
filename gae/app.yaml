@@ -53,7 +53,7 @@ handlers:
 - url: /_ah/(start|stop)
   script: tap.app
 - url: /_ah/warmup
-  script: warmup.app
+  script: tap.warmup.app
 - url: /_ah/spi/.*
   script: api.app
 - url: /_tap/(generate_sitemap|maintain_response|response_cache)
