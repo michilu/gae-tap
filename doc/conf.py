@@ -20,10 +20,18 @@ import os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 os.chdir("../gae")
-sys.path.insert(0, os.path.abspath(os.environ["GAE_HOME"]))
-sys.path.insert(0, os.path.abspath('.'))
-import utils
-os.chdir("../doc")
+try:
+  sys.path.insert(0, os.path.abspath(os.environ["GAE_HOME"]))
+  sys.path.insert(0, os.path.abspath('.'))
+  os.chdir("tap")
+  try:
+    sys.path.insert(0, os.path.abspath('.'))
+    os.environ["SITE_PACKAGES"] = os.path.abspath("../site-packages")
+    import shell
+  finally:
+    os.chdir("../")
+finally:
+  os.chdir("../doc")
 
 # -- General configuration ------------------------------------------------
 

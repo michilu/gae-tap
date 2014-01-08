@@ -1,9 +1,7 @@
-include Makefile.in
+include gae/tap/Makefile.in
+include gae/tap/Makefile.test
 
-all: css js test test_utils
+all: test css mo js test_tap tap
 
-test_utils=
-
-test_utils: $(GAE_LIB_PACKAGES_DIR) template $(FANSTATIC_DIR)
-	@py.test tests/test*.py --doctest-modules --with-gae --gae-path=$(GAE_PATH) --gae-project-path=`pwd`/$(GAE_DIR) --cov-report=html --cov=$(GAE_DIR) $(test_utils)
-	rm -rf /tmp/dev_appserver.test_datastore
+tap:
+	make --no-print-directory -C $(TAP_DIR)

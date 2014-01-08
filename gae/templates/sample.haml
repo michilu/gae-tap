@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "tap/base.html" %}
 {% set title = subdomain or "Sample" %}
 {% set description = title %}
 {% set domain = "example.com" %}
@@ -11,7 +11,7 @@
 %ul
  i18n: &rArr;
 
- {% if language == "ja" %}
+ {% if LANGUAGE == "ja" %}
  %a(href="?") English
  {% else %}
  %a(href="?l=ja") 日本語

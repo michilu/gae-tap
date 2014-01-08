@@ -33,15 +33,15 @@ msgstr "ボア"
 msgid "Cobra"
 msgstr "コブラ"
 
-#: gae/templates/admin/feedback.html:5 gae/templates/admin/feedback.html:17
+#: gae/templates/tap/feedback.html:5 gae/templates/tap/feedback.html:17
 msgid "feedback"
 msgstr "ご要望"
 
-#: gae/templates/admin/feedback.html:13
+#: gae/templates/tap/feedback.html:13
 msgid "close"
 msgstr "閉じる"
 
-#: gae/templates/admin/feedback.html:14
+#: gae/templates/tap/feedback.html:14
 msgid "send feedback"
 msgstr "送信"
 
