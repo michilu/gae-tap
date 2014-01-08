@@ -25,7 +25,7 @@ BIN_TESTACULAR=$(NODE_MODULES_BASE)/testacular/bin/testacular
 BIN_UGLIFYJS=$(NODE_MODULES_BASE)/uglify-js/bin/uglifyjs
 BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
 TESTACULAR_TARGET=$(GAE_DIR)/tests/test*.coffee
-VERSION=$(GAE_DIR)/static/version
+VERSION=$(TEMPLATE_DIR_PATH)/version.html
 LOCALES=
 test=
 

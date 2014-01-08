@@ -10,7 +10,7 @@
     %h3#modalLabel.modal-title {{ _("feedback") }}
    .modal-body
     %textarea#entry_0.form-control(name="entry.0.single" rows="8" ng-model="description" placeholder="{{ _('messages...') }}" required)
-    %input#entry_1(type="hidden" name="entry.1.single" value="{{ VERSION }}")
+    %input#entry_1(type="hidden" name="entry.1.single" value="{{ VERSIONS }}")
     %input#entry_2(type="hidden" name="entry.2.single")
    .modal-footer
     %a.btn(data-dismiss="modal" aria-hidden="true") {{ _("close") }}

@@ -12,7 +12,7 @@ BIN_COFFEE=$(NODE_MODULES_BASE)/coffee-script/bin/coffee
 BIN_UGLIFYJS=$(NODE_MODULES_BASE)/uglify-js/bin/uglifyjs
 TEMPLATE_DIR=
 BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
-VERSION=static/version
+VERSION=$(TEMPLATE_DIR_PATH)/tap/version.html
 
 .SUFFIXES: .haml .html
 .haml.html:
