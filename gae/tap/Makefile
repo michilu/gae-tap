@@ -54,9 +54,9 @@ clean:
 	rm -f $(MINJS)
 
 $(VERSION):
-	@if [ "$(strip $(shell git log -1 --format='%h'))" != "$(strip $(shell [ -f $@ ] && cat $@))" ] ; then\
-		echo 'git log -1 --format="%h" > $@' ;\
-		git log -1 --format="%h" > $@ ;\
+	@if [ "$(strip $(shell git describe --tags))" != "$(strip $(shell [ -f $@ ] && cat $@))" ] ; then\
+		echo 'git describe --tags > $@' ;\
+		git describe --tags > $@ ;\
 	fi;
 
 template: $(MINJS) $(TEMPLATES_COMPILED_ZIP_PATH)
