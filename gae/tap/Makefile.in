@@ -1,4 +1,4 @@
-all: css js mo test
+all: test css mo js
 
 
 GAE_PATH=$(GAE_HOME)/
@@ -6,6 +6,7 @@ GAE_DIR=gae
 GAE_LIB=site-packages
 GAE_LIB_DIR=$(GAE_DIR)/$(GAE_LIB)
 GAE_LIB_PACKAGES_DIR=$(GAE_LIB_DIR)/packages
+TAP_DIR=$(GAE_DIR)/tap
 TEMPLATE_DIR=templates
 TEMPLATE_DIR_PATH=$(GAE_DIR)/$(TEMPLATE_DIR)
 TEMPLATES_COMPILED_ZIP=templates_compiled.zip
@@ -18,9 +19,10 @@ JS_DIR=$(GAE_DIR)/static/js
 CSS_DIR=$(GAE_DIR)/static/css
 FANSTATIC_DIR=$(GAE_DIR)/static/lib
 PYTEST_TARGET=$(GAE_DIR)/tests/test*.py
-BIN_COFFEE=node_modules/coffee-script/bin/coffee
-BIN_TESTACULAR=node_modules/testacular/bin/testacular
-BIN_UGLIFYJS=node_modules/uglify-js/bin/uglifyjs
+NODE_MODULES_BASE=node_modules
+BIN_COFFEE=$(NODE_MODULES_BASE)/coffee-script/bin/coffee
+BIN_TESTACULAR=$(NODE_MODULES_BASE)/testacular/bin/testacular
+BIN_UGLIFYJS=$(NODE_MODULES_BASE)/uglify-js/bin/uglifyjs
 BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
 TESTACULAR_TARGET=$(GAE_DIR)/tests/test*.coffee
 VERSION=$(GAE_DIR)/static/version

@@ -24,10 +24,12 @@ is_server_error = re.compile(r"^.*?\s5\d{2}\s.*?$").match
 
 # initialize
 if os.path.basename(os.path.abspath(".")) != "gae":
-  os.chdir("gae")
-import tap
-if os.path.basename(os.path.abspath(".")) == "gae":
-  os.chdir("../")
+  if os.path.exists("gae"):
+    os.chdir("gae")
+    import tap
+    os.chdir("../")
+  else:
+    import tap
 
 @contextmanager
 def set_config(**kwargv):
