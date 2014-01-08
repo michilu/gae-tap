@@ -17,13 +17,13 @@ VERSION=static/version
 .SUFFIXES: .haml .html
 .haml.html:
 	haml -f html5 -t ugly $< $@
-HAML = $(wildcard $(TEMPLATE_DIR_PATH)/*.haml)
+HAML = $(wildcard $(TEMPLATE_DIR_PATH)/tap/*.haml)
 HTML = $(HAML:.haml=.html)
 
 .SUFFIXES: .haml .xhtml
 .haml.xhtml:
 	haml -f xhtml -t ugly $< $@
-MOBHAML = $(wildcard $(TEMPLATE_DIR_PATH)/mob/*.haml)
+MOBHAML = $(wildcard $(TEMPLATE_DIR_PATH)/tap/mob/*.haml)
 MOBHTML = $(MOBHAML:.haml=.xhtml)
 
 .SUFFIXES: .coffee .js
