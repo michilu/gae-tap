@@ -73,7 +73,8 @@ admin_console:
   - name: Response Cache
     url: /_tap/response_cache
 
-skip_files: |
+skip_files:
+- |
   ^(.*/)?(
   (#.*#)|
   (.*\.coffee)|
@@ -94,12 +95,13 @@ skip_files: |
   (tap/.*\.zip)|
   (tap/shell\.py)|
   (tap/static/js/i18n.*)|
-  (tap/templates/.*)|
   (tap/test.*)|
-  (templates/.*)|
   (htmlcov/.*)|
   (site-packages/.*\.(pth|txt))|
   (site-packages/.+[.](?!py|zip$))|
   (site-packages/packages/.*\.egg-info)|
   (tests/.*)|
   )$
+# if skip raw template files, define `config_JINJA2_FORCE_COMPILED = True` in appengine_config.py for dev_appserver
+- (tap/templates/.*)
+- (templates/.*)
