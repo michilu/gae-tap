@@ -13,6 +13,8 @@ BIN_UGLIFYJS=$(NODE_MODULES_BASE)/uglify-js/bin/uglifyjs
 TEMPLATE_DIR=
 BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
 VERSION=$(TEMPLATE_DIR_PATH)/tap/version.html
+RELEASE_ZIP=gaetap-$(shell git describe --tags --dirty=+).zip
+RELEASE_FILES=LICENSE $(wildcard Makefile*) $(wildcard *.py) $(HAML) $(MOBHAML) $(COFFEE) $(TEMPLATE_DIR_PATH)/tap/ads/analytics.html $(VERSION)
 
 .SUFFIXES: .haml .html
 .haml.html:
@@ -46,6 +48,7 @@ clean:
 	find . -name "*.sw?" -delete
 	find . -name .DS_Store -delete
 	find . -name .coverage -delete
+	find . -name "gaetap-*.zip" -delete
 	find $(TEMPLATE_DIR_PATH) -name "*.py" -delete
 	rm -f $(TEMPLATES_COMPILED_ZIP_PATH)
 	rm -f $(HTML)
@@ -72,5 +75,10 @@ $(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION)
 
 shell:
 	@cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME ./tap/shell.py
+
+release: $(RELEASE_ZIP)
+
+$(RELEASE_ZIP): $(RELEASE_FILES)
+	cd $(GAE_DIR); zip -FS tap/$@ $(foreach file,$(RELEASE_FILES),tap/$(file))
 
 .PHONY: all clean $(VERSION)
