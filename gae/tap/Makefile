@@ -12,9 +12,10 @@ BIN_COFFEE=$(NODE_MODULES_BASE)/coffee-script/bin/coffee
 BIN_UGLIFYJS=$(NODE_MODULES_BASE)/uglify-js/bin/uglifyjs
 TEMPLATE_DIR=
 BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
-VERSION=$(TEMPLATE_DIR_PATH)/tap/version.html
-RELEASE_ZIP=gaetap-$(shell git describe --tags --dirty=+).zip
-RELEASE_FILES=LICENSE $(wildcard Makefile*) $(wildcard *.py) $(HAML) $(MOBHAML) $(COFFEE) $(TEMPLATE_DIR_PATH)/tap/ads/analytics.html $(VERSION)
+VERSION_HTML=$(TEMPLATE_DIR_PATH)/tap/version.html
+VERSION=$(shell git describe --tags --dirty=+)
+RELEASE_ZIP=gaetap-$(VERSION).zip
+RELEASE_FILES=LICENSE $(wildcard Makefile*) $(wildcard *.py) $(HAML) $(MOBHAML) $(COFFEE) $(TEMPLATE_DIR_PATH)/tap/ads/analytics.html $(VERSION_HTML)
 
 .SUFFIXES: .haml .html
 .haml.html:
@@ -56,10 +57,10 @@ clean:
 	rm -f $(JS)
 	rm -f $(MINJS)
 
-$(VERSION):
-	@if [ "$(strip $(shell git describe --tags))" != "$(strip $(shell [ -f $@ ] && cat $@))" ] ; then\
-		echo 'git describe --tags > $@' ;\
-		git describe --tags > $@ ;\
+$(VERSION_HTML):
+	@if [ "$(VERSION)" != "$(strip $(shell [ -f $@ ] && cat $@))" ] ; then\
+		echo 'echo $(VERSION) > $@' ;\
+		echo $(VERSION) > $@ ;\
 	fi;
 
 template: $(MINJS) $(TEMPLATES_COMPILED_ZIP_PATH)
@@ -69,7 +70,7 @@ js: $(JS) $(MINJS)
 $(GAE_LIB_DIR):
 	mkdir -p $@
 
-$(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION)
+$(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION_HTML)
 	jinja2precompiler -c $(TEMPLATE_DIR_PATH)
 	zip -FS -j $(TEMPLATES_COMPILED_ZIP_PATH) $(TEMPLATE_DIR_PATH)/*.pyc
 
@@ -81,4 +82,4 @@ release: $(RELEASE_ZIP)
 $(RELEASE_ZIP): $(RELEASE_FILES)
 	cd $(GAE_DIR); zip -FS tap/$@ $(foreach file,$(RELEASE_FILES),tap/$(file))
 
-.PHONY: all clean $(VERSION)
+.PHONY: all clean $(VERSION_HTML)

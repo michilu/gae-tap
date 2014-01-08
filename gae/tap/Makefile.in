@@ -25,7 +25,8 @@ BIN_TESTACULAR=$(NODE_MODULES_BASE)/testacular/bin/testacular
 BIN_UGLIFYJS=$(NODE_MODULES_BASE)/uglify-js/bin/uglifyjs
 BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
 TESTACULAR_TARGET=$(GAE_DIR)/tests/test*.coffee
-VERSION=$(TEMPLATE_DIR_PATH)/version.html
+VERSION_HTML=$(TEMPLATE_DIR_PATH)/version.html
+VERSION=$(shell git describe --always --dirty=+)
 LOCALES=
 test=
 
@@ -110,10 +111,10 @@ clean:
 	rm -rf $(FANSTATIC_DIR)
 	rm -rf $(GAE_LIB_PACKAGES_DIR)
 
-$(VERSION):
-	@if [ "$(strip $(shell git log -1 --format='%h'))" != "$(strip $(shell [ -f $@ ] && cat $@))" ] ; then\
-		echo 'git log -1 --format="%h" > $@' ;\
-		git log -1 --format="%h" > $@ ;\
+$(VERSION_HTML):
+	@if [ "$(VERSION)" != "$(strip $(shell [ -f $@ ] && cat $@))" ] ; then\
+		echo 'echo $(VERSION) > $@' ;\
+		echo $(VERSION) > $@ ;\
 	fi;
 
 template: $(MINJS) mo $(GAE_LIB_PACKAGES_DIR) $(TEMPLATES_COMPILED_ZIP_PATH)
@@ -128,7 +129,7 @@ mo: $(PYMAPPING) $(JSMAPPING) $(POT) $(MO)
 $(GAE_LIB_DIR):
 	mkdir -p $@
 
-$(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION)
+$(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION_HTML)
 	jinja2precompiler -c $(TEMPLATE_DIR_PATH)
 	zip -FS -j $(TEMPLATES_COMPILED_ZIP_PATH) $(TEMPLATE_DIR_PATH)/*.pyc
 
@@ -193,4 +194,4 @@ shell:
 doc:
 	cd doc; PYTHONPATH=$$GAE_HOME make html
 
-.PHONY: all template clean test runserver deploy update_cron update_queues doc $(VERSION)
+.PHONY: all template clean test runserver deploy update_cron update_queues doc $(VERSION_HTML)
