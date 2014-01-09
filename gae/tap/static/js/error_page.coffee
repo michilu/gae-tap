@@ -3,10 +3,15 @@ $ () ->
   limit = 29000
   interval = 300
   $seconds = $("#seconds")
-  setInterval(() ->
+
+  indicator = () ->
     value = count / (limit / interval) * 100
+    if value > 100
+      return
     $seconds.css("width", "#{value}%")
     count += 1
-  , interval)
+    setTimeout indicator, interval
+    return
+  indicator()
 
   return

@@ -17,13 +17,17 @@
 %meta(property="og:type" content="website")
 %meta(property="og:url" content="https://{{ domain }}/")
 {% endblock og %}
+{% block fb %}
 %meta(property="fb:app_id" content="{{ fb_app_id }}")
+{% endblock fb %}
 {% if I18N %}
 %script
  window.gettext=function(t){return t},window.ngettext=function(t,n,e){return 1===e?t:n};
 %script(src="{{ URI_FOR('I18Njs', domain=I18N_DOMAIN, language=LANGUAGE) }}")
 {% endif %}
+{% block utils_js %}
 %script(src="/static/tap/js/utils{% if not DEBUG %}.min{% endif %}.js")
+{% endblock utils_js %}
 {% block head %}{% endblock head %}
 {% include "tap/ads/analytics.html" %}
 {% block body %}
@@ -41,11 +45,17 @@
 {% block footer %}
 %footer(style="margin-top:100px;")
  %div(style="text-align:center;")
+  {% if title %}
   &copy;
   %a(href="//{{ domain }}{{ base_path }}" title="{{ title }}")>< {{ title }}
   &nbsp;{{ since }}
+  {% endif %}
   %span.text-muted {% block version %}{{ VERSIONS }}{% endblock version %}
+  {% block feedback_link %}
   {% include "tap/feedback_link.html" %}
+  {% endblock feedback_link %}
+{% block feedback_form %}
 {% include "tap/feedback_form.html" %}
+{% endblock feedback_form %}
 {% endblock footer %}
 {% endblock body %}

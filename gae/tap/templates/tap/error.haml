@@ -1,19 +1,25 @@
 {% extends "tap/base.html" %}
+{% block og %}{% endblock og %}
+{% block fb %}{% endblock fb %}
+{% block utils_js %}{% endblock utils_js %}
 {% block head %}
 %meta{:"http-equiv" => "refresh", :content => "30; url=/"}
-%script{:src => "/static/js/error_page.js", :type => "text/javascript"}
+%script(src="/static/tap/js/error_page{% if not DEBUG %}.min{% endif %}.js")
 {% endblock head %}
 {% block main %}
 %div
  %a{:href => "/"} トップ
  &gt;
  サーバーエラーが発生しました
-.hero-unit
- %h2 サーバーエラーが発生しました
- %p 30秒後にトップページへ移動します
- .progress.progress-striped.active
-  #seconds.bar{:style => "width: 0%;"}
- %ul.pager
-  %li
-   %a{:href => "/"} トップページヘ移動する
+.row
+ .jumbotron.col-md-8.col-md-offset-2
+  %h2 サーバーエラーが発生しました
+  %p 30秒後にトップページへ移動します
+  .progress.progress-striped.active
+   #seconds.progress-bar(role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;")
+  %ul.pager
+   %li
+    %a{:href => "/"} トップページヘ移動する
 {% endblock main %}
+{% block feedback_link %}{% endblock feedback_link %}
+{% block feedback_form %}{% endblock feedback_form %}
