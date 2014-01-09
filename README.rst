@@ -88,6 +88,8 @@ Utils:
 Set up
 ------
 
+::
+
     $ git clone https://github.com/MiCHiLU/gae-tap.git
     $ cd gae-tap
     $ bundle install
