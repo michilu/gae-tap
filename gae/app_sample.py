@@ -1,12 +1,11 @@
 from datetime import datetime
 
-import tap
-
 from google.appengine.ext import ndb
-
 from js.angular import angular_cookies, angular_resource
 from js.bootstrap import bootstrap
 import webapp2
+
+import tap
 
 class Index(tap.RequestHandler):
   i18n = True
