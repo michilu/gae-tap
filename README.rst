@@ -69,8 +69,8 @@ Development:
 Testing:
 
 * coverage of tests
+* karma
 * py.test
-* testacular
 
 Utils:
 
