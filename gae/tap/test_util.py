@@ -19,10 +19,43 @@ from google.appengine.api import apiproxy_stub_map
 from google.appengine.datastore import datastore_stub_util
 from google.appengine.ext import deferred, testbed
 
-get_tail = re.compile("^(.*/google_appengine([^/]+)?/)?(?P<tail>.*)$").match
-is_server_error = re.compile(r"^.*?\s5\d{2}\s.*?$").match
+
+# Search Path
+
+def execute_once(func):
+
+  @wraps(func)
+  def inner(_result=[None], *argv, **kwargv):
+    if _result[0] is None:
+      _result[0] = func(*argv, **kwargv)
+      if _result[0] is None:
+        raise ValueError("The return value must be not `None`.")
+    return _result[0]
+
+  return inner
+
+@execute_once
+def sys_path_append():
+  import google
+  base = os.path.join(os.path.dirname(google.__file__), "../lib/")
+  for webapp2 in ["webapp2-2.5.2", "webapp2"]:
+    path = os.path.join(base, webapp2)
+    if os.path.exists(path):
+      sys.path.append(path)
+      break
+  else:
+    raise
+  for path in ["django-1.5", "endpoints-1.0", "protorpc-1.0", "jinja2-2.6"]:
+    path = os.path.join(base, path)
+    if os.path.exists(path):
+      sys.path.append(path)
+    else:
+      raise
+  return True
 
 # initialize
+sys_path_append()
+
 if os.path.basename(os.path.abspath(".")) != "gae":
   if os.path.exists("gae"):
     os.chdir("gae")
@@ -30,6 +63,10 @@ if os.path.basename(os.path.abspath(".")) != "gae":
     os.chdir("../")
   else:
     import tap
+
+
+get_tail = re.compile("^(.*/google_appengine([^/]+)?/)?(?P<tail>.*)$").match
+is_server_error = re.compile(r"^.*?\s5\d{2}\s.*?$").match
 
 @contextmanager
 def set_config(**kwargv):

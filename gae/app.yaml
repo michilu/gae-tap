@@ -10,6 +10,8 @@ automatic_scaling:
 libraries:
 - name: django
   version: latest
+- name: endpoints
+  version: 1.0
 - name: jinja2
   version: latest
 - name: markupsafe

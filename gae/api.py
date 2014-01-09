@@ -1,7 +1,7 @@
 import endpoints
 
-import main_api_v1
+import app_sample
 
 api_services = list()
-api_services.extend(main_api_v1.api_services)
+api_services.extend(app_sample.api_services)
 app = endpoints.api_server(api_services)
