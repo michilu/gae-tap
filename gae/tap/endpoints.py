@@ -1,16 +1,23 @@
+from google.appengine.api import (
+  namespace_manager,
+)
+
 from protorpc import remote
+from webapp2_extras import sessions
+import webob
 
 # Google Cloud Endpoints
 
 def get_user_from_endpoints_service(endpoints_service):
+  import tap
   request_state = endpoints_service.request_state
-  request_state.app = get_app()
+  request_state.app = tap.get_app()
   request_state.cookies = webob.request.RequestCookies({
     "HTTP_COOKIE": request_state.headers.get("cookie"),
   })
   session_store = sessions.SessionStore(request_state)
-  session_store.config["secret_key"] = get_namespaced_secret_key(namespace_manager.get_namespace())
-  return User.load_from_session(session_store.get_session())
+  session_store.config["secret_key"] = tap.get_namespaced_secret_key(namespace_manager.get_namespace())
+  return tap.User.load_from_session(session_store.get_session())
 
 class CRUDServiceClass(remote._ServiceClass):
 
