@@ -101,8 +101,11 @@ def set_environ(**kwargv):
       else:
         del os.environ[key]
 
-def gen_test_app(request_handler):
-  return TestApp(webapp2.WSGIApplication(routes=[("/", request_handler)]))
+def gen_test_app(request_handler, routes=None):
+  if routes is None:
+    routes = list()
+  routes.insert(0, ("/", request_handler))
+  return TestApp(webapp2.WSGIApplication(routes=routes))
 
 def set_domain(domain):
 
