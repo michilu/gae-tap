@@ -50,12 +50,12 @@ from . import warmup
 # Global
 
 AHEAD_HTML5 = "<!DOCTYPE html>\n<html>"
-ROOT_DIR_PATH = os.path.abspath(os.path.curdir)
 EMAIL_TRIM_SIZE = 0x3000 #12kB
 MAX_URLFETCH_DEADLINE = 60
 NAMESPACE_KEY = "NAMESPACE"
 RE_JS_Comments = re.compile(r"//.*$")
 RE_JS_MultiLineComments = re.compile(r"/\*.*\*/", re.DOTALL)
+ROOT_DIR_PATH = os.path.abspath(os.path.curdir)
 TASKQUEUE_MAXSIZE = 1000
 _memoize_cache = dict()
 
