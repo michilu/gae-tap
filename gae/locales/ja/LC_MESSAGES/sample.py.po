@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-03-20 17:39+0900\n"
+"POT-Creation-Date: 2014-01-10 10:40+0700\n"
 "PO-Revision-Date: 2013-03-20 08:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -25,11 +25,27 @@ msgstr "ニシキヘビ"
 msgid "Anaconda"
 msgstr "アナコンダ"
 
-#: gae/templates/sample.html:15
+#: gae/tap/templates/tap/feedback_form.html:8
+msgid "feedback"
+msgstr "ご要望"
+
+#: gae/tap/templates/tap/feedback_form.html:11
+msgid "messages..."
+msgstr "メッセージ..."
+
+#: gae/tap/templates/tap/feedback_form.html:16
+msgid "close"
+msgstr "閉じる"
+
+#: gae/tap/templates/tap/feedback_form.html:17
+msgid "send feedback"
+msgstr "送信"
+
+#: gae/templates/sample.html:20
 msgid "Boa"
 msgstr "ボア"
 
-#: gae/templates/sample.html:16
+#: gae/templates/sample.html:21
 msgid "Cobra"
 msgstr "コブラ"
 
