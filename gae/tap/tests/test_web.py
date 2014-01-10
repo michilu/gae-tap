@@ -86,8 +86,8 @@ class AppTest(tests.util.TestCase):
     assert queue.fetch_statistics().tasks == 1
 
   def test_OverQuotaError(self):
-    message = "30秒後にトップページへ移動します"
-    error_message = "サーバーエラーが発生しました。トップページを表示しています。"
+    message = "will move to the top page after 30 seconds..."
+    error_message = "Sorry, a server error has occurred. Display the top page."
     queue = taskqueue.Queue("cache")
 
     assert [i.tag for i in queue.lease_tasks(0, 1000)] == []
@@ -118,8 +118,8 @@ class AppTest(tests.util.TestCase):
     response.mustcontain(error_message)
 
   def test_OverQuotaError_for_featurephone(self):
-    message = u"ﾄｯﾌﾟﾍﾟｰｼﾞへ移動する".encode("Shift_JIS")
-    error_message = u"ｻｰﾊﾞｰｴﾗｰが発生しました｡ﾄｯﾌﾟﾍﾟｰｼﾞを表示しています｡".encode("Shift_JIS")
+    message = u"Go to the top page".encode("Shift_JIS")
+    error_message = u"Sorry, a server error has occurred. Display the top page.".encode("Shift_JIS")
     queue = taskqueue.Queue("cache")
 
     assert [i.tag for i in queue.lease_tasks(0, 1000)] == []
@@ -161,7 +161,7 @@ class AppTest(tests.util.TestCase):
     response.mustcontain("MaintainResponse: 1 entities deleted")
 
   def test_internal_server_error(self):
-    message = "30秒後にトップページへ移動します"
+    message = "will move to the top page after 30 seconds..."
 
     with tests.util.set_config(DEBUG=False):
       response = self.app.get("/test/error.html", status=500)

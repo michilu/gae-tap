@@ -1,12 +1,12 @@
 {% extends "tap/mob/base.xhtml" %}
 {% block main %}
 %div
- %a{:href => "/"} トップ
+ %a{:href => "/"} {{ _("top page") }}
  &gt;
- サーバーエラーが発生しました
+ {{ _("a server error has occurred") }}
 .hero-unit
- %h2 サーバーエラーが発生しました
+ %h2 {{ _("Sorry, a server error has occurred.") }}
  %ul.pager
   %li
-   %a{:href => "/"} トップページへ移動する
+   %a{:href => "/"} {{ _("Go to the top page") }}
 {% endblock main %}

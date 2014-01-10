@@ -57,6 +57,7 @@ RE_JS_Comments = re.compile(r"//.*$")
 RE_JS_MultiLineComments = re.compile(r"/\*.*\*/", re.DOTALL)
 ROOT_DIR_PATH = os.path.abspath(os.path.curdir)
 TASKQUEUE_MAXSIZE = 1000
+_ = gettext.gettext
 _memoize_cache = dict()
 
 
@@ -1235,12 +1236,12 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
       super(RequestHandler, self).dispatch()
     except webob.exc.HTTPGone:
       self.error(410)
-      message = u"見つかりませんでした。トップページを表示しています。"
+      message = _(u"Not found. Display the top page.")
     except apiproxy_errors.OverQuotaError:
       if self.is_bot:
         self.abort(503, headers=[("Retry-After", "86400")])
       self.response.set_status(500, "Status: 503 Service Unavailabl")
-      message = u"サーバーエラーが発生しました。トップページを表示しています。"
+      message = _(u"Sorry, a server error has occurred. Display the top page.")
     except Exception as e:
       if config.DEBUG:
         raise
@@ -1249,7 +1250,7 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
       logging.error("{0}: {1}".format(e.__class__.__name__, e))
       send_exception_report()
       self.error(500)
-      message = u"サーバーエラーが発生しました。トップページを表示しています。"
+      message = _(u"Sorry, a server error has occurred. Display the top page.")
     else:
       if (200 <= self.response.status_int < 400
           and config.GA_ACCOUNT
@@ -1268,6 +1269,8 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
     else:
       index = "/"
       template_path = "tap/error.html"
+      self.i18n = True
+      self.i18n_domain = "tap"
       self.response.write(AHEAD_HTML5)
       try:
         from js.bootstrap import bootstrap

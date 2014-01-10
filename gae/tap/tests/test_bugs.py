@@ -8,6 +8,7 @@ import tap
 
 from google.appengine.ext import ndb
 from google.appengine.runtime import apiproxy_errors
+import webapp2
 
 import conf
 
@@ -25,12 +26,12 @@ class BugTest(tests.util.TestCase):
       def tasklet(self):
         raise apiproxy_errors.OverQuotaError
 
-    self.app = tests.util.gen_test_app(App)
+    self.app = tests.util.gen_test_app(App,
+      routes=[webapp2.Route("/_tap/i18n/<domain>.<language>.js", "tap.I18Njs", name="I18Njs")],
+    )
     self.app.get("/", status=500)
     self.expected_logs = [
-      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'initial generator get(test_bugs.py:...) raised OverQuotaError()'),
       ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator inner(__init__.py:...) raised OverQuotaError()'),
-      ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', 'error.html'),
     ]
 
   def test_cache_period(self):

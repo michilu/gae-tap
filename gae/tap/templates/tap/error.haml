@@ -8,18 +8,18 @@
 {% endblock head %}
 {% block main %}
 %div
- %a{:href => "/"} トップ
+ %a{:href => "/"} {{ _("top page") }}
  &gt;
- サーバーエラーが発生しました
+ {{ _("a server error has occurred") }}
 .row
  .jumbotron.col-md-8.col-md-offset-2
-  %h2 サーバーエラーが発生しました
-  %p 30秒後にトップページへ移動します
+  %h2 {{ _("Sorry, a server error has occurred.") }}
+  %p {{ _("will move to the top page after 30 seconds...") }}
   .progress.progress-striped.active
    #seconds.progress-bar(role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;")
   %ul.pager
    %li
-    %a{:href => "/"} トップページヘ移動する
+    %a{:href => "/"} {{ _("Go to the top page") }}
 {% endblock main %}
 {% block feedback_link %}{% endblock feedback_link %}
 {% block feedback_form %}{% endblock feedback_form %}
