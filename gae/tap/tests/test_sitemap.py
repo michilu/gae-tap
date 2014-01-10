@@ -3,7 +3,6 @@
 
 from datetime import datetime
 import cPickle as pickle
-import os
 import re
 import unittest
 import urlparse

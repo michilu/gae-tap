@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
-
 import tests.util
 
 from google.appengine.api import urlfetch_stub

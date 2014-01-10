@@ -3,7 +3,6 @@
 
 from datetime import datetime
 from random import random
-import os
 
 import tests.util
 import tap

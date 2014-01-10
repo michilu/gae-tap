@@ -3,7 +3,6 @@
 
 from random import random
 import cPickle as pickle
-import os
 import unittest
 
 import pytest
