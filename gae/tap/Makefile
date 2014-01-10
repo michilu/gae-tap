@@ -79,7 +79,7 @@ shell:
 
 release: $(RELEASE_ZIP)
 
-$(RELEASE_ZIP): $(RELEASE_FILES)
-	cd $(GAE_DIR); zip -FS tap/$@ $(foreach file,$(RELEASE_FILES),tap/$(file))
+$(RELEASE_ZIP): $(RELEASE_FILES) $(TEMPLATES_COMPILED_ZIP_PATH)
+	cd $(GAE_DIR); zip -FS tap/$@ $(foreach file,$(RELEASE_FILES),tap/$(file)) $(GAE_LIB)/$(TEMPLATES_COMPILED_ZIP)
 
 .PHONY: all clean $(VERSION_HTML)
