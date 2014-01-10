@@ -8,6 +8,7 @@ import tests.util
 
 from google.appengine.api import urlfetch_stub
 from minimock import mock, restore
+import pytest
 
 import conf
 
@@ -40,6 +41,8 @@ class OAuthTest(tests.util.TestCase):
 class OAuthSecretsTest(tests.util.TestCase):
   root_path = conf.root_path
 
+  @pytest.mark.skipif('os.path.exists("gae/oauth_config/default.py")',
+                      reason="exists gae/oauth_config/default.py")
   def test_secrets(self):
     self.app.get("/oauth/google", status=500)
     self.expected_logs = [
