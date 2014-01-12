@@ -41,3 +41,6 @@ class CRUDServiceClass(remote._ServiceClass):
 class CRUDService(remote.Service):
 
   __metaclass__ = CRUDServiceClass
+
+  def _get_user(self):
+    return get_user_from_endpoints_service(self)
