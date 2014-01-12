@@ -35,6 +35,7 @@ Supports:
 * Google OAuth authentication-based Users API (alternate of Google App Engine Users API)
 * generating sitemaps
 * sessions
+* Google Cloud Endpoints API as a CRUD, avoid method naming conflict in implemented with multiple classes
 
 Low cost operating:
 
