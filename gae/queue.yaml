@@ -12,3 +12,5 @@ queue:
   mode: pull
 - name: ringbuffer
   mode: pull
+- name: queue
+  mode: pull

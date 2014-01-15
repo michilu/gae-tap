@@ -594,6 +594,33 @@ class Jinja2Factory(jinja2.Jinja2):
 
     self.environment = env
 
+class Queue(object):
+  queue_name = "queue"
+  queue = taskqueue.Queue(queue_name)
+  tag = None
+  lease_seconds = 600 # 10m
+
+  def __init__(self, tag):
+    self.tag = tag
+
+  def put(self, *values):
+    if len(values):
+      self.queue.add([taskqueue.Task(payload=dumps(value), method="PULL", tag=self.tag) for value in values])
+
+  def collect(self, lease_seconds=None):
+    if lease_seconds is None:
+      lease_seconds = self.lease_seconds
+    while True:
+      delete_tasks = list()
+      try:
+        for task in self.queue.lease_tasks_by_tag(lease_seconds, TASKQUEUE_MAXSIZE, self.tag):
+          yield loads(task.payload)
+          delete_tasks.append(task)
+      finally:
+        self.queue.delete_tasks(delete_tasks)
+        if len(delete_tasks) < TASKQUEUE_MAXSIZE:
+          return
+
 class RingBuffer(object):
   queue_name = "ringbuffer"
   queue = taskqueue.Queue(queue_name)
