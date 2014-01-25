@@ -307,6 +307,10 @@ def base_decoder(alphabet):
   >>> base32_decode = base_decoder("23456789ABCDEFGHJKLMNPQRSTUVWXYZ")
   >>> base32_decode("36TE2QL")
   1234567890
+
+  Note: will return 0 if given empty string
+  >>> base32_decode("")
+  0
   """
   reverse_base = dict((c, i) for i, c in enumerate(alphabet))
   length = len(reverse_base)
