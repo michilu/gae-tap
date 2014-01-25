@@ -17,8 +17,9 @@ angular.module("app", [
 .config([
   "$routeProvider"
   "$locationProvider"
+  "$interpolateProvider"
 
-($routeProvider, $locationProvider, config) ->
+($routeProvider, $locationProvider, $interpolateProvider, config) ->
 
   $routeProvider
 
@@ -31,6 +32,11 @@ angular.module("app", [
 
   # Without server side support html5 must be disabled.
   $locationProvider.html5Mode(false)
+
+  $interpolateProvider.startSymbol "[["
+  $interpolateProvider.endSymbol "]]"
+
+  return
 ])
 
 
@@ -41,10 +47,11 @@ angular.module("app.controllers", [])
 .controller("AppCtrl", [
   "$scope"
   "$location"
-  "$resource"
-  "$rootScope"
+  "$log"
 
-($scope, $location, $resource, $rootScope) ->
+($scope, $location, $log) ->
+  unless $scope.$$phase?
+    $scope.$apply()
 
   # Uses the url to determine if the selected
   # menu item should have the class active.
