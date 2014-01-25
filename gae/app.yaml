@@ -64,6 +64,12 @@ handlers:
   script: tap.app_static_root
 - url: /.*
   script: tap.app
+#- url: (.*)/
+#  static_files: htdocs\1/index.html
+#  upload: htdocs(.*)/index.html
+#- url: (.*)
+#  static_files: htdocs\1
+#  upload: htdocs(.*)
 
 admin_console:
   pages:
