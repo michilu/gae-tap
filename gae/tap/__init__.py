@@ -503,6 +503,18 @@ def fetch_keys_only(query, limit=None):
     entities = yield query.fetch_async(limit)
     raise ndb.Return([entity.key for entity in entities])
 
+@ndb.tasklet
+def fetch_page_async(query, page=10, cursor_string=None, cursor=None, keys_only=False):
+  if cursor_string is None:
+    cursor_string = ""
+  if cursor is None:
+    try:
+      cursor = ndb.Cursor.from_websafe_string(cursor_string)
+    except datastore_errors.BadValueError:
+      cursor = ndb.Cursor.from_websafe_string("")
+  results, cursor, more = yield query.fetch_page_async(page, start_cursor=cursor, keys_only=keys_only)
+  raise ndb.Return(results, cursor, more)
+
 def make_synctasklet(tasklet):
 
   @wraps(tasklet)
@@ -1497,15 +1509,10 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
     headers = (("Content-Type", mimetype),)
     return body, headers
 
-  @ndb.tasklet
-  def fetch_page_async(self, query, page=10, cursor=None, keys_only=False):
-    if cursor is None:
-      try:
-        cursor = ndb.Cursor.from_websafe_string(self.request.query_string)
-      except datastore_errors.BadValueError:
-        cursor = ndb.Cursor.from_websafe_string("")
-    results, cursor, more = yield query.fetch_page_async(page, start_cursor=cursor, keys_only=keys_only)
-    raise ndb.Return(results, cursor, more)
+  def fetch_page_async(self, query, page=10, cursor_string=None, cursor=None, keys_only=False):
+    if cursor_string is None:
+      cursor_string = self.request.query_string
+    return fetch_page_async(query, page, cursor_string, cursor, keys_only)
 
   @ndb.synctasklet
   def proxy(self, url=None, payload=None, method=None, headers=None):
