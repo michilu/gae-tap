@@ -40,8 +40,9 @@ class OverQuotaError():
     raise ndb.Return([Entity()])
 
 class TestFunctions(unittest.TestCase):
-  def test_base_encode(self):
-    assert tap.base_encode("test", 0) == "t"
+  def test_base_encoder(self):
+    base32_encode = tap.base_encoder("abcd")
+    assert base32_encode(0) == "a"
 
   def test_encodeURI(self):
     assert tap.encodeURI(" /;") == "%20/;"

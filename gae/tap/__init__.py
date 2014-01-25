@@ -319,21 +319,25 @@ def base_decoder(alphabet):
 
   return base_decode
 
-def base_encode(alphabet, num):
+def base_encoder(alphabet):
   """
 
-  >>> base_encode('23456789ABCDEFGHJKLMNPQRSTUVWXYZ', 1234567890)
+  >>> base32_encode = base_encoder("23456789ABCDEFGHJKLMNPQRSTUVWXYZ")
+  >>> base32_encode(1234567890)
   '36TE2QL'
   """
   base = len(alphabet)
-  if (num == 0):
-    return alphabet[0]
-  result = list()
-  result_append = result.append
-  while num:
-    result_append(alphabet[num % base])
-    num = num // base
-  return "".join(reversed(result))
+
+  def func(num):
+    if num == 0:
+      return alphabet[0]
+    result = ""
+    while num != 0:
+      result = alphabet[num % base] + result
+      num /= base
+    return result
+
+  return func
 
 def config_to_dict(config):
   result = dict(config._defaults)
