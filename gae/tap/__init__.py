@@ -223,6 +223,7 @@ def in_namespace(namespace):
 
 def parse_vars(arg_name, stack_level=2):
   """
+
   >>> @parse_vars("bar")
   ... def x(*argv, **kwargv):
   ...   return argv, kwargv
@@ -302,6 +303,7 @@ def on_namespace(namespace):
 
 def base_encode(alphabet, num):
   """
+
   >>> base_encode('23456789ABCDEFGHJKLMNPQRSTUVWXYZ', 1234567890)
   '36TE2QL'
   """
@@ -448,6 +450,7 @@ def get_keys_only(query):
 
 def get_vars_from_frame(args, stack_level=1):
   """
+
   >>> def f(arg1, arg2=None):
   ...   local_value1 = "val1"
   ...   local_value2 = "val2"
@@ -1841,6 +1844,7 @@ def end_recording(status, firepython_set_extension_data=None):
 
 def save_record(status):
   """
+
   >>> save_record("200")
   True
   >>> save_record("500")
