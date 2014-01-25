@@ -301,6 +301,24 @@ def on_namespace(namespace):
 
 # Functions
 
+def base_decoder(alphabet):
+  """
+
+  >>> base32_decode = base_decoder("23456789ABCDEFGHJKLMNPQRSTUVWXYZ")
+  >>> base32_decode("36TE2QL")
+  1234567890
+  """
+  reverse_base = dict((c, i) for i, c in enumerate(alphabet))
+  length = len(reverse_base)
+
+  def base_decode(string):
+    num = 0
+    for index, char in enumerate(reversed(string)):
+      num += (length ** index) * reverse_base[char]
+    return num
+
+  return base_decode
+
 def base_encode(alphabet, num):
   """
 
