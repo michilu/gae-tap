@@ -44,7 +44,7 @@ from google.appengine.ext import deferred, ndb, zipserve
 from google.appengine.ext.appstats import recording
 from google.appengine.runtime import apiproxy_errors
 
-from . import warmup
+import warmup
 
 
 # Global
