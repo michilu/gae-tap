@@ -343,6 +343,9 @@ def base_encoder(alphabet):
 
   return func
 
+base62_decode = base_decoder(string.digits + string.letters)
+base62_encode = base_encoder(string.digits + string.letters)
+
 def config_to_dict(config):
   result = dict(config._defaults)
   result.update(config._overrides)

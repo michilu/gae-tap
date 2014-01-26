@@ -1,5 +1,11 @@
+from __future__ import absolute_import
+
+import os
+import string
+
 from google.appengine.api import (
   namespace_manager,
+  oauth,
 )
 
 from protorpc import remote
@@ -18,6 +24,24 @@ def get_user_from_endpoints_service(endpoints_service):
   session_store = sessions.SessionStore(request_state)
   session_store.config["secret_key"] = tap.get_namespaced_secret_key(namespace_manager.get_namespace())
   return tap.User.load_from_session(session_store.get_session())
+
+def get_user_id_from_endpoints_service():
+  import tap
+  import endpoints
+  current_user = endpoints.get_current_user()
+  if current_user is None:
+    raise endpoints.UnauthorizedException()
+  user_id = current_user.user_id()
+
+  # for dev_appserver
+  # http://stackoverflow.com/questions/16661109
+  if user_id is None:
+    oauth_user = oauth.get_current_user(os.getenv("OAUTH_LAST_SCOPE"))
+    if oauth_user is None or oauth_user.user_id() is None:
+      raise endpoints.NotFoundException()
+    user_id = oauth_user.user_id()
+
+  return user_id
 
 class CRUDServiceClass(remote._ServiceClass):
 
@@ -44,3 +68,8 @@ class CRUDService(remote.Service):
 
   def _get_user(self):
     return get_user_from_endpoints_service(self)
+
+  def _get_user_key_id(self):
+    import tap
+    user_key_id =  get_user_id_from_endpoints_service()
+    return tap.base62_encode(int(user_key_id))
