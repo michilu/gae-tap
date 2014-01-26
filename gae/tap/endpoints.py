@@ -25,12 +25,15 @@ def get_user_from_endpoints_service(endpoints_service):
   session_store.config["secret_key"] = tap.get_namespaced_secret_key(namespace_manager.get_namespace())
   return tap.User.load_from_session(session_store.get_session())
 
-def get_user_id_from_endpoints_service():
+def get_user_id_from_endpoints_service(raises=True):
   import tap
   import endpoints
   current_user = endpoints.get_current_user()
   if current_user is None:
-    raise endpoints.UnauthorizedException()
+    if raises:
+      raise endpoints.UnauthorizedException()
+    else:
+      return
   user_id = current_user.user_id()
 
   # for dev_appserver
@@ -38,7 +41,10 @@ def get_user_id_from_endpoints_service():
   if user_id is None:
     oauth_user = oauth.get_current_user(os.getenv("OAUTH_LAST_SCOPE"))
     if oauth_user is None or oauth_user.user_id() is None:
-      raise endpoints.NotFoundException()
+      if raises:
+        raise endpoints.UnauthorizedException()
+      else:
+        return
     user_id = oauth_user.user_id()
 
   return user_id
