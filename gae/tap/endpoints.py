@@ -74,7 +74,7 @@ class CRUDService(remote.Service):
 
   __metaclass__ = CRUDServiceClass
 
-def get_user_id(self):
+def get_user_id(_self=None):
   import tap
   user_id = get_user_id_from_endpoints_service()
   return tap.base62_encode(int(user_id))
