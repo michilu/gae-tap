@@ -51,29 +51,6 @@ def get_user_id_from_endpoints_service(raises=True):
 
   return user_id
 
-class CRUDServiceClass(remote._ServiceClass):
-
-  @staticmethod
-  def __add_prefix(name, dct):
-    new_dct = dict()
-    for key, value in dct.iteritems():
-      if not key.startswith("_"):
-        key = "_{0}_{1}".format(name, key)
-      new_dct[key] = value
-    return new_dct
-
-  def __new__(cls, name, bases, dct):
-    new_dct = CRUDServiceClass.__add_prefix(name, dct)
-    return super(CRUDServiceClass, cls).__new__(cls, name, bases, new_dct)
-
-  def __init__(cls, name, bases, dct):
-    new_dct = CRUDServiceClass.__add_prefix(name, dct)
-    super(CRUDServiceClass, cls).__init__(name, bases, new_dct)
-
-class CRUDService(remote.Service):
-
-  __metaclass__ = CRUDServiceClass
-
 def get_user_id(_self=None):
   import tap
   user_id = get_user_id_from_endpoints_service()
@@ -105,3 +82,26 @@ def rate_limit(rate, size, key=None, tag=None):
     return inner
 
   return decorator
+
+class CRUDServiceClass(remote._ServiceClass):
+
+  @staticmethod
+  def __add_prefix(name, dct):
+    new_dct = dict()
+    for key, value in dct.iteritems():
+      if not key.startswith("_"):
+        key = "_{0}_{1}".format(name, key)
+      new_dct[key] = value
+    return new_dct
+
+  def __new__(cls, name, bases, dct):
+    new_dct = CRUDServiceClass.__add_prefix(name, dct)
+    return super(CRUDServiceClass, cls).__new__(cls, name, bases, new_dct)
+
+  def __init__(cls, name, bases, dct):
+    new_dct = CRUDServiceClass.__add_prefix(name, dct)
+    super(CRUDServiceClass, cls).__init__(name, bases, new_dct)
+
+class CRUDService(remote.Service):
+
+  __metaclass__ = CRUDServiceClass
