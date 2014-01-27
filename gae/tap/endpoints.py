@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from functools import wraps
 import os
 import string
 
@@ -7,6 +8,7 @@ from google.appengine.api import (
   namespace_manager,
   oauth,
 )
+from google.appengine.ext import ndb
 
 from protorpc import remote
 from webapp2_extras import sessions
@@ -79,3 +81,35 @@ class CRUDService(remote.Service):
     import tap
     user_key_id =  get_user_id_from_endpoints_service()
     return tap.base62_encode(int(user_key_id))
+
+def get_user_id(self):
+  import tap
+  user_id = get_user_id_from_endpoints_service()
+  return tap.base62_encode(int(user_id))
+
+def rate_limit(rate, size, key=None, tag=None):
+  import tap
+  import endpoints
+
+  def decorator(func):
+    prefix = tag
+    if prefix is None:
+      prefix = ".".join((func.__module__, func.__name__))
+    token_bucket = tap.TokenBucket(rate, size, prefix=prefix)
+
+    @wraps(func)
+    @ndb.synctasklet
+    def inner(self, *argv, **kwargv):
+      token_buket_key = key
+      if key is not None:
+        if callable(key):
+          token_buket_key = key(self)
+      is_acceptable = yield token_bucket.is_acceptable_async(key=token_buket_key)
+      if is_acceptable:
+        raise ndb.Return(func(self, *argv, **kwargv))
+      else:
+        raise endpoints.ForbiddenException("Too many requests")
+
+    return inner
+
+  return decorator
