@@ -12,12 +12,14 @@ from google.appengine.ext import ndb
 
 from protorpc import remote
 from webapp2_extras import sessions
+import endpoints
 import webob
+
+import tap
 
 # Google Cloud Endpoints
 
 def get_user_from_endpoints_service(endpoints_service):
-  import tap
   request_state = endpoints_service.request_state
   request_state.app = tap.get_app()
   request_state.cookies = webob.request.RequestCookies({
@@ -28,8 +30,6 @@ def get_user_from_endpoints_service(endpoints_service):
   return tap.User.load_from_session(session_store.get_session())
 
 def get_user_id_from_endpoints_service(raises=True):
-  import tap
-  import endpoints
   current_user = endpoints.get_current_user()
   if current_user is None:
     if raises:
@@ -52,13 +52,10 @@ def get_user_id_from_endpoints_service(raises=True):
   return user_id
 
 def get_user_id(_self=None):
-  import tap
   user_id = get_user_id_from_endpoints_service()
   return tap.base62_encode(int(user_id))
 
 def rate_limit(rate, size, key=None, tag=None):
-  import tap
-  import endpoints
 
   def decorator(func):
     prefix = tag
