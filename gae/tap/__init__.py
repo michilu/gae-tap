@@ -125,11 +125,22 @@ def execute_once(func):
   return inner
 
 
-from django.utils.crypto import get_random_string
-from django.utils.functional import memoize as _memoize
-from gdata.spreadsheet.service import SpreadsheetsService
+try:
+  from django.utils.crypto import get_random_string
+  from django.utils.functional import memoize as _memoize
+  from gdata.spreadsheet.service import SpreadsheetsService
+except ImportError as e:
+  if sys.argv[0].endswith("/endpointscfg.py"):
+    pass
+  else:
+    logging.warning("{0}: {1}".format(e.__class__.__name__, e))
+  def _memoize(func, *argv):
+    return func
+try:
+  import gdata.alt.appengine
+except ImportError:
+  gdata = None
 from webapp2_extras import jinja2, routes, security, sessions
-import gdata.alt.appengine
 import webapp2
 import webob
 
@@ -270,8 +281,7 @@ def set_urlfetch_deadline(deadline):
 try:
   import uamobile
   import zenhan
-except ImportError as e:
-  logging.warning("{0}: {1}".format(e.__class__.__name__, e))
+except ImportError as _e:
   class uamobile(object):
     @staticmethod
     def is_featurephone(x):
@@ -450,6 +460,8 @@ def get_resource_code(resources):
   import fanstatic
   needed = fanstatic.NeededResources(**config.FANSTATIC)
   for resource in resources:
+    if isinstance(resource, basestring):
+      resource = webapp2.import_string(resource)
     needed.need(resource)
   return needed.render_inclusions(needed.resources())
 
@@ -1712,8 +1724,8 @@ class OAuth(RequestHandler, SimpleAuthHandler):
 # admin console views
 
 class ResponseCache(RequestHandler):
-  from js.angular import angular
-  from js.bootstrap import bootstrap
+  angular = "js.angular.angular"
+  bootstrap = "js.bootstrap.bootstrap"
 
   @head(angular, bootstrap)
   @csrf
@@ -1947,7 +1959,7 @@ _jinja2 = new_jinja2()
 
 # Google Visualization API
 
-class AppEngineHttpClient(gdata.alt.appengine.AppEngineHttpClient):
+class AppEngineHttpClientPatch(object):
   @ndb.synctasklet
   def request(self, operation, url, data=None, headers=None):
     all_headers = self.headers.copy()
@@ -1980,6 +1992,10 @@ class AppEngineHttpClient(gdata.alt.appengine.AppEngineHttpClient):
         method=method, headers=all_headers, follow_redirects=False,
         deadline=self.deadline)
     raise ndb.Return(gdata.alt.appengine.HttpResponse(result))
+
+if gdata:
+  class AppEngineHttpClient(AppEngineHttpClientPatch, gdata.alt.appengine.AppEngineHttpClient):
+    pass
 
 class GoogleVisualization(object):
   """
