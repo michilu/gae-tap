@@ -11,13 +11,18 @@ import re
 import sys
 import unittest
 
+from minimock import mock, restore
 from testfixtures import LogCapture
 import webapp2
 import webtest
 
-from google.appengine.api import apiproxy_stub_map
+from google.appengine.api import (
+  apiproxy_stub_map,
+  users,
+)
 from google.appengine.datastore import datastore_stub_util
 from google.appengine.ext import deferred, testbed
+import endpoints
 
 
 # Search Path
@@ -150,6 +155,22 @@ class TestCase(unittest.TestCase):
   environ = dict()
   domain = None
   use_cookie = False
+  application = tap.app
+  is_endpoints = False
+
+  def __init__(self, *argv, **kwargv):
+    super(TestCase, self).__init__(*argv, **kwargv)
+
+    if isinstance(self.application, endpoints.api_config._ApiDecorator):
+      api_names = list()
+      for api_class in self.application.get_api_classes():
+        for name, _method in api_class.all_remote_methods().items():
+          api_names.append(name)
+      self.api_names = tuple(api_names)
+      self.application = endpoints.api_server([self.application], restricted=False)
+      self.is_endpoints = True
+    else:
+      self.api_names = tuple()
 
   def setUp(self):
     # webtest
@@ -157,7 +178,7 @@ class TestCase(unittest.TestCase):
       cookiejar = cookielib.CookieJar()
     else:
       cookiejar = None
-    self.app = TestApp(tap.app, domain=self.domain, cookiejar=cookiejar)
+    self.app = TestApp(self.application, domain=self.domain, cookiejar=cookiejar)
     # os.environ
     self.origin_environ = dict()
     if "HTTP_HOST" not in self.environ.viewkeys():
@@ -177,9 +198,19 @@ class TestCase(unittest.TestCase):
     self.log.install()
 
   def tearDown(self):
+    restore()
     try:
       # logging
       for record in self.log.records:
+        if self.is_endpoints and len(record.args) >= 3:
+          exception = record.args[2]
+          if isinstance(exception, endpoints.ServiceException):
+            try:
+              str(exception)
+            except TypeError:
+              record.args[2].args = [str(arg) for arg in exception.args]
+            except UnicodeEncodeError:
+              record.args[2].args = [unicode(arg) for arg in exception.args]
         pathname = get_tail(record.pathname).group("tail")
         log = (record.levelname, pathname.replace(os.path.abspath(os.curdir), "").lstrip("/"), record.funcName, record.getMessage())
         if getattr(self, "expected_logs", None):
@@ -194,6 +225,16 @@ class TestCase(unittest.TestCase):
                   continue
           if matched:
             continue
+        elif self.is_endpoints:
+          expected_log = (
+            'WARNING',
+            'google/appengine/ext/ndb/tasklets.py',
+            '_help_tasklet_along',
+            '... generator ...(....py:...) raised ...Exception(...)')
+          if log[:2] == expected_log[:2]:
+            if doctest._ellipsis_match(expected_log[3], log[3]):
+              matched = True
+              continue
         print(record.levelname, pathname, record.lineno, record.funcName, record.getMessage())
         assert not log
     finally:
@@ -212,3 +253,19 @@ class TestCase(unittest.TestCase):
     for task in tasks:
       deferred.run(base64.b64decode(task["body"]))
       taskqueue_stub.DeleteTask(queue_name, task["name"])
+
+  def endpoints_uri(self, endpoint):
+    api_class_name, api_method_name = endpoint.split(".", 1)
+    real_api_method_name = "_{0}_{1}".format(api_class_name, api_method_name)
+    assert real_api_method_name in self.api_names
+    return "/_ah/spi/{0}.{1}".format(api_class_name, real_api_method_name)
+
+  def endpoints_via_oauth(self, email=None, _auth_domain=None,
+               _user_id=None, federated_identity=None, federated_provider=None,
+               _strict_mode=False):
+    if _auth_domain is None:
+      _auth_domain = email.split("@", 1)[1]
+    user = users.User(email, _auth_domain,
+               _user_id, federated_identity, federated_provider,
+               _strict_mode)
+    mock("endpoints.get_current_user", returns=user, tracker=None)
