@@ -78,6 +78,8 @@ def rate_limit(rate, size, key=None, tag=None):
       if key is not None:
         if callable(key):
           token_buket_key = key(self)
+          if not isinstance(token_buket_key, basestring):
+            token_buket_key = str(token_buket_key)
       is_acceptable = yield token_bucket.is_acceptable_async(key=token_buket_key)
       if is_acceptable:
         raise ndb.Return(func(self, *argv, **kwargv))
