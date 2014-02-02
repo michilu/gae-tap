@@ -24,17 +24,17 @@ def execute_once(func):
 def sys_path_append():
   import google
   base = os.path.join(os.path.dirname(google.__file__), "../lib/")
-  for webapp2 in ["webapp2-2.5.2", "webapp2"]:
+  for webapp2 in ["webapp2-2.5.2"]:
     path = os.path.join(base, webapp2)
     if os.path.exists(path):
-      sys.path.append(path)
+      sys.path.insert(0, path)
       break
   else:
     raise
   for path in ["django-1.5", "endpoints-1.0", "protorpc-1.0", "jinja2-2.6"]:
     path = os.path.join(base, path)
     if os.path.exists(path):
-      sys.path.append(path)
+      sys.path.insert(0, path)
     else:
       raise
   return True
