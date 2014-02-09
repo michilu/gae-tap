@@ -131,6 +131,12 @@ html: $(HTML) $(MOBHTML) $(DARTHTML)
 
 mo: html $(PYMAPPING) $(JSMAPPING) $(POT) $(MO)
 
+discovery_doc:
+	endpointscfg.py get_discovery_doc -a gae -o doc $(shell cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME ./tap/printer.py main_api.v1.api_class_names_string)
+
+discovery_lib:
+	endpointscfg.py get_client_lib java -a gae -o doc $(shell cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME ./tap/printer.py main_api.v1.api_class_names_string)
+
 
 $(GAE_LIB_DIR):
 	mkdir -p $@
