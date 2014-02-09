@@ -15,6 +15,7 @@ STATIC_ROOT_DIR_PATH=$(GAE_DIR)/static_root
 STATIC_ROOT_ZIP_PATH=$(STATIC_ROOT_DIR_PATH).zip
 STATIC_ROOT=$(wildcard $(STATIC_ROOT_DIR_PATH)/**/*)
 STATIC_ROOT_PATH=$(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT))
+DART_DIR_PATH=$(GAE_DIR)/dart
 JS_DIR=$(GAE_DIR)/static/js
 CSS_DIR=$(GAE_DIR)/static/css
 FANSTATIC_DIR=$(GAE_DIR)/static/lib
@@ -35,6 +36,9 @@ test=
 	haml -f html5 -t ugly $< $@
 HAML = $(wildcard $(TEMPLATE_DIR_PATH)/*.haml $(GAE_DIR)/static/*.haml)
 HTML = $(HAML:.haml=.html)
+
+DARTHAML = $(wildcard $(DART_DIR_PATH)/web/*.haml)
+DARTHTML = $(DARTHAML:.haml=.html)
 
 .SUFFIXES: .haml .xhtml
 .haml.xhtml:
@@ -123,7 +127,9 @@ js: $(JS) $(MINJS) $(TESTACULAR_JS)
 
 css: $(MINCSS) $(CSS)
 
-mo: $(PYMAPPING) $(JSMAPPING) $(POT) $(MO)
+html: $(HTML) $(MOBHTML) $(DARTHTML)
+
+mo: html $(PYMAPPING) $(JSMAPPING) $(POT) $(MO)
 
 
 $(GAE_LIB_DIR):
