@@ -40,10 +40,7 @@ def sys_path_append():
   return True
 sys_path_append()
 
-import warmup
-
-if __name__ == "__main__":
-  try:
-    get_ipython().magic("doctest_mode")
-  except NameError:
-    pass
+try:
+  import warmup
+except ImportError:
+  import tap.warmup
