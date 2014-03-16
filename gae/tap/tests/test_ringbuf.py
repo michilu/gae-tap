@@ -39,6 +39,7 @@ class TestRingBuffer(tests.util.TestCase):
     buf.put(1, 2)
     self.execute_tasks("default")
     assert list(buf.get()) == [2, 1, 0]
+    assert list(buf.get()) == [2, 1, 0]
     self.execute_tasks("default")
 
     queue = taskqueue.Queue("ringbuffer")

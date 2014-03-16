@@ -24,6 +24,7 @@ import sys
 import threading
 import time
 import traceback
+import types
 import urllib
 import uuid
 import zlib
@@ -177,7 +178,10 @@ def memoize(num_args=None, use_memcache=False):
     @ndb.synctasklet
     def wrapper(*args):
       if use_memcache is not True:
-        raise ndb.Return(func(*args))
+        result = func(*args)
+        if isinstance(result, types.GeneratorType):
+          result = list(result)
+        raise ndb.Return(result)
       cache_key = ":".join(("memoize", key, args.__str__()))
       ctx = ndb.get_context()
       cache = yield ctx.memcache_get(cache_key, use_cache=True)
