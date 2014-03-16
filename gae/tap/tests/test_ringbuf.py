@@ -74,4 +74,4 @@ class TestTransientError(tests.util.TestCase):
 
   def test(self):
     args = ("ringbuffer", "tag", "999")
-    assert list(tap.RingBuffer(tag="tag")._get._func(*args)) == []
+    assert tap.RingBuffer(tag="tag")._get._func(*args) is None

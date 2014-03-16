@@ -180,7 +180,7 @@ def memoize(num_args=None, use_memcache=False):
       if use_memcache is not True:
         result = func(*args)
         if isinstance(result, types.GeneratorType):
-          result = list(result)
+          raise TypeError("'generator' object is not allowed")
         raise ndb.Return(result)
       cache_key = ":".join(("memoize", key, args.__str__()))
       ctx = ndb.get_context()
@@ -188,6 +188,8 @@ def memoize(num_args=None, use_memcache=False):
       if cache is not None:
         raise ndb.Return(loads(cache))
       result = func(*args)
+      if isinstance(result, types.GeneratorType):
+        raise TypeError("'generator' object is not allowed")
       ctx.memcache_set(cache_key, dumps(result), use_cache=True)
       raise ndb.Return(result)
 
@@ -725,8 +727,7 @@ class RingBuffer(object):
       return
     if len(buf) >= size:
       deferred.defer(RingBuffer.clean, tag, size)
-    for task, _i in zip(reversed(buf), xrange(size)):
-      yield loads(task.payload)
+    return [loads(task.payload) for task, _i in zip(reversed(buf), xrange(size))]
 
   def get(self):
     return self._get(self.queue_name, self.tag, self.size)
