@@ -43,6 +43,7 @@ Low cost operating:
 * Google Drive Spreadsheets-based feedback form
 * hosting DropBox as a proxy
 * hostname-based multitenancy
+  * supports robots.txt
 * just a few costs permanent caching
 * minimum OAuth accounting
 * redirecting to Google URL Shortener
