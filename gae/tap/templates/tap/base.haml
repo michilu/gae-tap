@@ -6,7 +6,9 @@
 %style [ng-cloak] {display: none;}
 {% endblock ngCloak %}
 %title {% block title %}{{ title }}{% endblock title %}
-%meta(name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0")
+{% block viewport %}
+%meta(name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+{% endblock viewport %}
 {% block icon %}
 %link(rel="apple-touch-icon-precomposed" href="/static/img/apple-touch-icon.png")
 {% endblock icon %}
