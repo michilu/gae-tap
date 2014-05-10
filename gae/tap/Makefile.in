@@ -29,6 +29,7 @@ TESTACULAR_TARGET=$(GAE_DIR)/tests/test*.coffee
 VERSION_HTML=$(TEMPLATE_DIR_PATH)/version.html
 VERSION=$(shell git describe --always --dirty=+)
 LOCALES=
+PORT=8080
 test=
 
 .SUFFIXES: .haml .html
@@ -175,7 +176,7 @@ testacular: js
 	PHANTOMJS_BIN=$(BIN_PHANTOMJS) $(BIN_TESTACULAR) start $(GAE_DIR)/tests/testacular.conf.js
 
 runserver: $(GAE_LIB_PACKAGES_DIR) template css js $(FANSTATIC_DIR)
-	python2.7 $$GAE_HOME/dev_appserver.py --require_indexes --datastore_path=datastore.db --show_mail_body=yes --host=0.0.0.0 $(GAE_DIR)/app.yaml
+	python2.7 $$GAE_HOME/dev_appserver.py --require_indexes --datastore_path=datastore.db --show_mail_body=yes --host=0.0.0.0 --port=$(PORT) $(GAE_DIR)/app.yaml
 
 deploy: update_frontends update_backends
 
