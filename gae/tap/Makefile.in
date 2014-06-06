@@ -1,7 +1,7 @@
 all: test css mo js
 
 
-GAE_PATH=$(GAE_HOME)/
+GAE_PATH=/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine
 GAE_DIR=gae
 GAE_LIB=site-packages
 GAE_LIB_DIR=$(GAE_DIR)/$(GAE_LIB)
@@ -133,10 +133,10 @@ html: $(HTML) $(MOBHTML) $(DARTHTML)
 mo: html $(PYMAPPING) $(JSMAPPING) $(POT) $(MO)
 
 discovery_doc:
-	endpointscfg.py get_discovery_doc -a gae -o doc $(shell cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME ./tap/printer.py $(gce))
+	endpointscfg.py get_discovery_doc -a gae -o doc $(shell cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) ./tap/printer.py $(gce))
 
 discovery_lib:
-	endpointscfg.py get_client_lib java -a gae -o doc $(shell cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME ./tap/printer.py $(gce))
+	endpointscfg.py get_client_lib java -a gae -o doc $(shell cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) ./tap/printer.py $(gce))
 
 
 $(GAE_LIB_DIR):
@@ -176,35 +176,35 @@ testacular: js
 	PHANTOMJS_BIN=$(BIN_PHANTOMJS) $(BIN_TESTACULAR) start $(GAE_DIR)/tests/testacular.conf.js
 
 runserver: $(GAE_LIB_PACKAGES_DIR) template css js $(FANSTATIC_DIR)
-	python2.7 $$GAE_HOME/dev_appserver.py --require_indexes --datastore_path=datastore.db --show_mail_body=yes --host=0.0.0.0 --port=$(PORT) $(GAE_DIR)/app.yaml
+	python2.7 $(GAE_PATH)/dev_appserver.py --require_indexes --datastore_path=datastore.db --show_mail_body=yes --host=0.0.0.0 --port=$(PORT) $(GAE_DIR)/app.yaml
 
 deploy: update_frontends update_backends
 
 update_frontends: all $(TEMPLATES_COMPILED_ZIP_PATH)
-	python2.7 $$GAE_HOME/appcfg.py update $(GAE_DIR)
+	python2.7 $(GAE_PATH)/appcfg.py update $(GAE_DIR)
 
 update_backends: all
-	python2.7 $$GAE_HOME/appcfg.py backends $(GAE_DIR) update
+	python2.7 $(GAE_PATH)/appcfg.py backends $(GAE_DIR) update
 
 update_cron:
-	python2.7 $$GAE_HOME/appcfg.py update_cron $(GAE_DIR)
+	python2.7 $(GAE_PATH)/appcfg.py update_cron $(GAE_DIR)
 
 update_indexes:
-	python2.7 $$GAE_HOME/appcfg.py update_indexes $(GAE_DIR)
+	python2.7 $(GAE_PATH)/appcfg.py update_indexes $(GAE_DIR)
 
 update_queues:
-	python2.7 $$GAE_HOME/appcfg.py update_queues $(GAE_DIR)
+	python2.7 $(GAE_PATH)/appcfg.py update_queues $(GAE_DIR)
 
 vacuum_indexes:
-	python2.7 $$GAE_HOME/appcfg.py vacuum_indexes $(GAE_DIR)
+	python2.7 $(GAE_PATH)/appcfg.py vacuum_indexes $(GAE_DIR)
 
 watchlion:
-	PYTHONPATH=$$GAE_HOME watchlion
+	PYTHONPATH=$(GAE_PATH) watchlion
 
 shell:
-	@cd $(GAE_DIR); PYTHONPATH=$$GAE_HOME PYTHONSTARTUP=./tap/shell.py ipython -c "%doctest_mode" -i
+	@cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) PYTHONSTARTUP=./tap/shell.py ipython -c "%doctest_mode" -i
 
 doc:
-	cd doc; PYTHONPATH=$$GAE_HOME make html
+	cd doc; PYTHONPATH=$(GAE_PATH) make html
 
 .PHONY: all template clean test runserver deploy update_cron update_queues doc $(VERSION_HTML)

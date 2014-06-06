@@ -99,6 +99,17 @@ Set up
     $ mkvirtualenv --python=`which ptyhon2.7` gae-tap
     (gae-tap)$ pip install -r packages.txt
 
+Set environ
+-----------
+
+It need the `GAE_PATH` environ args. Default `GAE_PATH` that is for Mac OS X::
+
+    GAE_PATH=/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine
+
+If you want to set other path, define `GAE_PATH` in Makefile as below::
+
+    GAE_PATH=<path to your gae>
+
 Build and Test
 --------------
 
