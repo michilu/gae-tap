@@ -1,0 +1,10 @@
+language: python
+python:
+  - 2.7
+install:
+  - bundle install
+  - npm install
+  - curl -s -o google_appengine.zip https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.6.zip && unzip -q google_appengine.zip
+  - pip install -r packages.txt
+  - pip install -r packages-gae.txt
+script: make test_tap GAE_PATH=`pwd`/google_appengine
