@@ -98,6 +98,7 @@ Set up
     $ npm install
     $ mkvirtualenv --python=`which ptyhon2.7` gae-tap
     (gae-tap)$ pip install -r packages.txt
+    (gae-tap)$ pip install -r packages-gae.txt
 
 Set environ
 -----------
