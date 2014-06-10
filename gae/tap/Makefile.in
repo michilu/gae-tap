@@ -1,7 +1,7 @@
 all: test css mo js
 
 
-GAE_PATH=/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine
+GAE_PATH=$$HOME/google-cloud-sdk/platform/google_appengine
 GAE_DIR=gae
 GAE_LIB=site-packages
 GAE_LIB_DIR=$(GAE_DIR)/$(GAE_LIB)

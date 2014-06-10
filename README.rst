@@ -103,9 +103,9 @@ Set up
 Set environ
 -----------
 
-It need the `GAE_PATH` environ args. Default `GAE_PATH` that is for Mac OS X::
+It need the `GAE_PATH` environ args. Default `GAE_PATH` as below::
 
-    GAE_PATH=/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine
+    GAE_PATH=$$HOME/google-cloud-sdk/platform/google_appengine
 
 If you want to set other path, define `GAE_PATH` in Makefile as below::
 
