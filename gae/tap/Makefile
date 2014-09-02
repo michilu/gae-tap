@@ -15,7 +15,7 @@ BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
 VERSION_HTML=$(TEMPLATE_DIR_PATH)/tap/version.html
 VERSION=$(shell git describe --tags --dirty=+)
 RELEASE_ZIP=gaetap-$(VERSION).zip
-RELEASE_FILES=$(sort LICENSE $(wildcard Makefile.*) $(wildcard *.py) $(HTML) $(MOBHTML) $(filter-out static/js/i18n%,$(MINJS) $(JS)) $(TEMPLATE_DIR_PATH)/tap/ads/analytics.html $(VERSION_HTML))
+RELEASE_FILES=$(sort LICENSE $(wildcard Makefile.*) $(wildcard *.py) $(HTML) $(MOBHTML) $(filter-out static/js/i18n%,$(MINJS) $(JS)) $(TEMPLATE_DIR_PATH)/tap/ads/analytics.html $(VERSION_HTML) endpoints.patch)
 
 .SUFFIXES: .haml .html
 .haml.html:
