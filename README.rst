@@ -103,13 +103,13 @@ Set up
 Set environ
 -----------
 
-It need the `GAE_PATH` environ args. Default `GAE_PATH` as below::
+It need the `GOOGLE_APPENGINE` environ args. Default `GOOGLE_APPENGINE` as below::
 
-    GAE_PATH=$$HOME/google-cloud-sdk/platform/google_appengine
+    GOOGLE_APPENGINE=$HOME/google-cloud-sdk/platform/google_appengine
 
-If you want to set other path, define `GAE_PATH` in Makefile as below::
+If you want to set other path, define `GOOGLE_APPENGINE` in environ as below::
 
-    GAE_PATH=<path to your gae>
+    $ GOOGLE_APPENGINE=<path to your gae> make
 
 Build and Test
 --------------
