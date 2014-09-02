@@ -111,6 +111,13 @@ If you want to set other path, define `GOOGLE_APPENGINE` in environ as below::
 
     $ GOOGLE_APPENGINE=<path to your gae> make
 
+Docker
+------
+
+or, Quickly set up environment via Docker:
+
+    $ docker pull michilu/gae-tap
+
 Build and Test
 --------------
 
