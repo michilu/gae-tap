@@ -17,6 +17,6 @@ install:
       fi
     done
   - patch -d google_appengine/lib/endpoints-1.0/endpoints -p0 -i ../../../../gae/tap/endpoints.patch
-  - pip install --quiet -r packages.txt
-  - pip install --quiet -r packages-gae.txt
+  - pip install --quiet -r requirements.txt
+  - pip install --quiet -r requirements-gae.txt
 script: make test
