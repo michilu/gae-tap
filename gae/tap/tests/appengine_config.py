@@ -1,7 +1,7 @@
 config_APPS = {
   #{<domain>: ((<path prefix>, <module name>[, <namespace>]),)}
   "": (
-    ("/sample", "app_sample"),
+    ("/sample", "app_test1"),
     ("/test", "app_test", "namespace"),
   ),
   r"<subdomain:(?!www\.)[^.]+>.localhost": (("", "app_test2", lambda:"localhost"),),

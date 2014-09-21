@@ -14,12 +14,12 @@ class AppTest(tests.util.TestCase):
 
   def test_status(self):
     self.app.head("/", status=404)
-    self.app.get("/sample/?q")
     self.app.get("/_ah/start")
     self.app.get("/_ah/stop")
     self.app.post("/_tap/response_cache", status=403)
 
-  def test_app_sample(self):
+  def test_app_test1(self):
+    self.app.get("/sample/?q")
     response = self.app.get("/sample/")
     response.mustcontain("Sample")
 
