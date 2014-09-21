@@ -1,6 +1,11 @@
 A full stack framework for the Google App Engine -based
 =======================================================
 
+.. image:: https://travis-ci.org/MiCHiLU/gae-tap.svg?branch=master
+    :target: https://travis-ci.org/MiCHiLU/gae-tap
+.. image:: https://app.wercker.com/status/72878e11dca6d30f174e95253d766075/s/master
+    :target: https://app.wercker.com/project/bykey/72878e11dca6d30f174e95253d766075
+
 Let's finish the work quickly and go TAP BEER!
 
 .. image:: http://farm5.staticflickr.com/4114/4809856899_e889084816.jpg
