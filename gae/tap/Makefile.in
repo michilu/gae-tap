@@ -19,7 +19,7 @@ DART_DIR_PATH=$(GAE_DIR)/dart
 JS_DIR=$(GAE_DIR)/static/js
 CSS_DIR=$(GAE_DIR)/static/css
 FANSTATIC_DIR=$(GAE_DIR)/static/lib
-PYTEST_TARGET=$(GAE_DIR)/tests/test*.py
+PYTEST_TARGET=$(wildcard $(GAE_DIR)/tests/test*.py $(GAE_DIR)/app*/**/test*.py)
 NODE_MODULES_BASE=node_modules
 BIN_COFFEE=$(NODE_MODULES_BASE)/coffee-script/bin/coffee
 BIN_TESTACULAR=$(NODE_MODULES_BASE)/testacular/bin/testacular
@@ -33,20 +33,20 @@ LOCALES=
 PORT=8080
 test=
 
-.SUFFIXES: .haml .html
-.haml.html:
-	haml -f html5 -t ugly $< $@
-HAML = $(wildcard $(TEMPLATE_DIR_PATH)/*.haml $(GAE_DIR)/static/*.haml)
-HTML = $(HAML:.haml=.html)
-
-DARTHAML = $(wildcard $(DART_DIR_PATH)/web/*.haml)
-DARTHTML = $(DARTHAML:.haml=.html)
-
 .SUFFIXES: .haml .xhtml
 .haml.xhtml:
 	haml -f xhtml -t ugly $< $@
-MOBHAML = $(wildcard $(TEMPLATE_DIR_PATH)/mob/*.haml)
+MOBHAML = $(filter %/mob/%,$(shell find . -name "*.haml"))
 MOBHTML = $(MOBHAML:.haml=.xhtml)
+
+.SUFFIXES: .haml .html
+.haml.html:
+	haml -f html5 -t ugly $< $@
+DARTHAML = $(wildcard $(DART_DIR_PATH)/web/*.haml)
+DARTHTML = $(DARTHAML:.haml=.html)
+
+HAML = $(filter-out $(DARTHAML) $(MOBHAML),$(shell find . -name "*.haml"))
+HTML = $(HAML:.haml=.html)
 
 .SUFFIXES: .coffee .js
 .coffee.js:
