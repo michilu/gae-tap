@@ -27,6 +27,7 @@ BIN_UGLIFYJS=$(NODE_MODULES_BASE)/uglify-js/bin/uglifyjs
 BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
 TESTACULAR_TARGET=$(GAE_DIR)/tests/test*.coffee
 VERSION_HTML=$(TEMPLATE_DIR_PATH)/version.html
+TAP_VERSION_HTML=$(TAP_DIR)/$(TEMPLATE_DIR)/tap/version.html
 VERSION=$(shell git describe --always --dirty=+)
 LOCALES=
 PORT=8080
@@ -122,6 +123,9 @@ $(VERSION_HTML):
 		echo $(VERSION) > $@ ;\
 	fi;
 
+$(TAP_VERSION_HTML):
+	echo "un-released" > $@
+
 template: $(MINJS) mo $(GAE_LIB_PACKAGES_DIR) $(TEMPLATES_COMPILED_ZIP_PATH)
 
 js: $(JS) $(MINJS) $(TESTACULAR_JS)
@@ -142,7 +146,7 @@ discovery_lib:
 $(GAE_LIB_DIR):
 	mkdir -p $@
 
-$(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION_HTML)
+$(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION_HTML) $(TAP_VERSION_HTML)
 	jinja2precompiler -c $(TEMPLATE_DIR_PATH)
 	zip -FS -j $(TEMPLATES_COMPILED_ZIP_PATH) $(TEMPLATE_DIR_PATH)/*.pyc
 
