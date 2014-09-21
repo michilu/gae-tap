@@ -466,7 +466,9 @@ def get_resource_code(resources):
   needed = fanstatic.NeededResources(**config.FANSTATIC)
   for resource in resources:
     if isinstance(resource, basestring):
-      resource = webapp2.import_string(resource)
+      resource = webapp2.import_string(resource, silent=True)
+      if resource is None:
+        continue
     needed.need(resource)
   return needed.render_inclusions(needed.resources())
 
@@ -1360,11 +1362,9 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
       self.i18n_domain = "tap"
       self.response.write(AHEAD_HTML5)
       try:
-        from js.bootstrap import bootstrap
-      except ImportError:
+        self.response.write(get_resource_code(("js.bootstrap.bootstrap",)))
+      except ImportStringError:
         pass
-      else:
-        self.response.write(get_resource_code((bootstrap,)))
 
     index_cache = self.get_cache(cache_key=index)
     if index_cache:
