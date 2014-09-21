@@ -67,7 +67,6 @@ _memoize_cache = dict()
 class ConfigDefaults(object):
   APPS = {
     #{<domain>: ((<path prefix>, <module name>[, <namespace>]),)}
-    "localhost": (("/sample", "app_sample"),),
   }
   APPSTATS_INCLUDE_ERROR_STATUS = True
   ASSOCIATE_TAG = "gaetap-22"
