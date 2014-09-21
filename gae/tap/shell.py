@@ -5,6 +5,9 @@ from functools import wraps
 import os
 import sys
 
+from IPython import get_ipython
+
+get_ipython().magic("%doctest_mode")
 
 # Search Path
 

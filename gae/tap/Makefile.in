@@ -202,7 +202,7 @@ watchlion:
 	PYTHONPATH=$(GAE_PATH) watchlion
 
 shell:
-	@cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) PYTHONSTARTUP=./tap/shell.py ipython -c "%doctest_mode" -i
+	@cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) PYTHONSTARTUP=./tap/shell.py ipython
 
 doc:
 	cd doc; PYTHONPATH=$(GAE_PATH) make html

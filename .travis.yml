@@ -5,7 +5,17 @@ env: GOOGLE_APPENGINE=`pwd`/google_appengine
 install:
   - bundle install --quiet --jobs `grep processor /proc/cpuinfo|wc -l`
   - npm install --silent
-  - curl -s -o google_appengine.zip https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.10.zip && unzip -q google_appengine.zip
+  - |
+    while :; do
+      url=https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.1$v.zip
+      if curl -f -I -s $url >/dev/null; then
+        echo use $url
+        curl -s -o google_appengine.zip $url && unzip -q google_appengine.zip
+        break
+      else
+        ((v++))
+      fi
+    done
   - patch -d google_appengine/lib/endpoints-1.0/endpoints -p0 -i ../../../../gae/tap/endpoints.patch
   - pip install --quiet -r packages.txt
   - pip install --quiet -r packages-gae.txt
