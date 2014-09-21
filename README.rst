@@ -92,6 +92,11 @@ Utils:
 * ring buffer
 * token bucket
 
+Continuous Integration Supports:
+
+* Travis CI
+* Wercker CI
+
 Set up
 ------
 
