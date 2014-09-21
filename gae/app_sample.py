@@ -1,8 +1,6 @@
 from datetime import datetime
 
 from google.appengine.ext import ndb
-from js.angular import angular_cookies, angular_resource
-from js.bootstrap import bootstrap
 import endpoints
 import webapp2
 
@@ -12,7 +10,7 @@ class Index(tap.RequestHandler):
   i18n = True
   i18n_domain = "sample"
 
-  @tap.head(angular_cookies, angular_resource, bootstrap)
+  @tap.head("js.angular.angular_cookies", "js.angular.angular_resource", "js.bootstrap.bootstrap")
   @tap.cache(60, expire=datetime(2012, 1, 1))
   def get(self, subdomain=None):
     i18n_ = _("Python")
