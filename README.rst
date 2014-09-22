@@ -49,13 +49,13 @@ Low cost operating:
 * hosting DropBox as a proxy
 * hostname-based multitenancy
   * supports robots.txt
-* just a few costs permanent caching
+* just a few costs permanent caching and key-value store via taskqueue API
 * minimum OAuth accounting
 * redirecting to Google URL Shortener
 
 Performance:
 
-* pre-compiling templates
+* pre-compiling jinja2 templates
 * uglify-js
 
 Coding:
@@ -72,6 +72,7 @@ Development:
 * webapp2
 
 * file system event-based automation building on Mac OS X 10.7+
+* Docker
 
 Testing:
 
