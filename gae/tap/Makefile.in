@@ -28,7 +28,12 @@ BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
 TESTACULAR_TARGET=$(GAE_DIR)/tests/test*.coffee
 VERSION_HTML=$(TEMPLATE_DIR_PATH)/version.html
 TAP_VERSION_HTML=$(TAP_DIR)/$(TEMPLATE_DIR)/tap/version.html
-VERSION=$(shell git describe --always --dirty=+)
+VERSION_NUMBER=$(shell git describe --tag --abbrev=0)
+PROJECT_SINCE=$(shell date -u -j -f %Y-%m-%d%H%M%S `git log --pretty=format:"%ad" --date=short|tail -1`000000 +%s)
+AUTO_COUNT_SINCE=$(shell echo $$(((`date -u +%s`-$(PROJECT_SINCE))/(24*60*60))))
+AUTO_COUNT_LOG=$(shell git log --since=midnight --oneline|wc -l|tr -d " ")
+VERSION_HASH=$(shell git describe --always --dirty=+)
+VERSION=$(VERSION_NUMBER).$(AUTO_COUNT_SINCE).$(AUTO_COUNT_LOG)-$(VERSION_HASH)
 LOCALES=
 PORT=8080
 test=
