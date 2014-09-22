@@ -10,4 +10,18 @@ install:
 - patch -d google_appengine/lib/endpoints-1.0/endpoints -p0 -i ../../../../gae/tap/endpoints.patch
 - pip install --quiet -r requirements.txt
 - pip install --quiet -r requirements-gae.txt
-script: make test
+script:
+- make test
+- make clean
+- git checkout -f
+- (cd gae/tap && make release)
+deploy:
+  provider: releases
+  api-key:
+    secure: Z7zy3OhInWD0aqL+u7OhZcZP580WTrMYTXXcwrAEV0BTAoEVH04n3tMRS1Q2qYQfEXITPuXA7lwUztTn9YePSuV54JZD03htUXOIr9w0rD3TTL0E4pgz31ldCQ4ugKjLVvlVcXArsnh0j82G03xs2E5EPFzi2tqTi/ukS9i3rh8=
+  file: gae/tap/gaetap-`git describe --tags --dirty=+`.zip
+  skip_cleanup: true
+  on:
+    repo: MiCHiLU/gae-tap
+    tags: true
+    all_branches: true
