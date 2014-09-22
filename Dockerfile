@@ -29,8 +29,9 @@ COPY requirements.txt /tmp/requirements.txt
 RUN pip install --quiet -r requirements.txt
 
 COPY gae/tap/endpoints.patch /tmp/endpoints.patch
+COPY fetch_google_appengine.sh /tmp/fetch_google_appengine.sh
 RUN \
-  curl -s -o google_appengine.zip https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.10.zip &&\
+  /tmp/fetch_google_appengine.sh &&\
   unzip -q google_appengine.zip -d / &&\
   patch -d /google_appengine/lib/endpoints-1.0/endpoints -p0 -i /tmp/endpoints.patch &&\
   rm -rf /tmp/*
