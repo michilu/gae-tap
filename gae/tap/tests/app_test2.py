@@ -1,14 +1,13 @@
 import tap
 
 from google.appengine.api import namespace_manager
-from js.bootstrap import bootstrap
 import webapp2
 
 class Index(tap.RequestHandler):
   i18n = True
   i18n_domain = "sample"
 
-  @tap.head(bootstrap)
+  @tap.head("js.bootstrap.bootstrap")
   def get(self, subdomain=None):
     self.render_response("sample.html", locals())
 

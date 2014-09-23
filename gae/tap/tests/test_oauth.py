@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
 import urlparse
 
 import tests.util
@@ -27,6 +28,8 @@ class OAuthTest(tests.util.TestCase):
     restore()
     super(OAuthTest, self).tearDown()
 
+  @pytest.mark.skipif('not sys.modules.has_key("simpleauth")',
+                      reason="no exists simpleauth module")
   def test_oauth(self):
     response = self.app.get("/oauth/google", status=302)
     assert response.location.startswith("https://accounts.google.com/o/oauth2/auth?")
@@ -44,10 +47,15 @@ class OAuthSecretsTest(tests.util.TestCase):
                       reason="exists gae/oauth_config/default.py")
   def test_secrets(self):
     self.app.get("/oauth/google", status=500)
-    self.expected_logs = [
-      ('WARNING', 'gae/tap/__init__.py', 'oauth_config', "import_string() failed for 'oauth_config.localhost'. Possible reasons are...g' found in '.../gae/oauth_config/__init__.py...'.\n- 'oauth_config.localhost' not found."),
-      ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', 'cannot import name default'),
-    ]
+    if sys.modules.has_key("simpleauth"):
+      self.expected_logs = [
+        ('WARNING', 'gae/tap/__init__.py', 'oauth_config', "import_string() failed for 'oauth_config.localhost'. Possible reasons are...g' found in '.../gae/oauth_config/__init__.py...'.\n- 'oauth_config.localhost' not found."),
+        ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', 'cannot import name default'),
+      ]
+    else:
+      self.expected_logs = [
+        ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', ''),
+      ]
 
 class OAuthSignoutTest(tests.util.TestCase):
   root_path = conf.root_path

@@ -120,7 +120,9 @@ clean:
 	rm -f $(TESTACULAR_JS)
 	rm -f $(MO)
 	rm -rf $(FANSTATIC_DIR)
-	rm -rf $(GAE_LIB_PACKAGES_DIR)
+	if curl -f -I -s https://pypi.python.org/simple/ ; then\
+		rm -rf $(GAE_LIB_PACKAGES_DIR);\
+	fi
 
 $(VERSION_HTML):
 	@if [ "$(VERSION)" != "$(strip $(shell [ -f $@ ] && cat $@))" ] ; then\
@@ -159,9 +161,13 @@ $(STATIC_ROOT_ZIP_PATH): $(STATIC_ROOT)
 	cd $(GAE_DIR); zip -FS -y $(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT_ZIP_PATH)) $(STATIC_ROOT_PATH)
 
 $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
-	rm -rf $(GAE_LIB_PACKAGES_DIR)
-	pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt
-	pip install --use-mirrors --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
+	if curl -f -I -s https://pypi.python.org/simple/ ; then\
+		rm -rf $(GAE_LIB_PACKAGES_DIR);\
+	else\
+		touch $(GAE_LIB_PACKAGES_DIR)/*.egg-info;\
+	fi
+	-pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt
+	-pip install --use-mirrors --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
 
 $(FANSTATIC_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
 	rm -rf $@
