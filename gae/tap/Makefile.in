@@ -160,8 +160,8 @@ $(STATIC_ROOT_ZIP_PATH): $(STATIC_ROOT)
 
 $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
 	rm -rf $(GAE_LIB_PACKAGES_DIR)
-	pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt
-	pip install --use-mirrors --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
+	-pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt
+	-pip install --use-mirrors --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
 
 $(FANSTATIC_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
 	rm -rf $@

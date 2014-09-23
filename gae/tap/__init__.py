@@ -128,7 +128,6 @@ def execute_once(func):
 try:
   from django.utils.crypto import get_random_string
   from django.utils.functional import memoize as _memoize
-  from gdata.spreadsheet.service import SpreadsheetsService
 except ImportError as e:
   if sys.argv[0].endswith("/endpointscfg.py"):
     pass
@@ -137,6 +136,7 @@ except ImportError as e:
   def _memoize(func, *argv):
     return func
 try:
+  from gdata.spreadsheet.service import SpreadsheetsService
   import gdata.alt.appengine
 except ImportError:
   gdata = None
@@ -285,16 +285,19 @@ def set_urlfetch_deadline(deadline):
 
 try:
   import uamobile
-  import zenhan
 except ImportError as _e:
   class uamobile(object):
     @staticmethod
     def is_featurephone(x):
       return False
+try:
+  import zenhan
+except ImportError as _e:
   zenhan = None
 
 class GoogleAnalyticsMixin(object):
-  pass
+  def _google_analytics_tracking(*argv, **kwargv):
+    pass
 if config.GA_ACCOUNT:
   try:
     from ga import GoogleAnalyticsMixin
@@ -462,7 +465,10 @@ def get_namespaced_secret_key(namespace):
 
 @memoize()
 def get_resource_code(resources):
-  import fanstatic
+  try:
+    import fanstatic
+  except ImportError:
+    return ""
   needed = fanstatic.NeededResources(**config.FANSTATIC)
   for resource in resources:
     if isinstance(resource, basestring):

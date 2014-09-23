@@ -3,9 +3,10 @@
 
 import unittest
 
+import pytest
+pytest.importorskip("atom")
 import atom.http
 import atom.service
-import pytest
 
 import tests.util
 import tap
