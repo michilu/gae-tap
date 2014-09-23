@@ -5,7 +5,7 @@ env:
   global:
   - GOOGLE_APPENGINE=$PWD/google_appengine
 install:
-- bundle install --quiet --jobs `grep processor /proc/cpuinfo|wc -l`
+- bundle install --quiet --jobs `grep processor /proc/cpuinfo|wc -l` --retry 10
 - npm install --silent
 - ./fetch_google_appengine.sh
 - unzip -q google_appengine.zip
