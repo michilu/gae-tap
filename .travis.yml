@@ -1,17 +1,20 @@
 language: python
 python:
 - 2.7
-env: GOOGLE_APPENGINE=`pwd`/google_appengine
+env:
+  global:
+  - GOOGLE_APPENGINE=$PWD/google_appengine
 install:
 - bundle install --quiet --jobs `grep processor /proc/cpuinfo|wc -l`
 - npm install --silent
 - ./fetch_google_appengine.sh
 - unzip -q google_appengine.zip
-- patch -d google_appengine/lib/endpoints-1.0/endpoints -p0 -i ../../../../gae/tap/endpoints.patch
+- patch -d google_appengine/lib/endpoints-1.0/endpoints -p0 -i $PWD/gae/tap/endpoints.patch
 - pip install --quiet -r requirements.txt
 - pip install --quiet -r requirements-gae.txt
 script:
 - make test
+before_deploy:
 - make clean
 - git checkout -f
 - (cd gae/tap && make release)
