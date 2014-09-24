@@ -161,6 +161,12 @@ Deploy
 
     (gae-tap)$ make deploy
 
+How to update core library
+--------------------------
+
+#. Download `gaetap-<release-number>.zip` file from https://github.com/MiCHiLU/gae-tap/releases
+#. Then replace with files and directories in your repository.
+
 Dependencies
 ------------
 

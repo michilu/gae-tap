@@ -1,13 +1,30 @@
 language: python
 python:
-  - 2.7
-env: GOOGLE_APPENGINE=`pwd`/google_appengine
+- 2.7
+env:
+  global:
+  - GOOGLE_APPENGINE=$PWD/google_appengine
 install:
-  - bundle install --quiet --jobs `grep processor /proc/cpuinfo|wc -l`
-  - npm install --silent
-  - ./fetch_google_appengine.sh
-  - unzip -q google_appengine.zip
-  - patch -d google_appengine/lib/endpoints-1.0/endpoints -p0 -i ../../../../gae/tap/endpoints.patch
-  - pip install --quiet -r requirements.txt
-  - pip install --quiet -r requirements-gae.txt
-script: make test
+- bundle install --quiet --jobs `grep processor /proc/cpuinfo|wc -l` --retry 10
+- npm install --silent
+- ./fetch_google_appengine.sh
+- unzip -q google_appengine.zip
+- patch -d google_appengine/lib/endpoints-1.0/endpoints -p0 -i $PWD/gae/tap/endpoints.patch
+- pip install --quiet -r requirements.txt
+- pip install --quiet -r requirements-gae.txt
+script:
+- make test
+before_deploy:
+- make clean
+- git checkout -f
+- (cd gae/tap && make release)
+deploy:
+  provider: releases
+  api-key:
+    secure: Z7zy3OhInWD0aqL+u7OhZcZP580WTrMYTXXcwrAEV0BTAoEVH04n3tMRS1Q2qYQfEXITPuXA7lwUztTn9YePSuV54JZD03htUXOIr9w0rD3TTL0E4pgz31ldCQ4ugKjLVvlVcXArsnh0j82G03xs2E5EPFzi2tqTi/ukS9i3rh8=
+  file: gae/tap/gaetap-`git describe --tags --dirty=+`_`git log -n1 --pretty=format:%ad --date=short`.zip
+  skip_cleanup: true
+  on:
+    repo: MiCHiLU/gae-tap
+    tags: true
+    all_branches: true
