@@ -2,6 +2,8 @@
     :target: https://travis-ci.org/MiCHiLU/gae-tap
 .. image:: https://app.wercker.com/status/72878e11dca6d30f174e95253d766075/s/master
     :target: https://app.wercker.com/project/bykey/72878e11dca6d30f174e95253d766075
+.. image:: https://landscape.io/github/MiCHiLU/gae-tap/master/landscape.png
+    :target: https://landscape.io/github/MiCHiLU/gae-tap/master
 
 A full stack framework for the Google App Engine -based
 =======================================================
@@ -26,6 +28,7 @@ Status
 
 * `Travis CI <https://travis-ci.org/MiCHiLU/gae-tap>`_
 * `Wercker CI <https://app.wercker.com/project/bykey/72878e11dca6d30f174e95253d766075>`_
+* `Code Health <https://landscape.io/github/MiCHiLU/gae-tap/master>`_
 
 Features
 --------
