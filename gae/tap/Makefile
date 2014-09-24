@@ -13,7 +13,7 @@ BIN_UGLIFYJS=$(NODE_MODULES_BASE)/uglify-js/bin/uglifyjs
 TEMPLATE_DIR=
 BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
 VERSION_HTML=$(TEMPLATE_DIR_PATH)/tap/version.html
-VERSION=$(shell git describe --tags --dirty=+)
+VERSION=$(shell git describe --tags --dirty=+)_$(shell git log -n1 --pretty=format:%ad --date=short)
 RELEASE_ZIP=gaetap-$(VERSION).zip
 RELEASE_FILES=$(sort LICENSE $(wildcard Makefile.*) $(wildcard *.py) $(HTML) $(MOBHTML) $(filter-out static/js/i18n%,$(MINJS) $(JS)) $(TEMPLATE_DIR_PATH)/tap/ads/analytics.html $(VERSION_HTML) endpoints.patch)
 
