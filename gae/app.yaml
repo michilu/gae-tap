@@ -54,7 +54,7 @@ handlers:
 - url: /_ah/warmup
   script: tap.warmup.app
 - url: /_ah/spi/.*
-  script: api.app
+  script: tap.api
 - url: /_tap/(generate_sitemap|maintain_response|response_cache)
   script: tap.app
   login: admin

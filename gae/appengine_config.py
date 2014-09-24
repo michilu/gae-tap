@@ -3,7 +3,12 @@ from google.appengine.ext.appstats import recording
 appstats_CALC_RPC_COSTS = True
 appstats_RECORD_FRACTION = 0.1
 
-config_APPS = {
+config_API = (
+  #(<module name>,)
+  "api_sample.v1",
+)
+
+config_APP = {
   #{<domain>: ((<path prefix>, <module name>[, <namespace>]),)}
   "<:localhost|(.*-dot-)?gae-tap.appspot.com>": (("", "app_sample"),),
   #r"<subdomain:(?!www\.)[^.]+>.local": (("/test", "app_sample"),),

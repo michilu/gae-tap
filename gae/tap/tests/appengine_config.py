@@ -1,4 +1,4 @@
-config_APPS = {
+config_APP = {
   #{<domain>: ((<path prefix>, <module name>[, <namespace>]),)}
   "": (
     ("/sample", "app_test1"),
