@@ -165,7 +165,7 @@ class AppTest(tests.util.TestCase):
     with tests.util.set_config(DEBUG=False):
       response = self.app.get("/test/error.html", status=500)
       response.mustcontain(message)
-    self.expected_logs = [('ERROR', 'gae/tap/__init__.py', 'dispatch', 'AssertionError: assert False')]
+    self.expected_logs = [('ERROR', 'gae/tap/ext.py', 'dispatch', 'AssertionError: assert False')]
 
   def test_head(self):
     self.app.get("/test/head")

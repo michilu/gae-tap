@@ -1,6 +1,6 @@
 from random import random
 import zipfile
-import tap
+import tap.ext
 
 from google.appengine.api import namespace_manager
 from google.appengine.ext import ndb
@@ -10,11 +10,11 @@ import webapp2
 class Model(ndb.Model):
   pass
 
-class FetchPage(tap.RequestHandler):
+class FetchPage(tap.ext.RequestHandler):
   def get(self):
     self.fetch_page_async(Model.query())
 
-class Translation(tap.RequestHandler):
+class Translation(tap.ext.RequestHandler):
   i18n = True
   i18n_domain = "sample"
   i18n_redirect = True
@@ -24,36 +24,36 @@ class Translation(tap.RequestHandler):
     i18n_gettext = gettext("Anaconda")
     self.render_response("sample.html", locals())
 
-class ForMobile(tap.RequestHandler):
-  @tap.cache(60)
+class ForMobile(tap.ext.RequestHandler):
+  @tap.ext.cache(60)
   def get(self):
     ndb.get_context().memcache_get("sample")
     self.render_response("sample.html", locals(), featurephone=True)
 
-class OverQuotaError(tap.RequestHandler):
+class OverQuotaError(tap.ext.RequestHandler):
   def get(self):
     raise apiproxy_errors.OverQuotaError
 
-class InternalServerError(tap.RequestHandler):
+class InternalServerError(tap.ext.RequestHandler):
   def get(self):
     assert False
 
-class Head(tap.RequestHandler):
-  @tap.head()
+class Head(tap.ext.RequestHandler):
+  @tap.ext.head()
   def get(self):
     self.response._app_iter = []
 
-class CORS(tap.RequestHandler):
-  @tap.cors()
+class CORS(tap.ext.RequestHandler):
+  @tap.ext.cors()
   def options(self):
     pass
 
-  @tap.cors(origin=lambda:"test")
+  @tap.ext.cors(origin=lambda:"test")
   def get(self):
     pass
 
-rate_limit = tap.rate_limit(rate=1, size=2, key=lambda self: self.request.remote_addr, tag="RateLimit")
-class RateLimit(tap.RequestHandler):
+rate_limit = tap.ext.rate_limit(rate=1, size=2, key=lambda self: self.request.remote_addr, tag="RateLimit")
+class RateLimit(tap.ext.RequestHandler):
   @rate_limit
   def get(self):
     pass
@@ -62,37 +62,37 @@ class RateLimit(tap.RequestHandler):
   def post(self):
     pass
 
-  @tap.rate_limit(rate=1, size=1)
+  @tap.ext.rate_limit(rate=1, size=1)
   def put(self):
     pass
 
-class CacheTemporary(tap.RequestHandler):
-  @tap.cache(temporary=True)
+class CacheTemporary(tap.ext.RequestHandler):
+  @tap.ext.cache(temporary=True)
   def get(self):
     self.response.write(random())
 
-class Proxy(tap.RequestHandler):
+class Proxy(tap.ext.RequestHandler):
   def get(self):
     self.proxy()
 
-class Sessions(tap.RequestHandler):
+class Sessions(tap.ext.RequestHandler):
   def get(self):
     assert self.session is None
 
-  @tap.session_read_only
+  @tap.ext.session_read_only
   def post(self):
     self.session["TEST"] = "POST"
 
-  @tap.session
+  @tap.ext.session
   def put(self):
     self.session["TEST"] = "PUT"
 
-  @tap.session
+  @tap.ext.session
   def delete(self):
     self.session["TEST"] = "DELETE"
 
-class Users(tap.RequestHandler):
-  @tap.session_read_only
+class Users(tap.ext.RequestHandler):
+  @tap.ext.session_read_only
   def get(self):
     assert self.users.create_login_url() == "/oauth/google"
     assert self.users.create_logout_url() == "/oauth/signout"
@@ -101,23 +101,23 @@ class Users(tap.RequestHandler):
     assert user.user_id() == u"ID"
     assert getattr(user, "locale", None) is None
 
-  @tap.session
+  @tap.ext.session
   def post(self):
-    assert tap.User.load_from_session(self.session) is None
-    user = tap.User(data={"id": u"ID", u"locale": u"ja"})
+    assert tap.ext.User.load_from_session(self.session) is None
+    user = tap.ext.User(data={"id": u"ID", u"locale": u"ja"})
     assert user is not None
     user.set_to_session(self.session)
 
-class LoginRequired(tap.RequestHandler):
-  @tap.login_required
+class LoginRequired(tap.ext.RequestHandler):
+  @tap.ext.login_required
   def get(self):
     pass
 
-class Namespace(tap.RequestHandler):
+class Namespace(tap.ext.RequestHandler):
   def get(self):
     self.response.write(namespace_manager.get_namespace())
 
-class ZipFile(tap.RequestHandler):
+class ZipFile(tap.ext.RequestHandler):
   use_zipfile = True
 
   def get(self):

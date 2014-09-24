@@ -9,6 +9,7 @@ import pytest
 
 import tests.util
 import tap
+import tap.ext
 
 from google.appengine.api import mail, taskqueue
 from google.appengine.ext import deferred, ndb
@@ -104,17 +105,17 @@ class TestFunctions(unittest.TestCase):
 
 class TestCacheMixin(unittest.TestCase):
   def test_get_key_name(self):
-    assert tap.CacheMixin.get_key_name("") == "1B2M2Y8AsgTpgAmY7PhCfg"
-    assert tap.CacheMixin.get_key_name("/") == "/"
-    assert tap.CacheMixin.get_key_name("/"*22) == "//////////////////////"
-    assert tap.CacheMixin.get_key_name("/"*23) == "qaf6bjEFhOwOKQzsIeCiIA"
+    assert tap.ext.CacheMixin.get_key_name("") == "1B2M2Y8AsgTpgAmY7PhCfg"
+    assert tap.ext.CacheMixin.get_key_name("/") == "/"
+    assert tap.ext.CacheMixin.get_key_name("/"*22) == "//////////////////////"
+    assert tap.ext.CacheMixin.get_key_name("/"*23) == "qaf6bjEFhOwOKQzsIeCiIA"
 
 class TestRequestHandler(unittest.TestCase):
   def test_to_cache_key(self):
-    assert tap.RequestHandler.to_cache_key("") == "1B2M2Y8AsgTpgAmY7PhCfg"
-    assert tap.RequestHandler.to_cache_key("/") == "/"
-    assert tap.RequestHandler.to_cache_key("/"*22) == "//////////////////////"
-    assert tap.RequestHandler.to_cache_key("/"*23) == "qaf6bjEFhOwOKQzsIeCiIA"
+    assert tap.ext.RequestHandler.to_cache_key("") == "1B2M2Y8AsgTpgAmY7PhCfg"
+    assert tap.ext.RequestHandler.to_cache_key("/") == "/"
+    assert tap.ext.RequestHandler.to_cache_key("/"*22) == "//////////////////////"
+    assert tap.ext.RequestHandler.to_cache_key("/"*23) == "qaf6bjEFhOwOKQzsIeCiIA"
 
 class AppTest(tests.util.TestCase):
   root_path = conf.root_path
