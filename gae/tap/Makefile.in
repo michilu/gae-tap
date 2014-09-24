@@ -120,7 +120,7 @@ clean:
 	rm -f $(TESTACULAR_JS)
 	rm -f $(MO)
 	rm -rf $(FANSTATIC_DIR)
-	if curl -f -I -s https://pypi.python.org/simple/ ; then\
+	if curl -f -I -s https://pypi.python.org/simple/ >/dev/null ; then\
 		rm -rf $(GAE_LIB_PACKAGES_DIR);\
 	fi
 
@@ -161,7 +161,7 @@ $(STATIC_ROOT_ZIP_PATH): $(STATIC_ROOT)
 	cd $(GAE_DIR); zip -FS -y $(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT_ZIP_PATH)) $(STATIC_ROOT_PATH)
 
 $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
-	if curl -f -I -s https://pypi.python.org/simple/ ; then\
+	if curl -f -I -s https://pypi.python.org/simple/ >/dev/null ; then\
 		rm -rf $(GAE_LIB_PACKAGES_DIR);\
 	else\
 		touch $(GAE_LIB_PACKAGES_DIR)/*.egg-info;\
