@@ -12,12 +12,11 @@ from google.appengine.api import taskqueue
 import pytest
 
 import tests.util
-from tap import SitemapMixin
-import tap
+import tap.ext
 
 import conf
 
-class Sitemap(tap.SitemapMixin):
+class Sitemap(tap.ext.SitemapMixin):
   changefreq = "daily"
   priority = 0.5
 
@@ -26,20 +25,20 @@ class Sitemap(tap.SitemapMixin):
 
 class TestSitemapMixin(unittest.TestCase):
   def test_sitemap_to_xml(self):
-    assert SitemapMixin.to_sitemap_xml("http://example.com", False) == "<url><loc>http://example.com</loc></url>"
-    assert SitemapMixin.to_sitemap_xml("http://example.com").startswith("<url><loc>http://example.com</loc><lastmod>")
-    assert "<lastmod>2012-01-01</lastmod>" in SitemapMixin.to_sitemap_xml("http://example.com", datetime(2012,1,1))
-    assert "<changefreq>daily</changefreq>" in SitemapMixin.to_sitemap_xml("http://example.com", False, "daily")
-    assert "<priority>1.0</priority>" in SitemapMixin.to_sitemap_xml("http://example.com", False, priority=1.0)
+    assert tap.ext.SitemapMixin.to_sitemap_xml("http://example.com", False) == "<url><loc>http://example.com</loc></url>"
+    assert tap.ext.SitemapMixin.to_sitemap_xml("http://example.com").startswith("<url><loc>http://example.com</loc><lastmod>")
+    assert "<lastmod>2012-01-01</lastmod>" in tap.ext.SitemapMixin.to_sitemap_xml("http://example.com", datetime(2012,1,1))
+    assert "<changefreq>daily</changefreq>" in tap.ext.SitemapMixin.to_sitemap_xml("http://example.com", False, "daily")
+    assert "<priority>1.0</priority>" in tap.ext.SitemapMixin.to_sitemap_xml("http://example.com", False, priority=1.0)
 
   def test_sitemap_escaping(self):
     """ http://www.sitemaps.org/protocol.html#escaping
     """
-    assert SitemapMixin.to_sitemap_xml("http://example.com/&\'\"><", False) == "<url><loc>http://example.com/&amp;&apos;&quot;&gt;&lt;</loc></url>"
+    assert tap.ext.SitemapMixin.to_sitemap_xml("http://example.com/&\'\"><", False) == "<url><loc>http://example.com/&amp;&apos;&quot;&gt;&lt;</loc></url>"
 
   def test_attributes(self):
     with pytest.raises(NotImplementedError):
-      SitemapMixin().loc
+      tap.ext.SitemapMixin().loc
 
 class AppTest(tests.util.TestCase):
   root_path = conf.root_path

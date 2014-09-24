@@ -6,16 +6,16 @@ import unittest
 import pytest
 
 import tests.util
-import tap
+import tap.ext
 
 import conf
 
 class UserTest(unittest.TestCase):
   def test_user(self):
-    user = tap.User()
+    user = tap.ext.User()
     with pytest.raises(AssertionError):
       user.user_id()
-    user = tap.User(data={"id": u"ID", u"locale": u"ja"}, provider="google")
+    user = tap.ext.User(data={"id": u"ID", u"locale": u"ja"}, provider="google")
     assert user._provider is None
     assert user.nickname() is None
     assert user.email() is None
