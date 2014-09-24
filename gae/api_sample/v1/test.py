@@ -4,10 +4,10 @@ import tests.util
 
 import endpoints
 
-import api_sample.v1
+from . import api
 
 class APITest(tests.util.TestCase):
-  application = api_sample.v1.api
+  application = api
 
   def test(self):
     response = self.app.post_json(self.endpoints_uri("Echo.echo"), {
