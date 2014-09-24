@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from functools import wraps
@@ -36,7 +38,7 @@ from google.appengine.ext import deferred, ndb
 from google.appengine.ext.appstats import recording
 from google.appengine.runtime import apiproxy_errors
 
-import warmup
+from . import warmup
 
 
 # Global
@@ -52,7 +54,10 @@ _memoize_cache = dict()
 # Config
 
 class ConfigDefaults(object):
-  APPS = {
+  API = {
+    #{<domain>: ((<path prefix>, <module name>[, <namespace>]),)}
+  }
+  APP = {
     #{<domain>: ((<path prefix>, <module name>[, <namespace>]),)}
   }
   APPSTATS_INCLUDE_ERROR_STATUS = True
@@ -358,6 +363,15 @@ def encodeURIComponent(data):
   return urllib.quote(data, safe="~()*!.'")
 
 @execute_once
+def get_api():
+  import endpoints
+  api_services = list()
+  for api in config.API:
+    module = webapp2.import_string(api)
+    api_services.extend(module.api_services)
+  return endpoints.api_server(api_services)
+
+@execute_once
 def get_app():
   config_dict = config_to_dict(config)
   config_dict.update({
@@ -386,7 +400,7 @@ def get_app():
   ))
   if config.BANG_REDIRECTOR:
     routes_list.append(webapp2.Route("/!<key:[^/]+>", "tap.ext.BangRedirector", name="bang-redirector"))
-  for domain, values in config.APPS.viewitems():
+  for domain, values in config.APP.viewitems():
     app_routes_by_domain = list()
     for value in values:
       prefix, app, namespace = (value + (None,))[:3]
@@ -726,6 +740,7 @@ if config.DEFERRED_HANDLE_OverQuotaError:
 
 # Applications
 
+api = get_api()
 app = get_app()
 
 
