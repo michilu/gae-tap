@@ -1,0 +1,10 @@
+all: css js test test_tap
+
+test_tap=
+
+test_tap: $(GAE_LIB_PACKAGES_DIR) template $(FANSTATIC_DIR) tap
+	@py.test $(TAP_DIR)/tests/test*.py --doctest-modules --with-gae --gae-path=$(GAE_PATH) --gae-project-path=`pwd`/$(GAE_DIR) --cov-report=html --cov=$(GAE_DIR) $(test_tap)
+	rm -rf /tmp/dev_appserver.test_datastore
+
+tap:
+	make --no-print-directory -C $(TAP_DIR)

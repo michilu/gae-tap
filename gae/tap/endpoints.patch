@@ -1,0 +1,20 @@
+Index: apiserving.py
+===================================================================
+--- apiserving.py	(revision 410)
++++ apiserving.py	(working copy)
+@@ -466,7 +466,15 @@
+ 
+       headers_dict = dict([(k.lower(), v) for k, v in headers])
+       if self.__is_json_error(status, headers_dict):
++        pre_body_length = len(body)
+         status, body = self.protorpc_to_endpoints_error(status, body)
++        post_body_length = len(body)
++        if pre_body_length != post_body_length:
++          for index, header in enumerate(headers):
++            header_key, _header_value = header
++            if header_key == 'content-length':
++              headers[index] = (header_key, str(post_body_length))
++              break
+ 
+     start_response(status, headers, exception)
+     return [body]

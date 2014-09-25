@@ -1,0 +1,16 @@
+queue:
+- name: default
+  rate: 500/s
+- name: aws
+  rate: 2000/h
+- name: b1
+  rate: 500/s
+  target: b1
+- name: cache
+  mode: pull
+- name: sitemap
+  mode: pull
+- name: ringbuffer
+  mode: pull
+- name: queue
+  mode: pull

@@ -1,0 +1,63 @@
+{% import "version.html" as VERSION %}
+{% import "tap/version.html" as TAP_VERSION %}
+{% import "tap/versions.html" as VERSIONS %}
+%meta(charset="UTF-8")
+{% block ngCloak %}
+%style [ng-cloak] {display: none;}
+{% endblock ngCloak %}
+%title {% block title %}{{ title }}{% endblock title %}
+{% block viewport %}
+%meta(name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+{% endblock viewport %}
+{% block icon %}
+%link(rel="apple-touch-icon-precomposed" href="/static/img/apple-touch-icon.png")
+{% endblock icon %}
+{% block og %}
+%meta(property="og:image" content="https://{{ domain }}/static/img/apple-touch-icon.png")
+%meta(property="og:title" content="{{ title }}")
+%meta(property="og:description" content="{{ description }}")
+%meta(property="og:type" content="website")
+%meta(property="og:url" content="https://{{ domain }}/")
+{% endblock og %}
+{% block fb %}
+%meta(property="fb:app_id" content="{{ fb_app_id }}")
+{% endblock fb %}
+{% if I18N %}
+%script
+ window.gettext=function(t){return t},window.ngettext=function(t,n,e){return 1===e?t:n};
+%script(src="{{ URI_FOR('I18Njs', domain=I18N_DOMAIN, language=LANGUAGE) }}")
+{% endif %}
+{% block utils_js %}
+%script(src="/static/tap/js/utils{% if not DEBUG %}.min{% endif %}.js")
+{% endblock utils_js %}
+{% block head %}{% endblock head %}
+{% include "tap/ads/analytics.html" %}
+{% block body %}
+%body/
+{% block main %}
+%h1 {{ title }}
+{% endblock main %}
+{% if more %}
+%ul.pager
+ %li.next
+  %a.btn(href="?{{ cursor.to_websafe_string() }}")
+   Next
+   %i.icon-arrow-right
+{% endif %}
+{% block footer %}
+%footer(style="margin-top:100px;")
+ %div(style="text-align:center;")
+  {% if title %}
+  &copy;
+  %a(href="//{{ domain }}{{ base_path }}" title="{{ title }}")>< {{ title }}
+  &nbsp;{{ since }}
+  {% endif %}
+  %span.text-muted {% block version %}{{ VERSIONS }}{% endblock version %}
+  {% block feedback_link %}
+  {% include "tap/feedback_link.html" %}
+  {% endblock feedback_link %}
+{% block feedback_form %}
+{% include "tap/feedback_form.html" %}
+{% endblock feedback_form %}
+{% endblock footer %}
+{% endblock body %}

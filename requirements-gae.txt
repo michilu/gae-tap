@@ -1,0 +1,11 @@
+# for Google App Engine
+PyYAML==3.10
+WebOb==1.2.3
+pycrypto==2.6
+
+# Bundle to Google App Engine
+httplib2==0.7.5
+jinja2==2.6
+MarkupSafe==0.15
+lxml==2.3
+oauth2==1.5.170

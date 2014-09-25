@@ -1,0 +1,16 @@
+# needs for tap
+# Ref. https://github.com/GoogleCloudPlatform/appengine-i18n-sample-python
+babel
+fanstatic-tools==0.2
+jinja2==2.6
+jinja2-precompiler>=0.2
+minimock
+pytest-cov
+#pytest-gae
+https://bitbucket.org/MiCHiLU/pytest_gae/get/default.zip
+testfixtures
+webtest>2
+
+# options
+#pytest-cache
+#watchlion

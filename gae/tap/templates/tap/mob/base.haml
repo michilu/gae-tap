@@ -1,0 +1,57 @@
+!!! XML Shift_JIS
+!!! Mobile
+%html(xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" dir="ltr")
+ %head
+  %meta(http-equiv="Content-Type" content="application/xhtml+xml; charset=Shift_JIS")
+  %title {% block title %}{{ title }}{% endblock title %}
+  %meta(http-equiv="pragma" content="no-cache")
+  %meta(http-equiv="cache-control" content="no-cache")
+  %meta(http-equiv="expires" content="-1")
+  %meta(http-equiv="Content-Style-Type" content="text/css")
+  %meta(name="description" content="{{ description }}")
+  %meta(name="keywords" content="{{ keywords }}")
+  %meta(name="robots" content="index,follow")
+  %style(type="text/css")
+   <![CDATA[
+   a:link{color:#E60000;}
+   a:visited{color:#E60000;}
+   a:focus{}
+   ]]>
+ %body(style="background:#ffffff;font-size:small;")
+  %a#top(name="top")
+  %h1(style="text-align:center;")
+   %img(src="/static/img/title.jpg" alt="{{ title }}")
+  {% block main %}
+  %div(style="margin:0;padding:0;text-align:center;")
+   &lt;
+   %span{:style => "color: #ff0000;"} 無料
+   サイト&gt;
+  %div(style="font-size:small; background-color:#000000; padding-top:3px; padding-right:5px; padding-bottom:3px; padding-left:5px;")
+   %span(style="color:#FFFFFF;")
+    最新の記事
+  {% for i in range(10) %}
+  %div(style="background-color:{{ loop.cycle('#E9E9E9','#FFFFFF') }};padding:5px;")
+   %a(href="")
+    %img(align="right" style="text-right;" src="image")
+   %a(href="") ◆
+   サンプル
+  {% endfor %}
+  {% endblock main %}
+  {% if more %}
+  %br
+  %div(style="font-size:90%;margin-top:8px;text-align:center;")
+   %span(style="padding:0px 3px")
+   %a.btn.btn-primary.btn-large(accesskey="#" href="?{{ cursor.to_websafe_string() }}")
+    次の10件
+   &gt;&gt;
+  {% endif %}
+  %br
+  %div(style="margin-right:3px;margin-left:3px")
+   %a(href="/index.html") &gt;&gt;トップページへ戻る
+   %br
+   %a(href="#top") ↑先頭へ戻る
+  %br
+  %div(style="text-align:center;")
+   &#169;
+   %a(href="/index.html" title="{{ title }}") {{ title }}
+   2005
