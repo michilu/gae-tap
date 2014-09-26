@@ -41,7 +41,7 @@ test=
 .SUFFIXES: .haml .xhtml
 .haml.xhtml:
 	haml -f xhtml -t ugly $< $@
-MOBHAML = $(filter %/mob/%,$(shell find . -name "*.haml"))
+MOBHAML = $(shell find `find \`find . -type d -name templates\` -type d -name mob` -type f -name "*.haml")
 MOBHTML = $(MOBHAML:.haml=.xhtml)
 
 .SUFFIXES: .haml .html
