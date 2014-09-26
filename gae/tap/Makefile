@@ -12,6 +12,7 @@ BIN_COFFEE=$(NODE_MODULES_BASE)/coffee-script/bin/coffee
 BIN_UGLIFYJS=$(NODE_MODULES_BASE)/uglify-js/bin/uglifyjs
 TEMPLATE_DIR=
 BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
+BIN_HAML=$(firstword $(HAML_PATH) haml)
 VERSION_HTML=$(TEMPLATE_DIR_PATH)/tap/version.html
 VERSION=$(shell git describe --tags --dirty=+)_$(shell git log -n1 --pretty=format:%ad --date=short)
 RELEASE_ZIP=gaetap-$(VERSION).zip
@@ -19,13 +20,13 @@ RELEASE_FILES=$(sort LICENSE $(wildcard Makefile.*) $(wildcard *.py) $(HTML) $(M
 
 .SUFFIXES: .haml .html
 .haml.html:
-	haml -f html5 -t ugly $< $@
+	$(BIN_HAML) -f html5 -t ugly $< $@
 HAML = $(wildcard $(TEMPLATE_DIR_PATH)/tap/*.haml)
 HTML = $(HAML:.haml=.html)
 
 .SUFFIXES: .haml .xhtml
 .haml.xhtml:
-	haml -f xhtml -t ugly $< $@
+	$(BIN_HAML) -f xhtml -t ugly $< $@
 MOBHAML = $(wildcard $(TEMPLATE_DIR_PATH)/tap/mob/*.haml)
 MOBHTML = $(MOBHAML:.haml=.xhtml)
 

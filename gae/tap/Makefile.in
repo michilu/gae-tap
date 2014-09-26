@@ -25,6 +25,7 @@ BIN_COFFEE=$(NODE_MODULES_BASE)/coffee-script/bin/coffee
 BIN_TESTACULAR=$(NODE_MODULES_BASE)/testacular/bin/testacular
 BIN_UGLIFYJS=$(NODE_MODULES_BASE)/uglify-js/bin/uglifyjs
 BIN_PHANTOMJS=$(HOME)/local/bin/phantomjs
+BIN_HAML=$(firstword $(HAML_PATH) haml)
 TESTACULAR_TARGET=$(GAE_DIR)/tests/test*.coffee
 VERSION_HTML=$(TEMPLATE_DIR_PATH)/version.html
 TAP_VERSION_HTML=$(TAP_DIR)/$(TEMPLATE_DIR)/tap/version.html
@@ -40,13 +41,13 @@ test=
 
 .SUFFIXES: .haml .xhtml
 .haml.xhtml:
-	haml -f xhtml -t ugly $< $@
+	$(BIN_HAML) -f xhtml -t ugly $< $@
 MOBHAML = $(shell find `find \`find . -type d -name templates\` -type d -name mob` -type f -name "*.haml")
 MOBHTML = $(MOBHAML:.haml=.xhtml)
 
 .SUFFIXES: .haml .html
 .haml.html:
-	haml -f html5 -t ugly $< $@
+	$(BIN_HAML) -f html5 -t ugly $< $@
 DARTHAML = $(wildcard $(DART_DIR_PATH)/web/*.haml)
 DARTHTML = $(DARTHAML:.haml=.html)
 
