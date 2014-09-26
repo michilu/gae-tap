@@ -28,3 +28,5 @@ deploy:
     repo: MiCHiLU/gae-tap
     tags: true
     all_branches: true
+notifications:
+  email: false
