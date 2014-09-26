@@ -10,10 +10,10 @@ install:
 - ./fetch_google_appengine.sh
 - unzip -q google_appengine.zip
 - patch -d google_appengine/lib/endpoints-1.0/endpoints -p0 -i $PWD/gae/tap/endpoints.patch
-- pip install --quiet -r requirements.txt
-- pip install --quiet -r requirements-gae.txt
+- while ( ! pip install --quiet -r requirements.txt ); do :; done
+- while ( ! pip install --quiet -r requirements-gae.txt ); do :; done
 script:
-- make test
+- make
 before_deploy:
 - make clean
 - git checkout -f
@@ -28,3 +28,5 @@ deploy:
     repo: MiCHiLU/gae-tap
     tags: true
     all_branches: true
+notifications:
+  email: false
