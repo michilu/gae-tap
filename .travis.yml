@@ -10,8 +10,8 @@ install:
 - ./fetch_google_appengine.sh
 - unzip -q google_appengine.zip
 - patch -d google_appengine/lib/endpoints-1.0/endpoints -p0 -i $PWD/gae/tap/endpoints.patch
-- while ( ! pip install --quiet -r requirements.txt ); do; done
-- while ( ! pip install --quiet -r requirements-gae.txt ); do; done
+- while ( ! pip install --quiet -r requirements.txt ); do :; done
+- while ( ! pip install --quiet -r requirements-gae.txt ); do :; done
 script:
 - make
 before_deploy:
