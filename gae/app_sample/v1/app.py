@@ -1,8 +1,6 @@
 from datetime import datetime
 
 from google.appengine.ext import ndb
-import endpoints
-import webapp2
 
 import tap.ext
 
@@ -22,11 +20,3 @@ class ForMobile(tap.ext.RequestHandler):
   def get(self):
     yield ndb.get_context().memcache_get("sample")
     self.render_response("mob/sample.xhtml", locals(), featurephone=True)
-
-routes = [
-  webapp2.Route("/", Index),
-  webapp2.Route("/index.html", ForMobile),
-]
-
-api = endpoints.api(name="sample", version="v1")
-api_services = [api]
