@@ -8,6 +8,11 @@ build:
   - npm-install
   - pip-install
   - script:
+      name: test without haml
+      code: |
+        export HAML_PATH=no-haml
+        make test
+  - script:
       name: test
       code: |
         export HAML_PATH=$PWD/bin/haml
