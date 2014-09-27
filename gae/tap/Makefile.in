@@ -1,6 +1,7 @@
 all: test css mo js
 
 
+CURL_TIMEOUT=1
 GAE_PATH=$(firstword $(GOOGLE_APPENGINE) $$HOME/google-cloud-sdk/platform/google_appengine)
 GAE_DIR=gae
 GAE_LIB=site-packages
@@ -119,7 +120,9 @@ clean:
 	find . -name "*.sw?" -delete
 	find . -name .DS_Store -delete
 	find . -name .coverage -delete
-	find $(TEMPLATE_DIR_PATH) -name "*.py" -delete
+	if [ -e $(TEMPLATE_DIR_PATH) ]; then\
+		find $(TEMPLATE_DIR_PATH) -name "*.py" -delete;\
+	fi
 	rm -f $(TEMPLATES_COMPILED_ZIP_PATH)
 	rm -f $(STATIC_ROOT_ZIP_PATH)
 	rm -f $(CSS)
@@ -131,11 +134,14 @@ clean:
 	rm -f $(TESTACULAR_JS)
 	rm -f $(MO)
 	rm -rf $(FANSTATIC_DIR)
-	if curl -f -I -s https://pypi.python.org/simple/ >/dev/null ; then\
+	if curl -f -I -s --connect-timeout $(CURL_TIMEOUT) https://pypi.python.org/simple/ >/dev/null ; then\
 		rm -rf $(GAE_LIB_PACKAGES_DIR);\
 	fi
 
-$(VERSION_HTML):
+$(TEMPLATE_DIR_PATH):
+	mkdir $@
+
+$(VERSION_HTML): $(TEMPLATE_DIR_PATH)
 	@if [ "$(VERSION)" != "$(strip $(shell [ -f $@ ] && cat $@))" ] ; then\
 		echo 'echo $(VERSION) > $@' ;\
 		echo $(VERSION) > $@ ;\
@@ -169,16 +175,22 @@ $(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION_HTML
 	zip -FS -j $(TEMPLATES_COMPILED_ZIP_PATH) $(TEMPLATE_DIR_PATH)/*.pyc
 
 $(STATIC_ROOT_ZIP_PATH): $(STATIC_ROOT)
-	cd $(GAE_DIR); zip -FS -y $(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT_ZIP_PATH)) $(STATIC_ROOT_PATH)
+	@if [ -e "$(STATIC_ROOT_PATH)" ]; then\
+		cd $(GAE_DIR); zip -FS -y $(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT_ZIP_PATH)) $(STATIC_ROOT_PATH);\
+	fi
 
 $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
-	if curl -f -I -s https://pypi.python.org/simple/ >/dev/null ; then\
+	@if curl -f -I -s --connect-timeout $(CURL_TIMEOUT) https://pypi.python.org/simple/ >/dev/null ; then\
 		rm -rf $(GAE_LIB_PACKAGES_DIR);\
+		if [ `sed -e "/^$$/d" -e "/^#/d" $(GAE_LIB_PACKAGES_DIR).txt|grep -c ""` ]; then\
+			pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt;\
+		fi;\
+		if [ `sed -e "/^$$/d" -e "/^#/d" $(GAE_LIB_PACKAGES_DIR)-no-deps.txt|grep -c ""` ]; then\
+			pip install --use-mirrors --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt;\
+		fi;\
 	else\
 		touch $(GAE_LIB_PACKAGES_DIR)/*.egg-info;\
 	fi
-	-pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt
-	-pip install --use-mirrors --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
 
 $(FANSTATIC_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
 	rm -rf $@
@@ -187,7 +199,7 @@ $(FANSTATIC_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
 
 $(GAE_LIB_PACKAGES_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
 	mkdir -p $@
-	-packages="$(filter-out js %.egg-info %.pth %.py %.pyc %.zip,$(shell ls $@))";\
+	-packages="$(filter-out js %.egg-info %.pth %.py %.pyc %.zip,$(shell ls $@ 2>/dev/null))";\
 	for package in $$packages; do\
 		if [ -d $@/$$package ]; then\
 			pip zip --no-pyc --path=$@ $$package;\
