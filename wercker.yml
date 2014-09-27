@@ -8,10 +8,15 @@ build:
   - npm-install
   - pip-install
   - script:
+      name: test without haml
+      code: |
+        HAML_PATH=no-haml make test
+        make clean
+        git checkout --force
+  - script:
       name: test
       code: |
-        export HAML_PATH=$PWD/bin/haml
-        make
+        HAML_PATH=$PWD/bin/haml make
 #  - script:
 #      name: copy output
 #      code: |-

@@ -41,13 +41,23 @@ test=
 
 .SUFFIXES: .haml .xhtml
 .haml.xhtml:
-	$(BIN_HAML) -f xhtml -t ugly $< $@
+	@if which $(BIN_HAML) >/dev/null; then\
+		echo $(BIN_HAML) -f xhtml -t ugly $< $@;\
+		$(BIN_HAML) -f xhtml -t ugly $< $@;\
+	else\
+		echo haml is not exists: no build $<;\
+	fi
 MOBHAML = $(shell find `find \`find . -type d -name templates\` -type d -name mob` -type f -name "*.haml")
 MOBHTML = $(MOBHAML:.haml=.xhtml)
 
 .SUFFIXES: .haml .html
 .haml.html:
-	$(BIN_HAML) -f html5 -t ugly $< $@
+	@if which $(BIN_HAML) >/dev/null; then\
+		echo $(BIN_HAML) -f html5 -t ugly $< $@;\
+		$(BIN_HAML) -f html5 -t ugly $< $@;\
+	else\
+		echo haml is not exists: no build $<;\
+	fi
 DARTHAML = $(wildcard $(DART_DIR_PATH)/web/*.haml)
 DARTHTML = $(DARTHAML:.haml=.html)
 
