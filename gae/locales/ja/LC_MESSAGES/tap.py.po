@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-09-22 05:02+0700\n"
+"POT-Creation-Date: 2014-09-27 17:05+0700\n"
 "PO-Revision-Date: 2014-01-10 10:27+0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: gae/tap/__init__.py:1326
+#: gae/tap/ext.py:711
 msgid "Not found. Display the top page."
 msgstr "見つかりませんでした。トップページを表示しています。"
 
-#: gae/tap/__init__.py:1331 gae/tap/__init__.py:1340
+#: gae/tap/ext.py:716 gae/tap/ext.py:725
 msgid "Sorry, a server error has occurred. Display the top page."
 msgstr "サーバーエラーが発生しました。トップページを表示しています。"
 
-#: gae/tap/templates/tap/error.html:11 gae/tap/templates/tap/mob/error.html:4
+#: gae/tap/templates/tap/error.html:11 gae/tap/templates/tap/mob/error.xhtml:4
 msgid "top page"
 msgstr "トップ"
 
-#: gae/tap/templates/tap/error.html:13 gae/tap/templates/tap/mob/error.html:6
+#: gae/tap/templates/tap/error.html:13 gae/tap/templates/tap/mob/error.xhtml:6
 msgid "a server error has occurred"
 msgstr "サーバーエラーが発生しました"
 
-#: gae/tap/templates/tap/error.html:17 gae/tap/templates/tap/mob/error.html:9
+#: gae/tap/templates/tap/error.html:17 gae/tap/templates/tap/mob/error.xhtml:9
 msgid "Sorry, a server error has occurred."
 msgstr "サーバーエラーが発生しました"
 
@@ -41,7 +41,24 @@ msgstr "サーバーエラーが発生しました"
 msgid "will move to the top page after 30 seconds..."
 msgstr "30秒後にトップページへ移動します"
 
-#: gae/tap/templates/tap/error.html:24 gae/tap/templates/tap/mob/error.html:12
+#: gae/tap/templates/tap/error.html:24 gae/tap/templates/tap/mob/error.xhtml:12
 msgid "Go to the top page"
 msgstr "トップページへ移動する"
+
+#: gae/tap/templates/tap/feedback_form.html:8
+#: gae/tap/templates/tap/feedback_link.html:3
+msgid "feedback"
+msgstr "ご要望"
+
+#: gae/tap/templates/tap/feedback_form.html:11
+msgid "messages..."
+msgstr "メッセージ..."
+
+#: gae/tap/templates/tap/feedback_form.html:16
+msgid "close"
+msgstr "閉じる"
+
+#: gae/tap/templates/tap/feedback_form.html:17
+msgid "send feedback"
+msgstr "送信"
 
