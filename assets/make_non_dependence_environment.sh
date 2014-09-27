@@ -9,4 +9,8 @@ rm -rf gae/oauth_config
 rm -rf gae/static
 rm -rf gae/static_root
 rm -rf gae/templates
-sed -i "" "/app_sample/d" gae/appengine_config.py
+if [ `uname` == "Darwin" ]; then
+  sed -i "" "/app_sample/d" gae/appengine_config.py;
+else
+  sed -i "/app_sample/d" gae/appengine_config.py;
+fi
