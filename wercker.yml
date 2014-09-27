@@ -25,13 +25,13 @@ build:
       name: test
       code: |
         HAML_PATH=$PWD/bin/haml make
-#  - script:
-#      name: copy output
-#      code: |-
-#        rsync -avz $WERCKER_SOURCE_DIR/gae/ $WERCKER_OUTPUT_DIR
-#deploy:
-#  steps:
-#  - script:
-#      name: Google App Engine deploy
-#      code: |
-#        echo $APP_ENGINE_PASSWORD | $GOOGLE_APPENGINE/appcfg.py update $WERCKER_SOURCE_DIR --email=$APP_ENGINE_EMAIL --passin
+  - script:
+      name: copy output
+      code: |-
+        rsync -avz $WERCKER_SOURCE_DIR/gae/ $WERCKER_OUTPUT_DIR
+deploy:
+  steps:
+  - script:
+      name: Google App Engine deploy
+      code: |
+        echo $APP_ENGINE_PASSWORD | $GOOGLE_APPENGINE/appcfg.py update $WERCKER_SOURCE_DIR --email=$APP_ENGINE_EMAIL --passin
