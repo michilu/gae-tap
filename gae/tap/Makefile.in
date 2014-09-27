@@ -1,6 +1,7 @@
 all: test css mo js
 
 
+CURL_TIMEOUT=1
 GAE_PATH=$(firstword $(GOOGLE_APPENGINE) $$HOME/google-cloud-sdk/platform/google_appengine)
 GAE_DIR=gae
 GAE_LIB=site-packages
@@ -133,7 +134,7 @@ clean:
 	rm -f $(TESTACULAR_JS)
 	rm -f $(MO)
 	rm -rf $(FANSTATIC_DIR)
-	if curl -f -I -s https://pypi.python.org/simple/ >/dev/null ; then\
+	if curl -f -I -s --connect-timeout $(CURL_TIMEOUT) https://pypi.python.org/simple/ >/dev/null ; then\
 		rm -rf $(GAE_LIB_PACKAGES_DIR);\
 	fi
 
@@ -179,7 +180,7 @@ $(STATIC_ROOT_ZIP_PATH): $(STATIC_ROOT)
 	fi
 
 $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
-	@if curl -f -I -s https://pypi.python.org/simple/ >/dev/null ; then\
+	@if curl -f -I -s --connect-timeout $(CURL_TIMEOUT) https://pypi.python.org/simple/ >/dev/null ; then\
 		rm -rf $(GAE_LIB_PACKAGES_DIR);\
 		if [ `sed -e "/^$$/d" -e "/^#/d" $(GAE_LIB_PACKAGES_DIR).txt|grep -c ""` ]; then\
 			pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt;\
