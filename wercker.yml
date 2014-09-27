@@ -10,13 +10,11 @@ build:
   - script:
       name: test without haml
       code: |
-        export HAML_PATH=no-haml
-        make test
+        HAML_PATH=no-haml make test
   - script:
       name: test
       code: |
-        export HAML_PATH=$PWD/bin/haml
-        make
+        HAML_PATH=$PWD/bin/haml make
 #  - script:
 #      name: copy output
 #      code: |-
