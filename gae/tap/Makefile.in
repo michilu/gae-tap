@@ -2,6 +2,8 @@ all: test css mo js
 
 
 CURL_TIMEOUT=1
+ASSETS_TMP=assets/tmp
+DATASTORE_DB=$(ASSETS_TMP)/datastore.db
 GAE_PATH=$(firstword $(GOOGLE_APPENGINE) $$HOME/google-cloud-sdk/platform/google_appengine)
 GAE_DIR=gae
 GAE_LIB=site-packages
@@ -213,8 +215,11 @@ test: $(GAE_LIB_PACKAGES_DIR) template $(FANSTATIC_DIR) $(STATIC_ROOT_ZIP_PATH)
 testacular: js
 	PHANTOMJS_BIN=$(BIN_PHANTOMJS) $(BIN_TESTACULAR) start $(GAE_DIR)/tests/testacular.conf.js
 
-runserver: $(GAE_LIB_PACKAGES_DIR) template css js $(FANSTATIC_DIR)
-	python2.7 $(GAE_PATH)/dev_appserver.py --require_indexes --datastore_path=datastore.db --show_mail_body=yes --host=0.0.0.0 --port=$(PORT) $(GAE_DIR)/app.yaml
+$(ASSETS_TMP):
+	mkdir $@
+
+runserver: $(GAE_LIB_PACKAGES_DIR) template css js $(FANSTATIC_DIR) $(ASSETS_TMP)
+	python2.7 $(GAE_PATH)/dev_appserver.py --require_indexes --datastore_path=$(DATASTORE_DB) --show_mail_body=yes --host=0.0.0.0 --port=$(PORT) $(GAE_DIR)/app.yaml
 
 deploy: update_frontends update_backends
 
