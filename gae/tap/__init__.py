@@ -62,7 +62,7 @@ class ConfigDefaults(object):
   }
   APPSTATS_INCLUDE_ERROR_STATUS = True
   ASSOCIATE_TAG = "gaetap-22"
-  BACKENDS_NAME = "b1"
+  BACKEND_NAME = "backend"
   BANG_REDIRECTOR = "http://goo.gl/"
   CORS_Access_Control_Max_Age = "3628800" # 30d
   CSRF_TIME = 60

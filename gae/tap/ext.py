@@ -18,8 +18,8 @@ import uuid
 
 from google.appengine.api import (
   app_identity,
-  backends,
   memcache,
+  modules,
   namespace_manager,
   oauth,
   taskqueue,
@@ -434,7 +434,7 @@ def cache(period=None, expire=None, temporary=None, empty=False):
     @wraps(func)
     @ndb.synctasklet
     def inner(self, *argv, **kwargv):
-      if backends.get_backend() is None:
+      if modules.get_current_module_name() != tap.config.BACKEND_NAME:
         cache = yield self.has_cache_async(expire, temporary=temporary)
         if cache:
           return

@@ -3,9 +3,9 @@ cron:
   url: /_tap/maintain_response
   schedule: every day 23:45
   timezone: America/Los_Angeles
-  target: b1
+  target: backend
 - description: tap.GenerateSitemap
   url: /_tap/generate_sitemap
   schedule: every day 23:55
   timezone: America/Los_Angeles
-  target: b1
+  target: backend
