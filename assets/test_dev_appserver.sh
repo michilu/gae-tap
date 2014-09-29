@@ -1,6 +1,7 @@
 #!/bin/sh
 
-timeout_sec=`expr 12 + 8 \* $RANDOM / 32767`
+random=`od -An -N1 -tu1 < /dev/urandom`
+timeout_sec=`expr 12 + 8 \* ${random} / 255`
 
 echo set timeout ${timeout_sec}s...
 
