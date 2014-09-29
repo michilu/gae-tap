@@ -18,7 +18,6 @@ import uuid
 
 from google.appengine.api import (
   app_identity,
-  backends,
   memcache,
   namespace_manager,
   oauth,
@@ -434,10 +433,9 @@ def cache(period=None, expire=None, temporary=None, empty=False):
     @wraps(func)
     @ndb.synctasklet
     def inner(self, *argv, **kwargv):
-      if backends.get_backend() is None:
-        cache = yield self.has_cache_async(expire, temporary=temporary)
-        if cache:
-          return
+      cache = yield self.has_cache_async(expire, temporary=temporary)
+      if cache:
+        return
       ndb.toplevel(func)(self, *argv, **kwargv)
       if self.response.status_int == 200:
         if empty or len(self.response.body) > 0:
