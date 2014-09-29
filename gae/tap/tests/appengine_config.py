@@ -1,10 +1,10 @@
 config_APP = {
   #{<domain>: ((<path prefix>, <module name>[, <namespace>]),)}
   "": (
-    ("/sample", "app_test1"),
-    ("/test", "app_test", "namespace"),
+    ("/sample", "app_test.test1"),
+    ("/test", "app_test.test", "namespace"),
   ),
-  r"<subdomain:(?!www\.)[^.]+>.localhost": (("", "app_test2", lambda:"localhost"),),
+  r"<subdomain:(?!www\.)[^.]+>.localhost": (("", "app_test.test2", lambda:"localhost"),),
 }
 
 config_APPSTATS_INCLUDE_ERROR_STATUS = False
