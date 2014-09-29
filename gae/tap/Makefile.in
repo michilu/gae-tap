@@ -190,8 +190,8 @@ $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAG
 		if [ `sed -e "/^$$/d" -e "/^#/d" $(GAE_LIB_PACKAGES_DIR)-no-deps.txt|grep -c ""` ]; then\
 			pip install --use-mirrors --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt;\
 		fi;\
-	else\
-		touch $(GAE_LIB_PACKAGES_DIR)/*.egg-info;\
+	elif [ -d $(GAE_LIB_PACKAGES_DIR) ]; then\
+		find $(GAE_LIB_PACKAGES_DIR) -name "*.egg-info" -exec touch {} +;\
 	fi
 
 $(FANSTATIC_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
