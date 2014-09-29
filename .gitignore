@@ -16,7 +16,7 @@ syntax: glob
 .coverage
 .sass-cache
 Gemfile.lock
-datastore.db
+assets/tmp/**/*
 doc/_*
 gae/**/templates/**/*.html
 gae/**/templates/**/mob/*.xhtml

@@ -29,7 +29,7 @@ COPY requirements.txt /tmp/requirements.txt
 RUN pip install --quiet -r requirements.txt
 
 COPY gae/tap/endpoints.patch /tmp/endpoints.patch
-COPY fetch_google_appengine.sh /tmp/fetch_google_appengine.sh
+COPY assets/fetch_google_appengine.sh /tmp/fetch_google_appengine.sh
 RUN \
   /tmp/fetch_google_appengine.sh &&\
   unzip -q google_appengine.zip -d / &&\
