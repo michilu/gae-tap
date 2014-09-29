@@ -434,7 +434,7 @@ def cache(period=None, expire=None, temporary=None, empty=False):
     @wraps(func)
     @ndb.synctasklet
     def inner(self, *argv, **kwargv):
-      if modules.get_current_module_name() != "backend":
+      if modules.get_current_module_name() != tap.config.BACKEND_NAME:
         cache = yield self.has_cache_async(expire, temporary=temporary)
         if cache:
           return
