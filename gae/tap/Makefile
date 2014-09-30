@@ -20,13 +20,23 @@ RELEASE_FILES=$(sort LICENSE $(wildcard Makefile.*) $(wildcard *.py) $(HTML) $(M
 
 .SUFFIXES: .haml .html
 .haml.html:
-	$(BIN_HAML) -f html5 -t ugly $< $@
+	@if which $(BIN_HAML) >/dev/null; then\
+		echo $(BIN_HAML) -f html5 -t ugly $< $@;\
+		$(BIN_HAML) -f html5 -t ugly $< $@;\
+	else\
+		echo haml is not exists: no build $<;\
+	fi
 HAML = $(wildcard $(TEMPLATE_DIR_PATH)/tap/*.haml)
 HTML = $(HAML:.haml=.html)
 
 .SUFFIXES: .haml .xhtml
 .haml.xhtml:
-	$(BIN_HAML) -f xhtml -t ugly $< $@
+	@if which $(BIN_HAML) >/dev/null; then\
+		echo $(BIN_HAML) -f xhtml -t ugly $< $@;\
+		$(BIN_HAML) -f xhtml -t ugly $< $@;\
+	else\
+		echo haml is not exists: no build $<;\
+	fi
 MOBHAML = $(wildcard $(TEMPLATE_DIR_PATH)/tap/mob/*.haml)
 MOBHTML = $(MOBHAML:.haml=.xhtml)
 
