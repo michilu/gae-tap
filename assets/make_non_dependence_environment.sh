@@ -5,6 +5,8 @@ echo > gae/site-packages/packages.txt
 
 rm -f gae/app_sample.py
 rm -f gae/site-packages/uamobile.py
+rm -f gae/tap/tests/test_web.py
+rm -f gae/tap/tests/test_web_bugs.py
 
 rm -rf doc
 rm -rf gae/locales
