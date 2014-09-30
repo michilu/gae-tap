@@ -23,8 +23,8 @@ RELEASE_FILES=$(sort\
 	$(VERSION_HTML)\
 	$(filter-out static/js/i18n%,$(MINJS) $(JS))\
 	$(wildcard *.py)\
-	$(wildcard Makefile.*)\
 	LICENSE\
+	Makefile.in\
 	endpoints.patch\
 )
 
