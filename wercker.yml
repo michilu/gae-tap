@@ -5,20 +5,38 @@ build:
       packages: zip
   - bundle-install:
       binstubs: true
+      jobs: 4
   - npm-install
   - pip-install
   - script:
+      name: test of non dependence
+      code: |
+        assets/make_non_dependence_environment.sh
+        make clean
+        make test
+        make clean
+        git checkout --force
+  - script:
+      name: test without haml
+      code: |
+        HAML_PATH=no-haml make test
+        make clean
+        git checkout --force
+  - script:
       name: test
       code: |
-        export HAML_PATH=$PWD/bin/haml
-        make
-#  - script:
-#      name: copy output
-#      code: |-
-#        rsync -avz $WERCKER_SOURCE_DIR/gae/ $WERCKER_OUTPUT_DIR
-#deploy:
-#  steps:
-#  - script:
-#      name: Google App Engine deploy
-#      code: |
-#        echo $APP_ENGINE_PASSWORD | $GOOGLE_APPENGINE/appcfg.py update $WERCKER_SOURCE_DIR --email=$APP_ENGINE_EMAIL --passin
+        HAML_PATH=$PWD/bin/haml make
+  - script:
+      name: test dev_appserver.py
+      code: |
+        assets/test_dev_appserver.sh
+  - script:
+      name: copy output
+      code: |-
+        rsync -avz $WERCKER_SOURCE_DIR/gae/ $WERCKER_OUTPUT_DIR
+deploy:
+  steps:
+  - script:
+      name: Google App Engine deploy
+      code: |
+        echo $APP_ENGINE_PASSWORD | $GOOGLE_APPENGINE/appcfg.py update $WERCKER_SOURCE_DIR --email=$APP_ENGINE_EMAIL --passin

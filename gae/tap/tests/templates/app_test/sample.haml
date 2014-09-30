@@ -1,0 +1,25 @@
+{% extends "tap/base.html" %}
+{% set title = subdomain or "Sample" %}
+{% set description = title %}
+{% set domain = "example.com" %}
+{% set fb_app_id = "example" %}
+{% block head %}
+%script(src="/static/js/sample{% if not DEBUG %}.min{% endif %}.js")
+{% endblock head %}
+{% block main %}
+%h1 {{ title }}
+%ul
+ i18n: &rArr;
+
+ {% if LANGUAGE == "ja" %}
+ %a(href="?") English
+ {% else %}
+ %a(href="?l=ja") 日本語
+ {% endif %}
+
+ %li {{ i18n_ }}
+ %li {{ i18n_gettext }}
+ %li {{ _("Boa") }}
+ %li {{ gettext("Cobra") }}
+ %li(i18n)
+{% endblock main %}

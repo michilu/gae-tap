@@ -10,7 +10,7 @@ config_API = (
 
 config_APP = {
   #{<domain>: ((<path prefix>, <module name>[, <namespace>]),)}
-  "<:localhost|(.*-dot-)?gae-tap.appspot.com>": (("", "app_sample"),),
+  "<:localhost|(.*-dot-)?gae-tap.appspot.com>": (("", "app_sample.v1"),),
   #r"<subdomain:(?!www\.)[^.]+>.local": (("/test", "app_sample"),),
 }
 

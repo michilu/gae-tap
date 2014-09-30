@@ -5,9 +5,9 @@ env:
   global:
   - GOOGLE_APPENGINE=$PWD/google_appengine
 install:
-- bundle install --quiet --jobs `grep processor /proc/cpuinfo|wc -l` --retry 10
+- bundle install --quiet --jobs 4 --retry 10
 - npm install --silent
-- ./fetch_google_appengine.sh
+- assets/fetch_google_appengine.sh
 - unzip -q google_appengine.zip
 - patch -d google_appengine/lib/endpoints-1.0/endpoints -p0 -i $PWD/gae/tap/endpoints.patch
 - while ( ! pip install --quiet -r requirements.txt ); do :; done

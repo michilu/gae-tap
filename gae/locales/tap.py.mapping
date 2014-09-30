@@ -1,5 +1,8 @@
 [python: tap/*.py]
 encoding = utf-8
-[jinja2: tap/templates/**/error.html]
+[jinja2: tap/templates/**/*.html]
+encoding = utf-8
+jinja2 = jinja2.ext:babel_extract
+[jinja2: tap/templates/**/*.xhtml]
 encoding = utf-8
 jinja2 = jinja2.ext:babel_extract

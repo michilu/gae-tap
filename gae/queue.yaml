@@ -3,9 +3,9 @@ queue:
   rate: 500/s
 - name: aws
   rate: 2000/h
-- name: b1
+- name: backend
   rate: 500/s
-  target: b1
+  target: backend
 - name: cache
   mode: pull
 - name: sitemap

@@ -62,7 +62,7 @@ class ConfigDefaults(object):
   }
   APPSTATS_INCLUDE_ERROR_STATUS = True
   ASSOCIATE_TAG = "gaetap-22"
-  BACKENDS_NAME = "b1"
+  BACKEND_NAME = "backend"
   BANG_REDIRECTOR = "http://goo.gl/"
   CORS_Access_Control_Max_Age = "3628800" # 30d
   CSRF_TIME = 60
@@ -405,9 +405,13 @@ def get_app():
     for value in values:
       prefix, app, namespace = (value + (None,))[:3]
       module = webapp2.import_string(app)
+      if hasattr(module, "routes"):
+        app_routes = module.routes
+      else:
+        logging.warning("{0} has not `routes`".format(module))
+        continue
       if namespace is not None:
         setattr(module, NAMESPACE_KEY, namespace)
-      app_routes = module.routes
       if prefix:
         app_routes = [routes.PathPrefixRoute(prefix, app_routes)]
       app_routes_by_domain.extend(app_routes)

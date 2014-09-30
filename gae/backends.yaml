@@ -1,5 +1,0 @@
-backends:
-- name: b1
-  class: B1
-  instances: 1
-  options: dynamic

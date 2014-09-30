@@ -18,8 +18,8 @@ import uuid
 
 from google.appengine.api import (
   app_identity,
-  backends,
   memcache,
+  modules,
   namespace_manager,
   oauth,
   taskqueue,
@@ -434,7 +434,7 @@ def cache(period=None, expire=None, temporary=None, empty=False):
     @wraps(func)
     @ndb.synctasklet
     def inner(self, *argv, **kwargv):
-      if backends.get_backend() is None:
+      if modules.get_current_module_name() != tap.config.BACKEND_NAME:
         cache = yield self.has_cache_async(expire, temporary=temporary)
         if cache:
           return
@@ -754,7 +754,7 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
       self.response.write(message)
       self.from_blob(index_cache)
     else:
-      self.render_response(template_path, featurephone=is_featurephone)
+      self.render_response(template_path, auto_relative_path=False, featurephone=is_featurephone)
 
   def head(self, *argv, **kwargv):
     if hasattr(self, "get"):
@@ -879,8 +879,14 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
     return tap.dumps(blob)
 
   @tap.parse_vars("args")
-  def render_response(self, *argv, **kwargv):
-    body, headers = self.render_template(*argv, **kwargv)
+  def render_response(self, template_path, *argv, **kwargv):
+    auto_relative_path = kwargv.pop("auto_relative_path", True)
+    if auto_relative_path:
+      template_path = os.path.join(
+        inspect.getmodule(inspect.currentframe(2).f_code).__package__.replace(".", os.sep),
+        template_path
+      )
+    body, headers = self.render_template(template_path, *argv, **kwargv)
     self.response.write(body)
     self.response.headers.update(headers)
 
@@ -1121,6 +1127,7 @@ class ResponseCache(RequestHandler):
       template_args.append(cache_key)
     app_id = app_identity.get_application_id()
     self.render_response("tap/response_cache.html",
+                         auto_relative_path=False,
                          args=template_args + [host, path, app_id])
 
   @head(angular, bootstrap)
@@ -1142,6 +1149,7 @@ class ResponseCache(RequestHandler):
     app_id = app_identity.get_application_id()
     message = "Deleted the key from caches."
     self.render_response("tap/response_cache.html",
+                         auto_relative_path=False,
                          args=template_args + [host, path, app_id, message])
 
 
@@ -1151,7 +1159,7 @@ class I18Njs(RequestHandler):
   @cache(60)
   def get(self, domain, language):
     translation = get_translation("{0}.js".format(domain), (language,), False, "json")
-    self.render_response("tap/i18n_js.html", args=[translation], mimetype="text/javascript")
+    self.render_response("tap/i18n_js.html", auto_relative_path=False, args=[translation], mimetype="text/javascript")
 
 
 # cron job views
