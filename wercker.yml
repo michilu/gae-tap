@@ -5,6 +5,7 @@ build:
       packages: zip
   - bundle-install:
       binstubs: true
+      jobs: 4
   - npm-install
   - pip-install
   - script:
