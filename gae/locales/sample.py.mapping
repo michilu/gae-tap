@@ -1,8 +1,8 @@
-[python: app_sample.py]
+[python: app_sample/**/*.py]
 encoding = utf-8
-[jinja2: templates/sample.html]
+[jinja2: app_sample/**/*.html]
 encoding = utf-8
 jinja2 = jinja2.ext:babel_extract
-[jinja2: tap/templates/tap/feedback_*.html]
+[jinja2: app_sample/**/*.xhtml]
 encoding = utf-8
 jinja2 = jinja2.ext:babel_extract

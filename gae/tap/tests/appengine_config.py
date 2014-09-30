@@ -12,6 +12,7 @@ config_CORS_Access_Control_Max_Age = "1"
 config_DROPBOX_PROXY_UID = 0
 config_GA_ACCOUNT = "test"
 config_JINJA2_FORCE_COMPILED = False
+config_JINJA2_TEMPLATE_PATH = ("tap/tests/templates", "tap/templates", "templates")
 config_RESPONSE_CACHE_SIZE = 0
 config_SECRET_KEY = "SECRET_KEY"
 config_URI_AUTHORITY = "localhost"
