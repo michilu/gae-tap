@@ -13,7 +13,7 @@ build:
       code: |
         assets/make_non_dependence_environment.sh
         make clean
-        make test
+        make
         make clean
         git checkout --force
   - script:
