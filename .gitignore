@@ -28,7 +28,7 @@ gae/static/sitemap.html
 gae/static_root.zip
 gae/tap/*.zip
 gae/tap/templates/tap/*.py
-gae/templates/*.py
+gae/templates
 htmlcov
 node_modules
 tags

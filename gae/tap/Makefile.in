@@ -122,9 +122,6 @@ clean:
 	find . -name "*.sw?" -delete
 	find . -name .DS_Store -delete
 	find . -name .coverage -delete
-	if [ -e $(TEMPLATE_DIR_PATH) ]; then\
-		find $(TEMPLATE_DIR_PATH) -name "*.py" -delete;\
-	fi
 	rm -f $(TEMPLATES_COMPILED_ZIP_PATH)
 	rm -f $(STATIC_ROOT_ZIP_PATH)
 	rm -f $(CSS)
@@ -136,6 +133,7 @@ clean:
 	rm -f $(TESTACULAR_JS)
 	rm -f $(MO)
 	rm -rf $(FANSTATIC_DIR)
+	rm -rf $(TEMPLATE_DIR_PATH)
 	if curl -f -I -s --connect-timeout $(CURL_TIMEOUT) https://pypi.python.org/simple/ >/dev/null ; then\
 		rm -rf $(GAE_LIB_PACKAGES_DIR);\
 	fi
@@ -173,6 +171,14 @@ $(GAE_LIB_DIR):
 	mkdir -p $@
 
 $(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION_HTML) $(TAP_VERSION_HTML)
+	for templates_path in $(patsubst $(GAE_DIR)/%,%,$(shell find $(GAE_DIR) -type d -name templates|grep ^$(GAE_DIR)/app_)); do\
+		templates_src=$(GAE_DIR)/$$templates_path;\
+		templates_dst=$(TEMPLATE_DIR_PATH)/$$templates_path;\
+		if [ ! -e $$templates_dst ]; then\
+			mkdir -p $$templates_dst;\
+		fi;\
+		cp -rp $$templates_src/* $$templates_dst;\
+	done
 	jinja2precompiler -c $(TEMPLATE_DIR_PATH)
 	zip -FS -j $(TEMPLATES_COMPILED_ZIP_PATH) $(TEMPLATE_DIR_PATH)/*.pyc
 
