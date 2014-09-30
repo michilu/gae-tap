@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import time
 
 import tests.util
 
 from google.appengine.api import taskqueue
+import pytest
 
 import conf
 
@@ -47,6 +49,8 @@ class AppTest(tests.util.TestCase):
     self.app.get("http://www.localhost/", status=404)
     self.app.get("http://foo.localhost/").mustcontain("foo")
 
+  @pytest.mark.skipif('not sys.modules.has_key("uamobile")',
+                      reason="no exists uamobile module")
   def test_featurephone(self):
     headers = {"User-Agent": "Googlebot-Mobile"}
     response = self.app.get("/sample/", headers=headers, status=302)
@@ -116,6 +120,8 @@ class AppTest(tests.util.TestCase):
     assert message not in response
     response.mustcontain(error_message)
 
+  @pytest.mark.skipif('not sys.modules.has_key("uamobile")',
+                      reason="no exists uamobile module")
   def test_OverQuotaError_for_featurephone(self):
     message = u"Go to the top page".encode("Shift_JIS")
     error_message = u"Sorry, a server error has occurred. Display the top page.".encode("Shift_JIS")
@@ -212,6 +218,9 @@ window.gettext=function(t){return t},window.ngettext=function(t,n,e){return 1===
 <script src="/_tap/i18n/sample.en.js"></script>
 """)
     response.mustcontain("<li>Python</li>\n<li>Anaconda</li>\n<li>Boa</li>\n<li>Cobra</li>")
+    if not os.path.exists("gae/locales/ja/LC_MESSAGES/sample.py.po"):
+      response = self.app.get("/test/translation", headers=[("Accept-Language", "ja-JP,ja;q=0.8")])
+      return
     response = self.app.get("/test/translation", headers=[("Accept-Language", "ja-JP,ja;q=0.8")], status=302)
     assert response.headers.get("Location") == "http://localhost/test/translation?l=ja"
     response = self.app.get("/test/translation?l=ja")
@@ -228,4 +237,6 @@ window.gettext=function(t){return t},window.ngettext=function(t,n,e){return 1===
     response = self.app.get("/_tap/i18n/sample.en.js")
     response.mustcontain(";translation={},")
     response = self.app.get("/_tap/i18n/sample.ja.js")
+    if not os.path.exists("gae/locales/ja/LC_MESSAGES/sample.js.po"):
+      return
     response.mustcontain(';translation={"catalog": {"Dumeril": "\u30c7\u30e5\u30e1\u30ea\u30eb"}, "plural": "0", "fallback": null},')
