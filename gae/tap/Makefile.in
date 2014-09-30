@@ -171,8 +171,8 @@ $(GAE_LIB_DIR):
 	mkdir -p $@
 
 $(TEMPLATES_COMPILED_ZIP_PATH): $(GAE_LIB_DIR) $(HTML) $(MOBHTML) $(VERSION_HTML) $(TAP_VERSION_HTML)
-	for templates_path in $(patsubst $(GAE_DIR)/%,%,$(shell find $(GAE_DIR) -type d -name templates|grep ^$(GAE_DIR)/app_)); do\
-		templates_src=$(GAE_DIR)/$$templates_path;\
+	for templates_path in $(patsubst $(GAE_DIR)/%/templates,%,$(shell find $(GAE_DIR) -type d -name templates|grep ^$(GAE_DIR)/app_)); do\
+		templates_src=$(GAE_DIR)/$$templates_path/templates;\
 		templates_dst=$(TEMPLATE_DIR_PATH)/$$templates_path;\
 		if [ ! -e $$templates_dst ]; then\
 			mkdir -p $$templates_dst;\
