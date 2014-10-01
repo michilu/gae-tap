@@ -46,8 +46,10 @@ try:
   from simpleauth import SimpleAuthHandler
 except ImportError:
   class SimpleAuthHandler(object):
-    def _auth_callback(self, *argv, **kwargv): raise NotImplementedError
-    def _simple_auth(self, *argv, **kwargv): raise NotImplementedError
+    def _auth_callback(self, *argv, **kwargv):
+      self.abort(401)
+    def _simple_auth(self, *argv, **kwargv):
+      self.abort(401)
 
 
 # Global
@@ -1068,7 +1070,10 @@ class OAuth(RequestHandler, SimpleAuthHandler):
     referer = self.request.referer
     if referer:
       self.session.add_flash(referer)
-    return super(OAuth, self)._simple_auth(*argv, **kwargv)
+    try:
+      return super(OAuth, self)._simple_auth(*argv, **kwargv)
+    except ValueError:
+      self.abort(401)
 
   def _on_signin(self, data, auth_info, provider):
     for referer, _label in self.session.get_flashes():
@@ -1096,7 +1101,10 @@ class OAuth(RequestHandler, SimpleAuthHandler):
     return self.uri_for('oauth_callback', provider=provider, _full=True)
 
   def _get_consumer_info_for(self, provider):
-    return self.oauth_config.AUTH_CONFIG[provider]
+    if hasattr(self.oauth_config, "AUTH_CONFIG"):
+      return self.oauth_config.AUTH_CONFIG[provider]
+    else:
+      raise ValueError("No exists `AUTH_CONFIG` in oauth_config")
 
   @webapp2.cached_property
   def oauth_config(self):
@@ -1107,7 +1115,10 @@ class OAuth(RequestHandler, SimpleAuthHandler):
         oauth_config = webapp2.import_string("oauth_config.{0}".format(self.request.host.split(":", 1)[0]))
       except webapp2.ImportStringError as e:
         logging.warning(e)
-        from oauth_config import default as oauth_config
+        try:
+          from oauth_config import default as oauth_config
+        except ImportError:
+          return
     return oauth_config
 
 # admin console views

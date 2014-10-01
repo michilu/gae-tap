@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import urlparse
 
@@ -31,14 +32,20 @@ class OAuthTest(tests.util.TestCase):
   @pytest.mark.skipif('not sys.modules.has_key("simpleauth")',
                       reason="no exists simpleauth module")
   def test_oauth(self):
-    response = self.app.get("/oauth/google", status=302)
-    assert response.location.startswith("https://accounts.google.com/o/oauth2/auth?")
-    state = urlparse.parse_qs(response.location)["state"][0]
-    self.app.get("/oauth/google/callback?state={0}".format(state), status=500)
-    self.expected_logs = [
-      ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', "'access_token'"),
-      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', "suspended generator _oauth2_callback(handler.py:230) raised KeyError('access_token')"),
-    ]
+    if os.path.exists("gae/oauth_config"):
+      response = self.app.get("/oauth/google", status=302)
+      assert response.location.startswith("https://accounts.google.com/o/oauth2/auth?")
+      state = urlparse.parse_qs(response.location)["state"][0]
+      self.app.get("/oauth/google/callback?state={0}".format(state), status=500)
+      self.expected_logs = [
+        ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', "'access_token'"),
+        ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', "suspended generator _oauth2_callback(handler.py:230) raised KeyError('access_token')"),
+      ]
+    else:
+      self.app.get("/oauth/google", status=401)
+      self.expected_logs = [
+        ('WARNING', 'gae/tap/ext.py', 'oauth_config', "import_string() failed for 'oauth_config.sample'. Possible reasons are:...\nOriginal exception:\n\nImportError: No module named oauth_config\n\nDebugged import:\n\n- 'oauth_config' not found."),
+      ]
 
 class OAuthSecretsTest(tests.util.TestCase):
   root_path = conf.root_path
@@ -46,16 +53,16 @@ class OAuthSecretsTest(tests.util.TestCase):
   @pytest.mark.skipif('os.path.exists("gae/oauth_config/default.py")',
                       reason="exists gae/oauth_config/default.py")
   def test_secrets(self):
-    self.app.get("/oauth/google", status=500)
+    self.app.get("/oauth/google", status=401)
     if sys.modules.has_key("simpleauth"):
       self.expected_logs = [
         ('WARNING', 'gae/tap/ext.py', 'oauth_config', "import_string() failed for 'oauth_config.localhost'. Possible reasons are...g' found in '.../gae/oauth_config/__init__.py...'.\n- 'oauth_config.localhost' not found."),
         ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', 'cannot import name default'),
       ]
-    else:
-      self.expected_logs = [
-        ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', ''),
-      ]
+      if not os.path.exists("gae/oauth_config"):
+        self.expected_logs.extend([
+          ('WARNING', 'gae/tap/ext.py', 'oauth_config', "import_string() failed for 'oauth_config.localhost'. ..."),
+        ])
 
 class OAuthSignoutTest(tests.util.TestCase):
   root_path = conf.root_path
@@ -93,3 +100,7 @@ class OAuthSignoutTest(tests.util.TestCase):
     self.expected_logs = [
       ('WARNING', 'lib/webapp2-2.5.2/webapp2_extras/securecookie.py', 'deserialize', "Invalid cookie signature u'...'"),
     ]
+    if not os.path.exists("gae/oauth_config"):
+      self.expected_logs.extend([
+        ('WARNING', 'gae/tap/ext.py', 'oauth_config', "import_string() failed for 'oauth_config.sample'. ..."),
+      ])

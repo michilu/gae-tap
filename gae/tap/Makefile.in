@@ -22,7 +22,7 @@ DART_DIR_PATH=$(GAE_DIR)/dart
 JS_DIR=$(GAE_DIR)/static/js
 CSS_DIR=$(GAE_DIR)/static/css
 FANSTATIC_DIR=$(GAE_DIR)/static/lib
-PYTEST_TARGET=$(wildcard $(GAE_DIR)/tests/test*.py $(GAE_DIR)/api*/**/test*.py $(GAE_DIR)/app*/**/test*.py)
+PYTEST_TARGET=$(GAE_DIR)/tests/init.py $(foreach path,tests api* app*,$(shell find $(GAE_DIR)/$(path) -type f -name "test*.py"))
 NODE_MODULES_BASE=node_modules
 BIN_COFFEE=$(NODE_MODULES_BASE)/coffee-script/bin/coffee
 BIN_TESTACULAR=$(NODE_MODULES_BASE)/testacular/bin/testacular
@@ -204,6 +204,13 @@ $(FANSTATIC_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
 	rm -rf $@
 	mkdir -p $@
 	cd $(GAE_DIR); mkfanstaticsymlink --sys_path_appends=$(GAE_LIB)/packages --versioning --versioning_use_md5 --base_url=static --publisher_signature=lib
+	@if [ "$(shell find $@ -type f)" = "" ]; then\
+		rm -rf $@;\
+	fi
+	@if [ "$(shell find $(GAE_DIR)/static -type f)" = "" ]; then\
+		rm -rf $(GAE_DIR)/static;\
+	fi
+
 
 $(GAE_LIB_PACKAGES_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
 	mkdir -p $@
