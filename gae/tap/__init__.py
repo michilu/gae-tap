@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 from itertools import chain, imap, islice, izip
 from xml.sax import saxutils
+import UserDict
 import cPickle as pickle
 import hmac
 import inspect
@@ -530,6 +531,30 @@ def wait_map(func, *sequences):
 
 
 # Classes
+
+class ChainMap(UserDict.DictMixin):
+  """Combine multiple mappings for sequential lookup.
+
+  http://code.activestate.com/recipes/305268/
+  For example, to emulate Python's normal lookup sequence:
+
+  >>> cm = ChainMap({'a':1, 'b':2}, {'a':3, 'd':4})
+  >>> assert cm['a'] == 1
+  >>> assert cm['b'] == 2
+  >>> assert cm['d'] == 4
+  >>> cm.get('f')
+  """
+
+  def __init__(self, *maps):
+    self._maps = maps
+
+  def __getitem__(self, key):
+    for mapping in self._maps:
+      try:
+        return mapping[key]
+      except KeyError:
+        pass
+    raise KeyError(key)
 
 class Queue(object):
   queue_name = "queue"
