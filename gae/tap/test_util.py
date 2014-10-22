@@ -188,7 +188,10 @@ class TestCase(unittest.TestCase):
     # testbed
     self.testbed = testbed.Testbed()
     self.testbed.activate()
-    self.testbed.init_datastore_v3_stub(consistency_policy=datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0))
+    self.testbed.init_datastore_v3_stub(
+      consistency_policy=datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0),
+      root_path=self.root_path,
+    )
     self.testbed.init_blobstore_stub()
     self.testbed.init_files_stub()
     self.testbed.init_memcache_stub()
@@ -263,8 +266,11 @@ class TestCase(unittest.TestCase):
   def endpoints_via_oauth(self, email=None, _auth_domain=None,
                _user_id=None, federated_identity=None, federated_provider=None,
                _strict_mode=False):
-    if _auth_domain is None:
-      _auth_domain = email.split("@", 1)[1]
+    if email is not None:
+      if _auth_domain is None:
+        _auth_domain = email.split("@", 1)[1]
+      if _user_id is None:
+        _user_id = str(tap.base_decoder(sorted(set(email)))(email))
     user = users.User(email, _auth_domain,
                _user_id, federated_identity, federated_provider,
                _strict_mode)

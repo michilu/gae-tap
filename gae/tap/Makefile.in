@@ -232,7 +232,7 @@ $(ASSETS_TMP):
 	mkdir $@
 
 runserver: $(GAE_LIB_PACKAGES_DIR) template css js $(FANSTATIC_DIR) $(ASSETS_TMP)
-	python2.7 $(GAE_PATH)/dev_appserver.py --require_indexes --datastore_path=$(DATASTORE_DB) --show_mail_body=yes --host=0.0.0.0 --port=$(PORT) $(GAE_DIR)/app.yaml
+	python2.7 $(GAE_PATH)/dev_appserver.py --datastore_path=$(DATASTORE_DB) --show_mail_body=yes --host=0.0.0.0 --port=$(PORT) $(GAE_DIR)/app.yaml
 
 deploy: update_frontends update_backends
 
