@@ -188,7 +188,10 @@ class TestCase(unittest.TestCase):
     # testbed
     self.testbed = testbed.Testbed()
     self.testbed.activate()
-    self.testbed.init_datastore_v3_stub(consistency_policy=datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0))
+    self.testbed.init_datastore_v3_stub(
+      consistency_policy=datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=0),
+      root_path=self.root_path,
+    )
     self.testbed.init_blobstore_stub()
     self.testbed.init_files_stub()
     self.testbed.init_memcache_stub()
