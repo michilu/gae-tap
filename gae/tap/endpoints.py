@@ -8,9 +8,14 @@ from google.appengine.api import (
   namespace_manager,
   oauth,
 )
-from google.appengine.ext import ndb
-
-from protorpc import remote
+from google.appengine.ext import (
+  db,
+  ndb,
+)
+from protorpc import (
+  messages,
+  remote,
+)
 from webapp2_extras import sessions
 import endpoints
 import webob
@@ -33,7 +38,7 @@ def get_user_id_from_endpoints_service(raises=True):
   current_user = endpoints.get_current_user()
   if current_user is None:
     if raises:
-      raise endpoints.UnauthorizedException()
+      raise endpoints.UnauthorizedException("Invalid token.")
     else:
       return
   user_id = current_user.user_id()
@@ -112,3 +117,93 @@ class CRUDServiceClass(remote._ServiceClass):
 class CRUDService(remote.Service):
 
   __metaclass__ = CRUDServiceClass
+
+class ValidationError(endpoints.BadRequestException, messages.ValidationError, db.BadValueError, ValueError):
+  pass
+
+try:
+  from endpoints_proto_datastore.ndb import EndpointsAliasProperty
+except (ImportError, IOError):
+  pass
+else:
+
+  class EndpointsModelUserAdapter(object):
+    # Refs:
+    #  https://github.com/GoogleCloudPlatform/endpoints-proto-datastore/blob/758032a/examples/custom_alias_properties/main.py
+    #  http://endpoints-proto-datastore.appspot.com/examples/custom_alias_properties.html
+
+    @ndb.synctasklet
+    def IdSet(self, value):
+      if not isinstance(value, basestring):
+        raise TypeError("ID must be a string.")
+      self.key = ndb.Key(self.__class__, value)
+      entity = yield self.key.get_async()
+      if entity is not None:
+        self._CopyFromEntity(entity)
+        self._from_datastore = True
+
+    @EndpointsAliasProperty(setter=IdSet, required=True)
+    def id(self):
+      if self.key is not None:
+        return self.key.string_id()
+
+class EndpointsUserIDProperty(ndb.StringProperty):
+  """A custom user property for interacting with user ID tokens.
+
+  Uses the tools provided in the endpoints module to detect the current user.
+  In addition, has an optional parameter raise_unauthorized which will return
+  a 401 to the endpoints API request if a user can't be detected.
+  """
+
+  def __init__(self, *args, **kwargs):
+    """Constructor for string property.
+
+    NOTE: Have to pop custom arguments from the keyword argument dictionary
+    to avoid corrupting argument order when sent to the superclass.
+
+    Attributes:
+      _raise_unauthorized: An optional boolean, defaulting to False. If True,
+         the property will return a 401 to the API request if a user can't
+         be deteced.
+    """
+    self._raise_unauthorized = kwargs.pop('raise_unauthorized', False)
+    super(EndpointsUserIDProperty, self).__init__(*args, **kwargs)
+
+  def _set_value(self, entity, value):
+    """Internal helper to set value on model entity.
+
+    If the value to be set is null, will try to retrieve the current user and
+    will return a 401 if a user can't be found and raise_unauthorized is True.
+
+    Args:
+      entity: An instance of some NDB model.
+      value: The value of this property to be set on the instance.
+    """
+    if value is None:
+      value = get_user_id_from_endpoints_service(raises=self._raise_unauthorized)
+    super(EndpointsUserIDProperty, self)._set_value(entity, value)
+
+  def _fix_up(self, cls, code_name):
+    """Internal helper called to register the property with the model class.
+
+    Overrides the _set_attributes method on the model class to interject this
+    attribute in to the keywords passed to it. Since the method _set_attributes
+    is called by the model class constructor to set values, this -- in congress
+    with the custom defined _set_value -- will make sure this property always
+    gets set when an instance is created, even if not passed in.
+
+    Args:
+      cls: The model class that owns the property.
+      code_name: The name of the attribute on the model class corresponding
+          to the property.
+    """
+    original_set_attributes = cls._set_attributes
+
+    def CustomSetAttributes(setattr_self, kwds):
+      """Custom _set_attributes which makes sure this property is always set."""
+      if self._code_name not in kwds:
+        kwds[self._code_name] = None
+      original_set_attributes(setattr_self, kwds)
+
+    cls._set_attributes = CustomSetAttributes
+    super(EndpointsUserIDProperty, self)._fix_up(cls, code_name)

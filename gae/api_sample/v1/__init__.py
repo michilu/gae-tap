@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+# import a base module of api
 from .api import *
 
-from .echo import *
+# import some modules of your apis
+from .api.echo import *

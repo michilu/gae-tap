@@ -4,7 +4,7 @@ import tests.util
 
 import endpoints
 
-from . import api
+from .. import api
 
 class APITest(tests.util.TestCase):
   application = api

@@ -50,6 +50,7 @@ Supports:
 * generating sitemaps
 * sessions
 * Google Cloud Endpoints API as a CRUD, avoid method naming conflict in implemented with multiple classes
+* endpoints-proto-datastore
 
 Low cost operating:
 

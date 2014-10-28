@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-09-27 17:05+0700\n"
+"POT-Creation-Date: 2014-10-28 18:22+0700\n"
 "PO-Revision-Date: 2014-01-10 10:27+0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: gae/tap/ext.py:711
+#: gae/tap/ext.py:713
 msgid "Not found. Display the top page."
 msgstr "見つかりませんでした。トップページを表示しています。"
 
-#: gae/tap/ext.py:716 gae/tap/ext.py:725
+#: gae/tap/ext.py:718 gae/tap/ext.py:727
 msgid "Sorry, a server error has occurred. Display the top page."
 msgstr "サーバーエラーが発生しました。トップページを表示しています。"
 
