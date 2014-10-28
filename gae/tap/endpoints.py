@@ -8,9 +8,14 @@ from google.appengine.api import (
   namespace_manager,
   oauth,
 )
-from google.appengine.ext import ndb
-
-from protorpc import remote
+from google.appengine.ext import (
+  db,
+  ndb,
+)
+from protorpc import (
+  messages,
+  remote,
+)
 from webapp2_extras import sessions
 import endpoints
 import webob
@@ -112,3 +117,6 @@ class CRUDServiceClass(remote._ServiceClass):
 class CRUDService(remote.Service):
 
   __metaclass__ = CRUDServiceClass
+
+class ValidationError(endpoints.BadRequestException, messages.ValidationError, db.BadValueError, ValueError):
+  pass
