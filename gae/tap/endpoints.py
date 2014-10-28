@@ -121,6 +121,32 @@ class CRUDService(remote.Service):
 class ValidationError(endpoints.BadRequestException, messages.ValidationError, db.BadValueError, ValueError):
   pass
 
+try:
+  from endpoints_proto_datastore.ndb import EndpointsAliasProperty
+except (ImportError, IOError):
+  pass
+else:
+
+  class EndpointsModelUserAdapter(object):
+    # Refs:
+    #  https://github.com/GoogleCloudPlatform/endpoints-proto-datastore/blob/758032a/examples/custom_alias_properties/main.py
+    #  http://endpoints-proto-datastore.appspot.com/examples/custom_alias_properties.html
+
+    @ndb.synctasklet
+    def IdSet(self, value):
+      if not isinstance(value, basestring):
+        raise TypeError("ID must be a string.")
+      self.key = ndb.Key(self.__class__, value)
+      entity = yield self.key.get_async()
+      if entity is not None:
+        self._CopyFromEntity(entity)
+        self._from_datastore = True
+
+    @EndpointsAliasProperty(setter=IdSet, required=True)
+    def id(self):
+      if self.key is not None:
+        return self.key.string_id()
+
 class EndpointsUserIDProperty(ndb.StringProperty):
   """A custom user property for interacting with user ID tokens.
 
