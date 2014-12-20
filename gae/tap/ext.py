@@ -982,7 +982,27 @@ class BangRedirector(RequestHandler):
     self.response.status_int = 301
     self.response.headers.add("Location", "".join((self._redirect_to, key)))
 
-# dropbox proxy views
+# Google Drive proxy views
+
+class DriveProxy(RequestHandler):
+  _drive_url_base = "https://www.googledrive.com/host/{uid}/{domain}{path}"
+  cache_time = 60 #1min
+  drive_uid = tap.config.DRIVE_PROXY_UID or ""
+
+  @classmethod
+  def __new__(cls, *argv, **kwargv):
+    cls.get = cache(cls.cache_time)(cls.get)
+    return super(DriveProxy, cls).__new__(*argv, **kwargv)
+
+  def get(self, path, domain):
+    url = self._drive_url_base.format(uid=self.drive_uid, domain=domain, path=path)
+    if url.endswith("/"):
+      url = url + "index.html"
+    self.proxy(url=url)
+    if self.response.status_code >= 400:
+      self.response.body = ""
+
+# Dropbox proxy views
 
 class DropboxProxy(RequestHandler):
   _dropbox_url_base = "https://dl.dropboxusercontent.com/u/{uid}/{domain}{path}"
