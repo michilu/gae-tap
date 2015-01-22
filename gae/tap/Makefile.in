@@ -161,10 +161,10 @@ html: $(HTML) $(MOBHTML) $(DARTHTML)
 mo: html $(PYMAPPING) $(JSMAPPING) $(POT) $(MO)
 
 discovery_doc:
-	endpointscfg.py get_discovery_doc -a gae -o doc $(shell cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) ./tap/printer.py $(gce))
+	endpointscfg.py get_discovery_doc -a gae -o assets $(shell cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) ./tap/printer.py $(gce))
 
 discovery_lib:
-	endpointscfg.py get_client_lib java -a gae -o doc $(shell cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) ./tap/printer.py $(gce))
+	endpointscfg.py get_client_lib java -a gae -o assets $(shell cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) ./tap/printer.py $(gce))
 
 
 $(GAE_LIB_DIR):
@@ -260,7 +260,4 @@ watchlion:
 shell:
 	@cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) PYTHONSTARTUP=./tap/shell.py ipython
 
-doc:
-	cd doc; PYTHONPATH=$(GAE_PATH) make html
-
-.PHONY: all template clean test runserver deploy update_cron update_queues doc $(VERSION_HTML)
+.PHONY: all template clean test runserver deploy update_cron update_queues $(VERSION_HTML)

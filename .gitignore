@@ -17,7 +17,6 @@ syntax: glob
 .sass-cache
 Gemfile.lock
 assets/tmp/**/*
-doc/_*
 gae/**/templates/**/*.html
 gae/**/templates/**/mob/*.xhtml
 gae/oauth_config/*.py
