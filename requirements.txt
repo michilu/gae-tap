@@ -3,12 +3,11 @@
 
 babel
 fanstatic-tools==0.2
+https://github.com/MiCHiLU/pytest_gae/archive/master.zip #pytest-gae
 jinja2-precompiler>=0.2
 jinja2==2.6
 minimock
 pytest-cov
-#pytest-gae
-https://bitbucket.org/MiCHiLU/pytest_gae/get/default.zip
 testfixtures
 webtest>2
 
