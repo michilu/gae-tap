@@ -1,11 +1,16 @@
 # for Google App Engine
+# https://cloud.google.com/appengine/docs/python/tools/libraries27
+
 PyYAML==3.10
 WebOb==1.2.3
 pycrypto==2.6
 
+
 # Bundle to Google App Engine
+# google-cloud-sdk/platform/google_appengine/lib
+
+MarkupSafe==0.15
 httplib2==0.7.5
 jinja2==2.6
-MarkupSafe==0.15
 lxml==2.3
 oauth2==1.5.170
