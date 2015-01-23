@@ -8,7 +8,6 @@ rm -f gae/site-packages/uamobile.py
 rm -f gae/tap/tests/test_web.py
 rm -f gae/tap/tests/test_web_bugs.py
 
-rm -rf doc
 rm -rf gae/locales
 rm -rf gae/oauth_config
 rm -rf gae/static
