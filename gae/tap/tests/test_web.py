@@ -61,6 +61,13 @@ class AppTest(tests.util.TestCase):
 
   def test_fetch_page(self):
     self.app.get("/test/fetch_page?test")
+    self.expected_logs = [
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'initial generator run_to_queue(query.py:...) raised BadRequestError(invalid cursor)'),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator helper(context.py:...) raised BadRequestError(invalid cursor)'),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator has_next_async(query.py:...) raised BadRequestError(invalid cursor)'),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator _fetch_page_async(query.py:...) raised BadRequestError(invalid cursor)'),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator fetch_page_async(__init__.py:...) raised BadRequestError(invalid cursor)'),
+    ]
 
   def test_namespace(self):
     self.app.get("/test/namespace").mustcontain("namespace")

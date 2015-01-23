@@ -69,6 +69,7 @@ class ConfigDefaults(object):
   CSRF_TIME = 60
   DEBUG = os.environ.get('SERVER_SOFTWARE', 'Dev').startswith('Dev')
   DEFERRED_HANDLE_OverQuotaError = True
+  DRIVE_PROXY_UID = None
   DROPBOX_PROXY_UID = None
   ENSURE_FREE_SPACE = 0x3200000 # 50MB
   FANSTATIC = dict(
@@ -421,7 +422,9 @@ def get_app():
     elif not config.IS_TEST: #TODO: remove
       raise ValueError("domain is required by {values}".format(values=values))
     routes_list.extend(app_routes_by_domain)
-  if config.DROPBOX_PROXY_UID is not None:
+  if config.DRIVE_PROXY_UID is not None:
+    routes_list.append(routes.DomainRoute(r"<domain:^.+?\.[a-zA-Z]{2,5}$>", [webapp2.Route(r"<path:.*>", "tap.ext.DriveProxy")]))
+  elif config.DROPBOX_PROXY_UID is not None:
     routes_list.append(routes.DomainRoute(r"<domain:^.+?\.[a-zA-Z]{2,5}$>", [webapp2.Route(r"<path:.*>", "tap.ext.DropboxProxy")]))
   return webapp2.WSGIApplication(routes=routes_list, debug=config.DEBUG, config=config_dict)
 

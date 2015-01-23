@@ -50,6 +50,7 @@ Supports:
 * generating sitemaps
 * sessions
 * Google Cloud Endpoints API as a CRUD, avoid method naming conflict in implemented with multiple classes
+* endpoints-proto-datastore
 
 Low cost operating:
 
@@ -119,6 +120,12 @@ Set up
     $ mkvirtualenv --python=`which ptyhon2.7` gae-tap
     (gae-tap)$ pip install -r requirements.txt
     (gae-tap)$ pip install -r requirements-gae.txt
+
+If you want to start a new project with `make scaffold`, as below::
+
+    $ make scaffold
+    your app-id, default 'gae-tap': <type your app-id>
+    your github user name, default 'MiCHiLU': <type your github user name>
 
 Set environ
 -----------

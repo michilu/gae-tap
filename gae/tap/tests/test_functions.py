@@ -51,20 +51,6 @@ class TestFunctions(unittest.TestCase):
   def test_encodeURIComponent(self):
     assert tap.encodeURIComponent(" /;") == "%20%2F%3B"
 
-  @ndb.synctasklet
-  def test_get_keys_only(self):
-    result = yield tap.get_keys_only(Model.query())
-    assert result is None
-    result =  yield tap.get_keys_only(OverQuotaError())
-    assert result
-
-  @ndb.synctasklet
-  def test_fetch_keys_only(self):
-    result = yield tap.fetch_keys_only(Model.query())
-    assert result == []
-    result = yield tap.fetch_keys_only(OverQuotaError())
-    assert result
-
   def test_send_exception_report(self):
     with tests.util.set_config(DEBUG=False, JOB_EMAIL_RECIPIENT=True):
       with pytest.raises(mail.InvalidEmailError):
@@ -90,6 +76,28 @@ class TestFunctions(unittest.TestCase):
       with pytest.raises(deferred.PermanentTaskFailure):
         f()
 
+class TestFunctionsWithDatastore(tests.util.TestCase):
+  @ndb.synctasklet
+  def test_get_keys_only(self):
+    result = yield tap.get_keys_only(Model.query())
+    assert result is None
+    result =  yield tap.get_keys_only(OverQuotaError())
+    assert result
+    self.expected_logs = [
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'initial generator get_async(test_functions.py:...) raised OverQuotaError()'),
+    ]
+
+  @ndb.synctasklet
+  def test_fetch_keys_only(self):
+    result = yield tap.fetch_keys_only(Model.query())
+    assert result == []
+    result = yield tap.fetch_keys_only(OverQuotaError())
+    assert result
+    self.expected_logs = [
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'initial generator fetch_async(test_functions.py:...) raised OverQuotaError()'),
+    ]
+
+class TestFunctionsWihMemcache(tests.util.TestCase):
   def test_memoize(self):
 
     @ndb.toplevel
@@ -146,7 +154,7 @@ class AppTest(tests.util.TestCase):
       recording.config.RECORD_FRACTION = origin_RECORD_FRACTION
       recording.config.DEBUG = origin_DEBUG
 
-class TestTokenBucket(unittest.TestCase):
+class TestTokenBucket(tests.util.TestCase):
   def test_is_acceptable(self):
     with pytest.raises(ValueError):
       tap.TokenBucket(rate=3, size=10)

@@ -982,25 +982,35 @@ class BangRedirector(RequestHandler):
     self.response.status_int = 301
     self.response.headers.add("Location", "".join((self._redirect_to, key)))
 
-# dropbox proxy views
-
-class DropboxProxy(RequestHandler):
-  _dropbox_url_base = "https://dl.dropboxusercontent.com/u/{uid}/{domain}{path}"
+class ProxyBase(RequestHandler):
+  _url_base = None
   cache_time = 60 #1min
-  dropbox_uid = tap.config.DROPBOX_PROXY_UID or ""
+  uid = None
 
   @classmethod
   def __new__(cls, *argv, **kwargv):
     cls.get = cache(cls.cache_time)(cls.get)
-    return super(DropboxProxy, cls).__new__(*argv, **kwargv)
+    return super(ProxyBase, cls).__new__(*argv, **kwargv)
 
   def get(self, path, domain):
-    url = self._dropbox_url_base.format(uid=self.dropbox_uid, domain=domain, path=path)
+    url = self._url_base.format(uid=self.uid, domain=domain, path=path)
     if url.endswith("/"):
       url = url + "index.html"
     self.proxy(url=url)
     if self.response.status_code >= 400:
       self.response.body = ""
+
+# Google Drive proxy views
+
+class DriveProxy(ProxyBase):
+  _url_base = "https://www.googledrive.com/host/{uid}/{domain}{path}"
+  uid = tap.config.DRIVE_PROXY_UID or ""
+
+# Dropbox proxy views
+
+class DropboxProxy(ProxyBase):
+  _url_base = "https://dl.dropboxusercontent.com/u/{uid}/{domain}{path}"
+  uid = tap.config.DROPBOX_PROXY_UID or ""
 
 # OAuth views
 

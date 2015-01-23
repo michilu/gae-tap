@@ -1,11 +1,18 @@
 # for Google App Engine
+# https://cloud.google.com/appengine/docs/python/tools/libraries27
+
 PyYAML==3.10
 WebOb==1.2.3
 pycrypto==2.6
 
+
 # Bundle to Google App Engine
-httplib2==0.7.5
-jinja2==2.6
+# google-cloud-sdk/platform/google_appengine/lib
+
 MarkupSafe==0.15
+http://download.cherrypy.org/cherrypy/3.2.2/CherryPy-3.2.2.zip #cherrypy==3.2.2
+httplib2==0.7.5
+https://pythonfutures.googlecode.com/archive/168453acb1ee.zip #pythonfutures==168453acb1ee
+jinja2==2.6
 lxml==2.3
 oauth2==1.5.170
