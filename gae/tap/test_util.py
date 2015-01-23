@@ -196,6 +196,8 @@ class TestCase(unittest.TestCase):
     self.testbed.init_files_stub()
     self.testbed.init_memcache_stub()
     self.testbed.init_taskqueue_stub(root_path=self.root_path)
+    self.testbed.init_urlfetch_stub()
+    self.testbed.init_user_stub()
     # logging
     self.log = LogCapture(level=logging.WARNING)
     self.log.install()
