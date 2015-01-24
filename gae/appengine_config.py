@@ -37,14 +37,21 @@ config_SECRET_KEY = "a very long and secret session key goes here"
 
 
 # START of settings for appstats
+# To use the appstats only dev_appserver.
 # https://cloud.google.com/appengine/docs/python/tools/appstats
+# If you want to use this feature on production, please setting the Cloud Trace instead.
+# https://cloud.google.com/tools/cloud-trace
 
 from google.appengine.ext.appstats import recording
 
 appstats_CALC_RPC_COSTS = True
-appstats_RECORD_FRACTION = 0.1
+appstats_RECORD_FRACTION = 1
 
 def webapp_add_wsgi_middleware(app):
-  return recording.appstats_wsgi_middleware(app)
+  import tap
+  if tap.config.DEBUG:
+    return recording.appstats_wsgi_middleware(app)
+  else:
+    return app
 
 # END of settings for appstats
