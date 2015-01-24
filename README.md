@@ -140,8 +140,8 @@ or, Quickly set up environment via Docker:
 
 then access to:
 
-* admin server: http://localhost:8000
-* instance server: http://localhost:8080
+* admin server: [http://localhost:8000](http://localhost:8000)
+* instance server: [http://localhost:8080](http://localhost:8080)
 
 ## Deploy
 
