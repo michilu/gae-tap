@@ -264,8 +264,7 @@ REPOSITORY=$(shell git remote -v|grep origin|grep fetch|awk '{print $$2}')
 USER=$(shell echo $(dir $(REPOSITORY))|sed "s%.*\\([:/]\\)\\([A-Za-z0-9-]*\\)\\/%\\2%g")
 NAME=$(basename $(notdir $(REPOSITORY)))
 scaffold:
-	@sed -i "" "/landscape.io/d" README.rst;\
-	read -p "your app-id, default '$(NAME)': " name &&\
+	@read -p "your app-id, default '$(NAME)': " name &&\
 	if [ "$$name" == "" ] ; then\
 		name="$(NAME)";\
 	fi;\
@@ -281,6 +280,7 @@ scaffold:
 		echo no given.;\
 		exit;\
 	fi;\
+	sed -i "" "/landscape.io/d" README.rst;\
 	if [ "$(REPOSITORY)" != "" ] ; then\
 		sed -i "" "s%https://github.com/MiCHiLU/gae-tap.git%$(REPOSITORY)%g"\
 			README.rst\
