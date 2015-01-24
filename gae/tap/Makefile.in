@@ -280,6 +280,7 @@ scaffold:
 		echo no given.;\
 		exit;\
 	fi;\
+	sed -i "" "/include gae\/tap\/Makefile.test/d" Makefile;\
 	sed -i "" "/landscape.io/d" README.rst;\
 	if [ "$(REPOSITORY)" != "" ] ; then\
 		sed -i "" "s%https://github.com/MiCHiLU/gae-tap.git%$(REPOSITORY)%g"\
