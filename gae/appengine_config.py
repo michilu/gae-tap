@@ -45,7 +45,7 @@ config_SECRET_KEY = "a very long and secret session key goes here"
 from google.appengine.ext.appstats import recording
 
 appstats_CALC_RPC_COSTS = True
-appstats_RECORD_FRACTION = 0.1
+appstats_RECORD_FRACTION = 1
 
 def webapp_add_wsgi_middleware(app):
   import tap
