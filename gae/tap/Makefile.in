@@ -203,14 +203,7 @@ $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAG
 $(FANSTATIC_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
 	rm -rf $@
 	mkdir -p $@
-	cd $(GAE_DIR); mkfanstaticsymlink --sys_path_appends=$(GAE_LIB)/packages --versioning --versioning_use_md5 --base_url=static --publisher_signature=lib
-	@if [ "$(shell find $@ -type f)" = "" ]; then\
-		rm -rf $@;\
-	fi
-	@if [ "$(shell find $(GAE_DIR)/static -type f)" = "" ]; then\
-		rm -rf $(GAE_DIR)/static;\
-	fi
-
+	cd $(GAE_DIR); mkfanstaticsymlink --sys_path_appends=$(GAE_LIB)/packages --versioning --versioning_use_md5 --base_url=static --publisher_signature=$(basename $(notdir $@))
 
 $(GAE_LIB_PACKAGES_DIR): $(GAE_LIB_PACKAGES_DIR)/*.egg-info
 	mkdir -p $@
