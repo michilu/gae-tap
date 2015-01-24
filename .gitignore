@@ -3,7 +3,6 @@
 /.coverage
 /.sass-cache
 /Gemfile.lock
-/datastore.db
 /gae/site-packages/packages
 /gae/static/lib
 /gae/static/sitemap.html
