@@ -55,8 +55,10 @@ Supports:
 Low cost operating:
 
 * Google Drive Spreadsheets as a database via Google Visualization API
-* Google Drive Spreadsheets-based feedback form
-* hosting DropBox as a proxy
+* Google Drive Form-based feedback system
+* hosting as a proxy
+  * DropBox
+  * Google Drive
 * hostname-based multitenancy
   * supports robots.txt
 * just a few costs permanent caching and key-value store via taskqueue API
