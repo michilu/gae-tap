@@ -25,20 +25,20 @@ Looking for sponsors:
 
 Supports:
 
-* Google App Engine / Python 2.7
-  * Appstats
-  * Google Cloud Endpoints API
-  * NDB Asynchronous Operation
-  * Python Module Configuration
-* Google Analytics for feature phone
-* I18N / Python, HTML and JavaScript
-* Japanese han-kaku characters / 半角
-* OAuth login / gae-simpleauth
-* Google OAuth authentication-based Users API (alternate of Google App Engine Users API)
+* [Google App Engine / Python 2.7](https://cloud.google.com/appengine/docs/python/)
+  * [Google Cloud Endpoints API](https://cloud.google.com/appengine/docs/python/endpoints/)
+  * [NDB Asynchronous Operation](https://cloud.google.com/appengine/docs/python/ndb/async)
+    * [Python NDB Datastore API](https://cloud.google.com/appengine/docs/python/ndb/)
+  * [Python Module Configuration](https://cloud.google.com/appengine/docs/python/tools/appengineconfig)
+* [Google Analytics for feature phone](https://github.com/MiCHiLU/Google-Analytics-for-Mobile--Google-App-Engine)
+* I18N / Python, HTML and JavaScript / [babel](http://babel.pocoo.org/)
+* Japanese han-kaku characters / 半角 / [zenhan-py](https://github.com/MiCHiLU/zenhan-py)
+* OAuth login / [gae-simpleauth](https://github.com/MiCHiLU/simpleauth)
+* [Google OAuth 2.0](https://developers.google.com/accounts/docs/OAuth2) authentication-based Users API (alternate of [Google App Engine Users API](https://cloud.google.com/appengine/docs/python/users/))
 * generating sitemaps
-* sessions
+* [sessions](https://webapp-improved.appspot.com/api/webapp2_extras/sessions.html)
 * Google Cloud Endpoints API as a CRUD, avoid method naming conflict in implemented with multiple classes
-* endpoints-proto-datastore
+* [Endpoints Proto Datastore API](https://github.com/GoogleCloudPlatform/endpoints-proto-datastore)
 
 Low cost operating:
 
@@ -55,30 +55,31 @@ Low cost operating:
 
 Performance:
 
-* pre-compiling jinja2 templates
-* uglify-js
+* pre-compiling jinja2 templates to Python byte code / [jinja2precompiler](https://github.com/MiCHiLU/jinja2-precompiler)
+* [uglify-js](https://github.com/mishoo/UglifyJS)
 
 Coding:
 
-* CoffeeScript
-* HAML
-* SASS / compass
+* [CoffeeScript](http://coffeescript.org/)
+* [HAML](http://haml.info/)
+* [SASS](http://sass-lang.com/) / [compass](http://compass-style.org/)
 
 Development:
 
-* AngularJS
-* Jinja2
-* Twitter bootstrap
-* webapp2
+* [AngularJS](https://angularjs.org/)
+* [Appstats](https://cloud.google.com/appengine/docs/python/tools/appstats)
+* [Jinja2 2.6](http://jinja.pocoo.org/docs/dev/)
+* [Twitter bootstrap](http://getbootstrap.com/)
+* [webapp2](https://cloud.google.com/appengine/docs/python/tools/webapp2)
 
-* file system event-based automation building on Mac OS X 10.7+
-* Docker
+* [file system event-based automation building on Mac OS X 10.7+](https://pypi.python.org/pypi/watchlion)
+* [Docker](https://www.docker.com/)
 
 Testing:
 
-* coverage of tests
-* karma
-* py.test
+* [py.test](http://pytest.org/)
+* coverage of tests / [pytest-cov](https://pypi.python.org/pypi/pytest-cov)
+* [karma](http://karma-runner.github.io/)
 
 Utils:
 
@@ -95,8 +96,8 @@ Utils:
 
 Continuous Integration Supports:
 
-* Travis CI
-* Wercker CI
+* [Travis CI](https://travis-ci.org/)
+* [Wercker CI](http://wercker.com/)
 
 ## Set up
 
@@ -154,10 +155,12 @@ then access to:
 
 ## Dependencies
 
-* Bundler
+* [Bundler](http://bundler.io/)
 * GNU Make
+  * [How to install Xcode Command Line Tools](http://railsapps.github.io/xcode-command-line-tools.html)
 * Python 2.7
-* npm
+  * [Third-party Libraries in Python 2.7](https://cloud.google.com/appengine/docs/python/tools/libraries27) on Google App Engine
+* [npm](https://www.npmjs.com/)
 
 ## LICENSE
 
