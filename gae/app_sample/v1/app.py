@@ -13,7 +13,7 @@ class Index(tap.ext.RequestHandler):
   def get(self, subdomain=None):
     i18n_ = _("Python")
     i18n_gettext = gettext("Anaconda")
-    self.render_response("sample.html", locals())
+    self.render_response("app_sample/v1/sample.html", locals(), auto_relative_path=False)
 
 class ForMobile(tap.ext.RequestHandler):
   @tap.ext.cache(60)
