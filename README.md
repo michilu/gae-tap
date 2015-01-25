@@ -139,8 +139,9 @@ Or, update core library from releases:
 If you want to start a new project with `make scaffold`, as below:
 
     $ make scaffold
-    your app-id, default 'gae-tap': <type your app-id>
+    your project name, default 'gae-tap':     <type your project name>
     your github user name, default 'MiCHiLU': <type your github user name>
+    your app-id, default 'gae-tap':           <type your app-id>
 
 ## Build and Test
 
