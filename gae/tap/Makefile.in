@@ -19,7 +19,7 @@ STATIC_ROOT_ZIP_PATH=$(STATIC_ROOT_DIR_PATH).zip
 STATIC_ROOT=$(wildcard $(STATIC_ROOT_DIR_PATH)/**/*)
 STATIC_ROOT_PATH=$(patsubst $(GAE_DIR)/%,%,$(STATIC_ROOT))
 DART_DIR_PATH=$(GAE_DIR)/dart
-JS_DIR=$(GAE_DIR)/static/js
+JS_DIR=$(GAE_DIR)/static/js $(TAP_DIR)/static/js
 CSS_DIR=$(GAE_DIR)/static/css
 FANSTATIC_DIR=$(GAE_DIR)/static/lib
 PYTEST_TARGET=$(GAE_DIR)/tests/init.py $(foreach path,tests api* app*,$(shell find $(GAE_DIR)/$(path) -type f -name "test*.py"))
@@ -188,7 +188,12 @@ $(STATIC_ROOT_ZIP_PATH): $(STATIC_ROOT)
 	fi
 
 $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
-	@if curl -f -I -s --connect-timeout $(CURL_TIMEOUT) https://pypi.python.org/simple/ >/dev/null ; then\
+	@if [ `find $(GAE_LIB_PACKAGES_DIR) -type f -print|grep -c ""` ]; then\
+		curl_timeout=$(CURL_TIMEOUT);\
+	else\
+		curl_timeout=0;\
+	fi;\
+	if curl -f -I -s --connect-timeout $$curl_timeout https://pypi.python.org/simple/ >/dev/null ; then\
 		rm -rf $(GAE_LIB_PACKAGES_DIR);\
 		if [ `sed -e "/^$$/d" -e "/^#/d" $(GAE_LIB_PACKAGES_DIR).txt|grep -c ""` ]; then\
 			pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt;\

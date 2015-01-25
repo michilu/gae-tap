@@ -20,6 +20,7 @@ config_APP = {
 
 #config_FEEDBACK_FORMKEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 #config_GA_ACCOUNT = ""
+#config_JINJA2_FORCE_COMPILED = False
 #config_JOB_EMAIL_RECIPIENT = "email@example.com"
 #config_WEBAPP2_CONFIG = {}
 
