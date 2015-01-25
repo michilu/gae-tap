@@ -261,8 +261,9 @@ shell:
 REPOSITORY=$(shell git remote -v|grep origin|grep fetch|awk '{print $$2}')
 USER=$(shell echo $(dir $(REPOSITORY))|sed "s%.*\\([:/]\\)\\([A-Za-z0-9-]*\\)\\/%\\2%g")
 NAME=$(basename $(notdir $(REPOSITORY)))
+APPID=$(NAME)
 scaffold:
-	@read -p "your app-id, default '$(NAME)': " name &&\
+	@read -p "your project name, default '$(NAME)': " name &&\
 	if [ "$$name" == "" ] ; then\
 		name="$(NAME)";\
 	fi;\
@@ -275,6 +276,14 @@ scaffold:
 		user="$(USER)";\
 	fi;\
 	if [ "$$user" == "" ] ; then\
+		echo no given.;\
+		exit;\
+	fi;\
+	read -p "your app-id, default '$(APPID)': " appid &&\
+	if [ "$$appid" == "" ] ; then\
+		appid="$(APPID)";\
+	fi;\
+	if [ "$$appid" == "" ] ; then\
 		echo no given.;\
 		exit;\
 	fi;\
@@ -300,10 +309,12 @@ scaffold:
 		README.md\
 	;\
 	sed -i "" "s%gae-tap%$$name%g"\
+		package.json\
+	;\
+	sed -i "" "s%gae-tap%$$appid%g"\
 		gae/app.yaml\
 		gae/appengine_config.py\
 		gae/backend.yaml\
-		package.json\
 	;
 
 .PHONY: all template clean test runserver deploy update_cron update_queues $(VERSION_HTML)
