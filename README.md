@@ -148,6 +148,10 @@ then access to:
 
     (gae-tap)$ make deploy
 
+### Auto deploy via Wercker CI
+
+If you want to auto deploy to the Google App Engine, add `APP_ENGINE_EMAIL` and `APP_ENGINE_PASSWORD` variables to `Deploy pipeline` of `Deploy targets` in your `App` on the Wercker CI.
+
 ## How to update core library
 
 1. Download `gaetap-<release-number>.zip` file from https://github.com/MiCHiLU/gae-tap/releases
