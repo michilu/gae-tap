@@ -188,7 +188,12 @@ $(STATIC_ROOT_ZIP_PATH): $(STATIC_ROOT)
 	fi
 
 $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAGES_DIR)-no-deps.txt
-	@if curl -f -I -s --connect-timeout $(CURL_TIMEOUT) https://pypi.python.org/simple/ >/dev/null ; then\
+	@if [ `find $(GAE_LIB_PACKAGES_DIR) -type f -print|grep -c ""` ]; then\
+		curl_timeout=$(CURL_TIMEOUT);\
+	else\
+		curl_timeout=0;\
+	fi;\
+	if curl -f -I -s --connect-timeout $$curl_timeout https://pypi.python.org/simple/ >/dev/null ; then\
 		rm -rf $(GAE_LIB_PACKAGES_DIR);\
 		if [ `sed -e "/^$$/d" -e "/^#/d" $(GAE_LIB_PACKAGES_DIR).txt|grep -c ""` ]; then\
 			pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt;\
