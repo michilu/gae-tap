@@ -274,25 +274,25 @@ scaffold:
 		exit;\
 	fi;\
 	sed -i "" "/include gae\/tap\/Makefile.test/d" Makefile;\
-	sed -i "" "/landscape.io/d" README.rst;\
+	sed -i "" "/landscape.io/d" README.md;\
 	if [ "$(REPOSITORY)" != "" ] ; then\
 		sed -i "" "s%https://github.com/MiCHiLU/gae-tap.git%$(REPOSITORY)%g"\
-			README.rst\
+			README.md\
 			package.json\
 		;\
 	fi;\
 	sed -i "" "s%MiCHiLU/gae-tap\([^/]\)%$$user/$$name\\1%g"\
-		README.rst\
+		README.md\
 	;\
 	sed -i "" "s%MiCHiLU/gae-tap$$%$$user/$$name%g"\
 		.travis.yml\
-		README.rst\
+		README.md\
 	;\
 	sed -i "" "s%\([^/]\)gae-tap$$%\\1$$name%g"\
-		README.rst\
+		README.md\
 	;\
 	sed -i "" "s%\( .\)gae-tap\(.. \)%\1$$name\\2%g"\
-		README.rst\
+		README.md\
 	;\
 	sed -i "" "s%gae-tap%$$name%g"\
 		gae/app.yaml\
