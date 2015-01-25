@@ -125,6 +125,17 @@ or, Quickly set up environment via Docker:
 
     $ docker pull michilu/gae-tap
 
+## First time build
+
+First, you must be build core library:
+
+    (gae-tap)$ (cd gae/tap && make release)
+
+Or, update core library from releases:
+
+1. Download `gaetap-<release-number>.zip` file from https://github.com/MiCHiLU/gae-tap/releases
+2. Then replace with files and directories in your repository.
+
 If you want to start a new project with `make scaffold`, as below:
 
     $ make scaffold
@@ -151,11 +162,6 @@ then access to:
 Auto deploy via Wercker CI:
 
 If you want to auto deploy to the Google App Engine, add `APP_ENGINE_EMAIL` and `APP_ENGINE_PASSWORD` variables to `Deploy pipeline` of `Deploy targets` in your `App` on the Wercker CI.
-
-## How to update core library
-
-1. Download `gaetap-<release-number>.zip` file from https://github.com/MiCHiLU/gae-tap/releases
-2. Then replace with files and directories in your repository.
 
 ## Dependencies
 
