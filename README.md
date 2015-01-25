@@ -156,6 +156,20 @@ then access to:
 * admin server: [http://localhost:8000](http://localhost:8000)
 * instance server: [http://localhost:8080](http://localhost:8080)
 
+## iPython shell with the Google App Engine enviroment
+
+First, you must be install iPython:
+
+    (gae-tap)$ pip install ipython
+
+Then, type `make shell` command as below:
+
+    (gae-tap)$ make shell
+    Python 2.7.5 (default, Mar  9 2014, 22:15:05)
+    IPython 2.3.1 -- An enhanced Interactive Python.
+    Doctest mode is: ON
+    >>> import tap
+
 ## Deploy
 
     (gae-tap)$ make deploy
