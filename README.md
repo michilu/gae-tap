@@ -105,7 +105,7 @@ Continuous Integration Supports:
     $ cd gae-tap
     $ bundle install
     $ npm install
-    $ mkvirtualenv --python=`which ptyhon2.7` gae-tap
+    $ mkvirtualenv --python=`which python2.7` gae-tap
     (gae-tap)$ pip install -r requirements.txt
     (gae-tap)$ pip install -r requirements-gae.txt
 
