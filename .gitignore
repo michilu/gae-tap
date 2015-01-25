@@ -1,3 +1,17 @@
+.DS_Store
+/.cache
+/.coverage
+/.sass-cache
+/Gemfile.lock
+/gae/site-packages/packages
+/gae/static/lib
+/gae/static/sitemap.html
+/gae/static_root.zip
+/gae/templates
+/htmlcov
+/node_modules
+tags
+
 syntax: glob
 
 *.css
@@ -11,25 +25,12 @@ syntax: glob
 *.sw?
 *.tmp
 *~
-.DS_Store
-.cache
-.coverage
-.sass-cache
-Gemfile.lock
-assets/tmp/**/*
-gae/**/templates/**/*.html
-gae/**/templates/**/mob/*.xhtml
-gae/oauth_config/*.py
-gae/site-packages/*.zip
-gae/site-packages/packages
-gae/static/lib
-gae/static/sitemap.html
-gae/static_root.zip
-gae/tap/*.zip
-gae/tap/templates/tap/*.py
-gae/templates
-htmlcov
-node_modules
-tags
+/assets/tmp/**/*
+/gae/**/templates/**/*.html
+/gae/**/templates/**/mob/*.xhtml
+/gae/oauth_config/*.py
+/gae/site-packages/*.zip
+/gae/tap/*.zip
+/gae/tap/templates/tap/*.py
 
 syntax: regexp
