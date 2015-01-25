@@ -109,12 +109,6 @@ Continuous Integration Supports:
     (gae-tap)$ pip install -r requirements.txt
     (gae-tap)$ pip install -r requirements-gae.txt
 
-If you want to start a new project with `make scaffold`, as below:
-
-    $ make scaffold
-    your app-id, default 'gae-tap': <type your app-id>
-    your github user name, default 'MiCHiLU': <type your github user name>
-
 ## Set environ
 
 It need the `GOOGLE_APPENGINE` environ args. Default `GOOGLE_APPENGINE` as below:
@@ -130,6 +124,12 @@ If you want to set other path, define `GOOGLE_APPENGINE` in environ as below:
 or, Quickly set up environment via Docker:
 
     $ docker pull michilu/gae-tap
+
+If you want to start a new project with `make scaffold`, as below:
+
+    $ make scaffold
+    your app-id, default 'gae-tap': <type your app-id>
+    your github user name, default 'MiCHiLU': <type your github user name>
 
 ## Build and Test
 
@@ -148,7 +148,7 @@ then access to:
 
     (gae-tap)$ make deploy
 
-### Auto deploy via Wercker CI
+Auto deploy via Wercker CI:
 
 If you want to auto deploy to the Google App Engine, add `APP_ENGINE_EMAIL` and `APP_ENGINE_PASSWORD` variables to `Deploy pipeline` of `Deploy targets` in your `App` on the Wercker CI.
 
