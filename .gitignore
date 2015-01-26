@@ -5,7 +5,6 @@
 /Gemfile.lock
 /gae/site-packages/packages
 /gae/static/lib
-/gae/static/sitemap.html
 /gae/static_root.zip
 /gae/templates
 /htmlcov
@@ -30,6 +29,7 @@ syntax: glob
 /gae/**/templates/**/mob/*.xhtml
 /gae/oauth_config/*.py
 /gae/site-packages/*.zip
+/gae/static/sitemap*.html
 /gae/tap/*.zip
 /gae/tap/templates/tap/*.py
 
