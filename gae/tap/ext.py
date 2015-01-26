@@ -413,6 +413,7 @@ class CacheModelBase(CacheMixin):
 def head(*packages, **kwargv):
   ahead = kwargv.get("ahead", AHEAD_HTML5)
   close = kwargv.get("close")
+
   def decorator(func):
     @wraps(func)
     def inner(self, *argv, **kwargv):
@@ -429,6 +430,7 @@ def head(*packages, **kwargv):
         if self.response._app_iter is not None:
           self.response._app_iter = self.response._app_iter[index:] + self.response._app_iter[:index]
     return inner
+
   return decorator
 
 def cache(period=None, expire=None, temporary=None, empty=False):
