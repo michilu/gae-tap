@@ -73,8 +73,6 @@ handlers:
 
 admin_console:
   pages:
-  - name: Appstats
-    url: /_ah/stats
   - name: Response Cache
     url: /_tap/response_cache
 
