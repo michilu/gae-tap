@@ -410,21 +410,27 @@ class CacheModelBase(CacheMixin):
 
 # View Decorators
 
-def head(*packages):
+def head(*packages, **kwargv):
+  ahead = kwargv.get("ahead", AHEAD_HTML5)
+  close = kwargv.get("close")
+
   def decorator(func):
     @wraps(func)
     def inner(self, *argv, **kwargv):
       ndb.toplevel(func)(self, *argv, **kwargv)
+      if close is not None:
+        self.response.write(close)
       if self.response._app_iter is None:
         index = 0
       else:
         index = len(self.response._app_iter)
-      self.response.write(AHEAD_HTML5)
+      self.response.write(ahead)
       if len(packages):
         self.response.write(get_resource_code(packages))
         if self.response._app_iter is not None:
           self.response._app_iter = self.response._app_iter[index:] + self.response._app_iter[:index]
     return inner
+
   return decorator
 
 def cache(period=None, expire=None, temporary=None, empty=False):
