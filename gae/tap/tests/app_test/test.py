@@ -12,7 +12,7 @@ class Model(ndb.Model):
 
 class FetchPage(tap.ext.RequestHandler):
   def get(self):
-    self.fetch_page_async(Model.query())
+    self.fetch_page(Model.query())
 
 class Translation(tap.ext.RequestHandler):
   i18n = True

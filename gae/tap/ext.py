@@ -925,6 +925,11 @@ class RequestHandler(webapp2.RequestHandler, GoogleAnalyticsMixin):
     return tap.fetch_page_async(query, page, cursor_string, cursor, keys_only)
 
   @ndb.synctasklet
+  def fetch_page(self, query, **kwargv):
+    results, cursor, more = yield self.fetch_page_async(query, **kwargv)
+    raise ndb.Return(results, cursor, more)
+
+  @ndb.synctasklet
   def proxy(self, url=None, payload=None, method=None, headers=None):
     if url is None:
       url = self.request.query_string
