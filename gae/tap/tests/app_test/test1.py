@@ -9,7 +9,8 @@ class Index(tap.ext.RequestHandler):
   i18n = True
   i18n_domain = "sample"
 
-  @tap.ext.head("js.angular.angular_cookies", "js.angular.angular_resource", "js.bootstrap.bootstrap")
+  @tap.ext.head("js.angular.angular_cookies", "js.angular.angular_resource", "js.bootstrap.bootstrap",
+                ahead="<!DOCTYPE html>\n<html lang='ja'>", close="</html>",)
   @tap.ext.cache(60, expire=datetime(2012, 1, 1))
   def get(self, subdomain=None):
     i18n_ = _("Python")
