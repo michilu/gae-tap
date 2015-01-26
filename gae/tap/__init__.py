@@ -39,8 +39,6 @@ from google.appengine.ext import deferred, ndb
 from google.appengine.ext.appstats import recording
 from google.appengine.runtime import apiproxy_errors
 
-from . import warmup
-
 
 # Global
 
@@ -106,6 +104,13 @@ class ConfigDefaults(object):
   WEBAPP2_CONFIG = None
 config = lib_config.register("config", ConfigDefaults.__dict__)
 config.LOCALE_PATH = os.path.join(ROOT_DIR_PATH, config.I18N_TRANSLATIONS_PATH)
+if config.IS_TEST:
+  config.SITE_PACKAGES = os.path.abspath(config.SITE_PACKAGES)
+
+
+# fix sys.path
+os.environ["SITE_PACKAGES"] = config.SITE_PACKAGES
+from . import warmup
 
 
 def execute_once(func):
