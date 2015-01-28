@@ -287,6 +287,7 @@ scaffold:
 		echo no given.;\
 		exit;\
 	fi;\
+	patch -p0 -i assets/clear-for-scaffold.diff;\
 	sed -i "" "/include gae\/tap\/Makefile.test/d" Makefile;\
 	sed -i "" "/landscape.io/d" README.md;\
 	if [ "$(REPOSITORY)" != "" ] ; then\
