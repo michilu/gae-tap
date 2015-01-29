@@ -515,11 +515,7 @@ def wait_each(futures):
   while futures:
     future = ndb.Future.wait_any(futures)
     futures.remove(future)
-    exception = future.get_exception()
-    if exception:
-      logging.warning(exception)
-      continue
-    yield future.get_result()
+    yield future
 
 def wait_map(func, *sequences):
   isequences = izip(*sequences)
@@ -531,11 +527,7 @@ def wait_map(func, *sequences):
       futures.append(func(*isequences.next()))
     except StopIteration:
       pass
-    exception = future.get_exception()
-    if exception:
-      logging.warning(exception)
-      continue
-    yield future.get_result()
+    yield future
 
 
 # Classes
