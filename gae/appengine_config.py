@@ -14,7 +14,7 @@ config_API = (
 # settings for webapp2 from this below
 config_APP = {
   #{<domain>: ((<path prefix>, <module name>[, <namespace>]),)}
-  "<:localhost|(.*-dot-)?gae-tap.appspot.com>": (("", "app_sample.v1"),),
+  "<:localhost|(.*(\.|-dot-))?gae-tap.appspot.com>": (("", "app_sample.v1"),),
   #r"<subdomain:(?!www\.)[^.]+>.local": (("/test", "app_sample"),),
 }
 
