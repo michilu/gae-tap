@@ -229,8 +229,9 @@ testacular: js
 $(ASSETS_TMP):
 	mkdir $@
 
+GAE_YAML=$(shell grep "^application:" -l $(GAE_DIR)/*.yaml)
 runserver: $(GAE_LIB_PACKAGES_DIR) template css js $(FANSTATIC_DIR) $(ASSETS_TMP)
-	python2.7 $(GAE_PATH)/dev_appserver.py --datastore_path=$(DATASTORE_DB) --show_mail_body=yes --host=0.0.0.0 --port=$(PORT) $(GAE_DIR)/app.yaml
+	python2.7 $(GAE_PATH)/dev_appserver.py --datastore_path=$(DATASTORE_DB) --show_mail_body=yes --host=0.0.0.0 --port=$(PORT) $(GAE_YAML)
 
 deploy: update_frontends update_backends
 
@@ -287,6 +288,7 @@ scaffold:
 		echo no given.;\
 		exit;\
 	fi;\
+	patch -p0 -i assets/clear-for-scaffold.diff;\
 	sed -i "" "/include gae\/tap\/Makefile.test/d" Makefile;\
 	sed -i "" "/landscape.io/d" README.md;\
 	if [ "$(REPOSITORY)" != "" ] ; then\
