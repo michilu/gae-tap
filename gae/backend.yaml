@@ -58,8 +58,6 @@ handlers:
   script: tap.app
 - url: /_ah/warmup
   script: tap.warmup.app
-- url: /_ah/spi/.*
-  script: tap.api
 - url: /_tap/(generate_sitemap|maintain_response|response_cache)
   script: tap.app
   login: admin
@@ -75,11 +73,6 @@ handlers:
 #- url: (.*)
 #  static_files: htdocs\1
 #  upload: htdocs(.*)
-
-admin_console:
-  pages:
-  - name: Response Cache
-    url: /_tap/response_cache
 
 skip_files:
 - |
