@@ -207,10 +207,10 @@ class TestWaitEach(tests.util.TestCase):
 
   def test_wait_each(self):
     futures = tap.wait_each([self.failer(), self.succeser()])
-    assert futures.next() == "success"
+    assert futures.next().get_exception() is not None
+    assert futures.next().get_result() == "success"
     self.expected_logs = [
       ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator failer(test_functions.py:...) raised Exception()'),
-      ('WARNING', 'gae/tap/__init__.py', 'wait_each', ''),
     ]
 
 class TestWaitMap(tests.util.TestCase):
@@ -241,8 +241,8 @@ class TestWaitMap(tests.util.TestCase):
 
   def test_wait_map(self):
     futures = tap.wait_map(lambda x:x, [self.failer(), self.succeser()])
-    assert futures.next() == "success"
+    assert futures.next().get_exception() is not None
+    assert futures.next().get_result() == "success"
     self.expected_logs = [
       ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator failer(test_functions.py:...) raised Exception()'),
-      ('WARNING', 'gae/tap/__init__.py', 'wait_map', ''),
     ]
