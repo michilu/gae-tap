@@ -39,4 +39,4 @@ deploy:
   - script:
       name: Google App Engine deploy
       code: |
-        echo $APP_ENGINE_PASSWORD | $GOOGLE_APPENGINE/appcfg.py update $WERCKER_SOURCE_DIR --email=$APP_ENGINE_EMAIL --passin
+        (cd $WERCKER_SOURCE_DIR && echo $APP_ENGINE_PASSWORD | $GOOGLE_APPENGINE/appcfg.py update `grep "^application:" -l -null *.yaml` --email=$APP_ENGINE_EMAIL --passin)
