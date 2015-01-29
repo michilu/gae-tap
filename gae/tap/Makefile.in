@@ -233,13 +233,8 @@ GAE_YAML=$(shell grep "^application:" -l $(GAE_DIR)/*.yaml)
 runserver: $(GAE_LIB_PACKAGES_DIR) template css js $(FANSTATIC_DIR) $(ASSETS_TMP)
 	python2.7 $(GAE_PATH)/dev_appserver.py --datastore_path=$(DATASTORE_DB) --show_mail_body=yes --host=0.0.0.0 --port=$(PORT) $(GAE_YAML)
 
-deploy: update_frontends update_backends
-
-update_frontends: all $(TEMPLATES_COMPILED_ZIP_PATH)
-	python2.7 $(GAE_PATH)/appcfg.py update $(GAE_DIR)
-
-update_backends: all
-	python2.7 $(GAE_PATH)/appcfg.py backends $(GAE_DIR) update
+deploy: all $(TEMPLATES_COMPILED_ZIP_PATH)
+	cd $(GAE_DIR) && python2.7 $(GAE_PATH)/appcfg.py update `grep "^application:" -l -null *.yaml`
 
 update_cron:
 	python2.7 $(GAE_PATH)/appcfg.py update_cron $(GAE_DIR)
