@@ -131,6 +131,17 @@ First, you must be build core library:
 
     (gae-tap)$ (cd gae/tap && make release)
 
+Then, if you want to add templates of gae-tap to git repository:
+
+    $ git add \
+      gae/site-packages/tap_templates_compiled.zip \
+      gae/tap/static/js/admin_response_cache.js \
+      gae/tap/static/js/admin_response_cache.min.js \
+      gae/tap/static/js/error_page.js \
+      gae/tap/static/js/error_page.min.js \
+      gae/tap/static/js/utils.js \
+      gae/tap/static/js/utils.min.js
+
 Or, update core library from releases:
 
 1. Download `gaetap-<release-number>.zip` file from https://github.com/MiCHiLU/gae-tap/releases
