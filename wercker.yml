@@ -33,7 +33,7 @@ build:
   - script:
       name: copy output
       code: |-
-        rsync -avz $WERCKER_SOURCE_DIR/gae/ $WERCKER_OUTPUT_DIR
+        rsync -avz --copy-unsafe-links $WERCKER_SOURCE_DIR/gae/ $WERCKER_OUTPUT_DIR
 deploy:
   steps:
   - script:
