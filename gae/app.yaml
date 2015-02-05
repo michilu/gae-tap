@@ -31,8 +31,6 @@ inbound_services:
 builtins:
 - deferred: on
 
-default_expiration: 365d
-
 derived_file_type:
 - python_precompiled
 
