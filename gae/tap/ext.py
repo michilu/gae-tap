@@ -523,7 +523,7 @@ def rate_limit(rate, size, key=None, tag=None):
     token_bucket = tap.TokenBucket(rate, size, prefix=prefix)
 
     @wraps(func)
-    @ndb.tasklet
+    @ndb.synctasklet
     def inner(self, *argv, **kwargv):
       token_buket_key = key
       if key is not None:
