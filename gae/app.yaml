@@ -9,7 +9,7 @@ automatic_scaling:
 
 libraries:
 - name: django
-  version: latest
+  version: 1.5
 - name: endpoints
   version: 1.0
 - name: jinja2
