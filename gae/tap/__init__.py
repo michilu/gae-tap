@@ -9,13 +9,11 @@ from itertools import chain, imap, islice, izip
 from xml.sax import saxutils
 import UserDict
 import cPickle as pickle
-import hmac
 import inspect
 import logging
 import os
 import pdb
 import pprint
-import random
 import string
 import sys
 import threading
