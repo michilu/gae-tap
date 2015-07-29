@@ -1,0 +1,8 @@
+--- google/appengine/tools/docker/containers.py
++++ google/appengine/tools/docker/containers.py
+@@ -48 +48,4 @@
+-from docker import docker
++try:
++  from docker import docker
++except ImportError:
++  pass
