@@ -63,12 +63,12 @@ class AppTest(tests.util.TestCase):
     self.app.get("/test/fetch_page")
     self.app.get("/test/fetch_page?test", status=500)
     self.expected_logs = [
-      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'initial generator run_to_queue(query.py:...) raised BadRequestError(invalid cursor)'),
-      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator helper(context.py:...) raised BadRequestError(invalid cursor)'),
-      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator has_next_async(query.py:...) raised BadRequestError(invalid cursor)'),
-      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator _fetch_page_async(query.py:...) raised BadRequestError(invalid cursor)'),
-      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator fetch_page_async(__init__.py:...) raised BadRequestError(invalid cursor)'),
-      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator fetch_page(ext.py:...) raised BadRequestError(invalid cursor)'),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'initial generator run_to_queue(query.py:...) raised BadValueError(invalid cursor)'),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator helper(context.py:...) raised BadValueError(invalid cursor)'),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator has_next_async(query.py:...) raised BadValueError(invalid cursor)'),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator _fetch_page_async(query.py:...) raised BadValueError(invalid cursor)'),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator fetch_page_async(__init__.py:...) raised BadValueError(invalid cursor)'),
+      ('WARNING', 'google/appengine/ext/ndb/tasklets.py', '_help_tasklet_along', 'suspended generator fetch_page(ext.py:...) raised BadValueError(invalid cursor)'),
       ('ERROR', 'lib/webapp2-2.5.2/webapp2.py', '_internal_error', 'invalid cursor'),
     ]
 
