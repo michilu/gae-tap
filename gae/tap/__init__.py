@@ -9,13 +9,11 @@ from itertools import chain, imap, islice, izip
 from xml.sax import saxutils
 import UserDict
 import cPickle as pickle
-import hmac
 import inspect
 import logging
 import os
 import pdb
 import pprint
-import random
 import string
 import sys
 import threading
@@ -154,6 +152,7 @@ def logging_exception_traceback(func):
 def memoize(num_args=None, use_memcache=False):
 
   def decorator(func):
+    #TODO ndb.synctaskletの時はnum_argsを必須にする
     key = ".".join((func.__module__, func.__name__))
 
     @wraps(func)
