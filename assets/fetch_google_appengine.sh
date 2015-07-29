@@ -1,5 +1,5 @@
 #!/bin/bash
-v=10
+v=24
 max=$v+10
 while [[ v -ne $max ]]; do
   url=https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.$((v++)).zip

@@ -1,7 +1,5 @@
-Index: apiserving.py
-===================================================================
---- apiserving.py	(revision 410)
-+++ apiserving.py	(working copy)
+--- lib/endpoints-1.0/endpoints/apiserving.py	(revision 410)
++++ lib/endpoints-1.0/endpoints/apiserving.py	(working copy)
 @@ -466,7 +466,15 @@
  
        headers_dict = dict([(k.lower(), v) for k, v in headers])

@@ -32,7 +32,7 @@ config_APP = {
 # Get 'a random and long string' from here:
 # http://clsc.net/tools/random-string-generator.php
 # or execute this from a python shell: import os; os.urandom(64)
-config_SECRET_KEY = "a very long and secret session key goes here"
+config_SECRET_KEY = u"a very long and secret session key goes here"
 
 # END of settings for gae-tap
 

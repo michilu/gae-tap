@@ -9,13 +9,11 @@ from itertools import chain, imap, islice, izip
 from xml.sax import saxutils
 import UserDict
 import cPickle as pickle
-import hmac
 import inspect
 import logging
 import os
 import pdb
 import pprint
-import random
 import string
 import sys
 import threading
@@ -154,6 +152,9 @@ def logging_exception_traceback(func):
 def memoize(num_args=None, use_memcache=False):
 
   def decorator(func):
+    if func.__code__.co_name == 'synctasklet_wrapper' and num_args is None:
+      raise ValueError("A function that wrapped 'ndb.synctasklet' is required 'num_args'.")
+
     key = ".".join((func.__module__, func.__name__))
 
     @wraps(func)
@@ -424,8 +425,6 @@ def get_app():
       app_routes_by_domain.extend(app_routes)
     if domain:
       app_routes_by_domain = [routes.DomainRoute(domain, app_routes_by_domain)]
-    elif not config.IS_TEST: #TODO: remove
-      raise ValueError("domain is required by {values}".format(values=values))
     routes_list.extend(app_routes_by_domain)
   if config.DRIVE_PROXY_UID is not None:
     routes_list.append(routes.DomainRoute(r"<domain:^.+?\.[a-zA-Z]{2,5}$>", [webapp2.Route(r"<path:.*>", "tap.ext.DriveProxy")]))

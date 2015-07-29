@@ -9,7 +9,7 @@ automatic_scaling:
 
 libraries:
 - name: django
-  version: latest
+  version: 1.5
 - name: endpoints
   version: 1.0
 - name: jinja2
@@ -30,8 +30,6 @@ inbound_services:
 
 builtins:
 - deferred: on
-
-default_expiration: 365d
 
 derived_file_type:
 - python_precompiled
