@@ -462,10 +462,13 @@ def cors(origin=None):
     @wraps(func)
     def inner(self, *argv, **kwargv):
       ndb.toplevel(func)(self, *argv, **kwargv)
+      allow_origin = None
       if origin is None:
         allow_origin = self.request.headers.get("Origin")
         if allow_origin is None and self.request.referer:
           allow_origin = "{0}://{1}".format(*urlparse(self.request.referer)[:2])
+      elif isinstance(origin, basestring):
+        allow_origin = origin
       elif callable(origin):
         allow_origin = origin()
       if allow_origin:
