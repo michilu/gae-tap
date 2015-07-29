@@ -466,9 +466,8 @@ def cors(origin=None):
         allow_origin = self.request.headers.get("Origin")
         if allow_origin is None and self.request.referer:
           allow_origin = "{0}://{1}".format(*urlparse(self.request.referer)[:2])
-      else:
-        if callable(origin):
-          allow_origin = origin()
+      elif callable(origin):
+        allow_origin = origin()
       if allow_origin:
         self.response.headers["Access-Control-Allow-Origin"] = allow_origin
       if security.compare_hashes(self.request.method, "OPTIONS"):
