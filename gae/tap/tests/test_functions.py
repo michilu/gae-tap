@@ -111,6 +111,28 @@ class TestFunctionsWihMemcache(tests.util.TestCase):
     f._cache.clear()
     assert f(1) == result
 
+  def test_memoize_with_synctasklet(self):
+
+    with pytest.raises(ValueError):
+
+      @ndb.toplevel
+      @tap.memoize(use_memcache=True)
+      @ndb.synctasklet
+      def f1NG(x):
+        return random()
+
+    @ndb.toplevel
+    @tap.memoize(num_args=1, use_memcache=True)
+    @ndb.synctasklet
+    def f1(x):
+      return random()
+
+    result = f1(1)
+    assert f1(1) == result
+    assert f1(2) != result
+    f1._cache.clear()
+    assert f1(1) == result
+
 class TestCacheMixin(unittest.TestCase):
   def test_get_key_name(self):
     assert tap.ext.CacheMixin.get_key_name("") == "1B2M2Y8AsgTpgAmY7PhCfg"

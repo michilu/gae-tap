@@ -152,7 +152,9 @@ def logging_exception_traceback(func):
 def memoize(num_args=None, use_memcache=False):
 
   def decorator(func):
-    #TODO ndb.synctaskletの時はnum_argsを必須にする
+    if func.__code__.co_name == 'synctasklet_wrapper' and num_args is None:
+      raise ValueError("A function that wrapped 'ndb.synctasklet' is required 'num_args'.")
+
     key = ".".join((func.__module__, func.__name__))
 
     @wraps(func)
