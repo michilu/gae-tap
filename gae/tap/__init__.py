@@ -425,8 +425,6 @@ def get_app():
       app_routes_by_domain.extend(app_routes)
     if domain:
       app_routes_by_domain = [routes.DomainRoute(domain, app_routes_by_domain)]
-    elif not config.IS_TEST: #TODO: remove
-      raise ValueError("domain is required by {values}".format(values=values))
     routes_list.extend(app_routes_by_domain)
   if config.DRIVE_PROXY_UID is not None:
     routes_list.append(routes.DomainRoute(r"<domain:^.+?\.[a-zA-Z]{2,5}$>", [webapp2.Route(r"<path:.*>", "tap.ext.DriveProxy")]))
