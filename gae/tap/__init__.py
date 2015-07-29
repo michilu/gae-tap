@@ -152,6 +152,7 @@ def logging_exception_traceback(func):
 def memoize(num_args=None, use_memcache=False):
 
   def decorator(func):
+    #TODO ndb.synctaskletの時はnum_argsを必須にする
     key = ".".join((func.__module__, func.__name__))
 
     @wraps(func)
