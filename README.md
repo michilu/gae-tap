@@ -195,6 +195,7 @@ If you want to auto deploy to the Google App Engine, add `APP_ENGINE_EMAIL` and 
 * GNU Make
   * [How to install Xcode Command Line Tools](http://railsapps.github.io/xcode-command-line-tools.html)
 * Python 2.7
+  * [pip <7.x](https://pypi.python.org/pypi/pip/6.1.1)
   * [Third-party Libraries in Python 2.7](https://cloud.google.com/appengine/docs/python/tools/libraries27) on Google App Engine
 * [npm](https://www.npmjs.com/)
 

@@ -7,6 +7,7 @@ https://github.com/MiCHiLU/pytest_gae/archive/master.zip #pytest-gae
 jinja2-precompiler>=0.2
 jinja2==2.6
 minimock
+pip<7
 pytest-cov
 testfixtures
 webtest>2
