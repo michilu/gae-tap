@@ -81,10 +81,10 @@ TESTACULAR_JS = $(TESTACULAR_COFFEE:.coffee=.js)
 
 .SUFFIXES: .sass .css
 .sass.css:
-	compass compile $< -c $(CSS_DIR)/config.rb
+	compass compile --environment development --force $< -c $(CSS_DIR)/config.rb
 .SUFFIXES: .sass .min.css
 .sass.min.css:
-	compass compile --environment production $< -c $(CSS_DIR)/config.rb
+	compass compile --environment production --force $< -c $(CSS_DIR)/config.rb
 	mv $*.css $@
 SASS = $(wildcard $(CSS_DIR)/*.sass)
 CSS = $(SASS:.sass=.css)
