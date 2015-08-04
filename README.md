@@ -187,7 +187,7 @@ Then, type `make shell` command as below:
 
 Auto deploy via Wercker CI:
 
-If you want to auto deploy to the Google App Engine, add `APP_ENGINE_EMAIL` and `APP_ENGINE_PASSWORD` variables to `Deploy pipeline` of `Deploy targets` in your `App` on the Wercker CI.
+If you want to auto deploy to the Google App Engine, add a `APP_ENGINE_TOKEN` variable to `Deploy pipeline` of `Deploy targets` in your `App` on the Wercker CI.
 
 ## Dependencies
 
