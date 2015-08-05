@@ -2,8 +2,10 @@ FROM michilu/fedora-zero
 
 WORKDIR /tmp
 ENV GOOGLE_APPENGINE /google_appengine
+ENV LC_CTYPE en_US.utf8
 
 RUN yum install --quiet -y \
+  findutils \
   git \
   make \
   npm \
@@ -14,6 +16,7 @@ RUN yum install --quiet -y \
   ruby-devel \
   rubygem-bundler \
   unzip \
+  which \
   && yum clean all
 
 COPY Gemfile /tmp/Gemfile
