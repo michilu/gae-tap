@@ -41,3 +41,4 @@ RUN \
   patch -d $GOOGLE_APPENGINE -p0 -i /tmp/endpoints.patch &&\
   patch -d $GOOGLE_APPENGINE -p0 -i /tmp/docker.patch &&\
   rm -rf /tmp/*
+WORKDIR /home
