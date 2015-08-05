@@ -101,7 +101,7 @@ Continuous Integration Supports:
 
 ## Set up
 
-    $ git clone https://github.com/MiCHiLU/gae-tap.git
+    $ git clone --depth 1 https://github.com/MiCHiLU/gae-tap.git
     $ cd gae-tap
     $ bundle install
     $ npm install
