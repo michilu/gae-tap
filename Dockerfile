@@ -29,9 +29,11 @@ COPY requirements.txt /tmp/requirements.txt
 RUN pip install --quiet -r requirements.txt
 
 COPY gae/tap/endpoints.patch /tmp/endpoints.patch
+COPY gae/tap/docker.patch /tmp/docker.patch
 COPY assets/fetch_google_appengine.sh /tmp/fetch_google_appengine.sh
 RUN \
   /tmp/fetch_google_appengine.sh &&\
   unzip -q google_appengine.zip -d / &&\
-  patch -d /google_appengine/lib/endpoints-1.0/endpoints -p0 -i /tmp/endpoints.patch &&\
+  patch -d /google_appengine -p0 -i /tmp/endpoints.patch &&\
+  patch -d /google_appengine -p0 -i /tmp/docker.patch &&\
   rm -rf /tmp/*
