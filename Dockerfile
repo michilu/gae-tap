@@ -1,8 +1,9 @@
 FROM michilu/fedora-zero
 
 WORKDIR /tmp
-ENV GOOGLE_APPENGINE /google_appengine
-ENV LC_CTYPE en_US.utf8
+ENV \
+  GOOGLE_APPENGINE="/google_appengine" \
+  LC_CTYPE="en_US.utf8"
 
 RUN yum install --quiet -y \
   findutils \
