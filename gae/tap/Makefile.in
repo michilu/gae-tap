@@ -196,10 +196,10 @@ $(GAE_LIB_PACKAGES_DIR)/*.egg-info: $(GAE_LIB_PACKAGES_DIR).txt $(GAE_LIB_PACKAG
 	if curl -f -I -s --connect-timeout $$curl_timeout https://pypi.python.org/simple/ >/dev/null ; then\
 		rm -rf $(GAE_LIB_PACKAGES_DIR);\
 		if [ `sed -e "/^$$/d" -e "/^#/d" $(GAE_LIB_PACKAGES_DIR).txt|grep -c ""` ]; then\
-			pip install --use-mirrors -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt;\
+			pip install -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR).txt;\
 		fi;\
 		if [ `sed -e "/^$$/d" -e "/^#/d" $(GAE_LIB_PACKAGES_DIR)-no-deps.txt|grep -c ""` ]; then\
-			pip install --use-mirrors --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt;\
+			pip install --no-dependencies -t $(GAE_LIB_PACKAGES_DIR) -r $(GAE_LIB_PACKAGES_DIR)-no-deps.txt;\
 		fi;\
 	elif [ -d $(GAE_LIB_PACKAGES_DIR) ]; then\
 		find $(GAE_LIB_PACKAGES_DIR) -name "*.egg-info" -exec touch {} +;\
