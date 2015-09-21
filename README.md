@@ -101,7 +101,7 @@ Continuous Integration Supports:
 
 ## Set up
 
-    $ git clone https://github.com/MiCHiLU/gae-tap.git
+    $ git clone --depth 1 https://github.com/MiCHiLU/gae-tap.git
     $ cd gae-tap
     $ bundle install
     $ npm install
@@ -166,6 +166,7 @@ then access to:
 
 * admin server: [http://localhost:8000](http://localhost:8000)
 * instance server: [http://localhost:8080](http://localhost:8080)
+* API Explorer: [http://localhost:8080/_ah/api/explorer](http://localhost:8080/_ah/api/explorer)
 
 ## iPython shell with the Google App Engine enviroment
 
@@ -187,16 +188,32 @@ Then, type `make shell` command as below:
 
 Auto deploy via Wercker CI:
 
-If you want to auto deploy to the Google App Engine, add `APP_ENGINE_EMAIL` and `APP_ENGINE_PASSWORD` variables to `Deploy pipeline` of `Deploy targets` in your `App` on the Wercker CI.
+If you want to auto deploy to the Google App Engine, add a `APP_ENGINE_TOKEN` variable to `Deploy pipeline` of `Deploy targets` in your `App` on the Wercker CI.
+
+then access to:
+
+* Server: [https://<app-id>.appspot.com/](https://<app-id>.appspot.com/)
+* API Explorer: [https://<app-id>.appspot.com/_ah/api/explorer](https://<app-id>.appspot.com/_ah/api/explorer)
+* Developers Console: [https://console.developers.google.com/project/<app-id>](https://console.developers.google.com/project/<app-id>)
 
 ## Dependencies
 
-* [Bundler](http://bundler.io/)
+* Python 2.7
+  * [pip 6.x](https://pypi.python.org/pypi/pip/6.1.1)
+* Google App Engine
+  * [Django 1.5.x](https://pypi.python.org/pypi/Django)
+  * [Third-party Libraries in Python 2.7](https://cloud.google.com/appengine/docs/python/tools/libraries27) on Google App Engine
+  * [libxml2](http://www.xmlsoft.org/)
+  * [libxslt](http://xmlsoft.org/XSLT/)
+  * [lxml](http://www.xmlsoft.org/)
 * GNU Make
   * [How to install Xcode Command Line Tools](http://railsapps.github.io/xcode-command-line-tools.html)
-* Python 2.7
-  * [Third-party Libraries in Python 2.7](https://cloud.google.com/appengine/docs/python/tools/libraries27) on Google App Engine
-* [npm](https://www.npmjs.com/)
+* [Bundler](http://bundler.io/)
+* [Node.js](https://nodejs.org/)
+
+### Optionals
+
+* [virtualenvwrapper](https://pypi.python.org/pypi/virtualenvwrapper)
 
 ## Known issues
 
