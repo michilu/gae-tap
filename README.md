@@ -202,9 +202,9 @@ then access to:
   * [pip <7.x](https://pypi.python.org/pypi/pip/6.1.1)
 * Google App Engine
   * [Third-party Libraries in Python 2.7](https://cloud.google.com/appengine/docs/python/tools/libraries27) on Google App Engine
-  * [lxml](http://www.xmlsoft.org/)
   * [libxml2](http://www.xmlsoft.org/)
   * [libxslt](http://xmlsoft.org/XSLT/)
+  * [lxml](http://www.xmlsoft.org/)
 * GNU Make
   * [How to install Xcode Command Line Tools](http://railsapps.github.io/xcode-command-line-tools.html)
 * [Bundler](http://bundler.io/)
