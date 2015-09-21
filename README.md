@@ -201,6 +201,7 @@ then access to:
 * Python 2.7
   * [pip 6.x](https://pypi.python.org/pypi/pip/6.1.1)
 * Google App Engine
+  * [Django 1.5.x](https://pypi.python.org/pypi/Django)
   * [Third-party Libraries in Python 2.7](https://cloud.google.com/appengine/docs/python/tools/libraries27) on Google App Engine
   * [libxml2](http://www.xmlsoft.org/)
   * [libxslt](http://xmlsoft.org/XSLT/)

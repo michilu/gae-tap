@@ -3,6 +3,7 @@
 
 PyYAML==3.10
 WebOb==1.2.3
+django<1.6
 pycrypto==2.6
 
 
