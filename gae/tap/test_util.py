@@ -7,6 +7,7 @@ import doctest
 import logging
 import os
 import pdb
+import platform
 import re
 import sys
 import unittest
@@ -217,7 +218,17 @@ class TestCase(unittest.TestCase):
             except UnicodeEncodeError:
               record.args[2].args = [unicode(arg) for arg in exception.args]
         pathname = get_tail(record.pathname).group("tail")
-        log = (record.levelname, pathname.replace(os.path.abspath(os.curdir), "").lstrip("/"), record.funcName, record.getMessage())
+        curdir_abspath = os.path.abspath(os.curdir)
+        if platform.mac_ver()[0] != "":
+          prefix = '/Volumes/'
+          if curdir_abspath.startswith(prefix):
+            curdir_abspath = curdir_abspath[len(prefix):]
+          if pathname.startswith(prefix):
+            pathname = pathname[len(prefix):]
+        else:
+          curdir_abspath = curdir_abspath.lstrip('/')
+          pathname = pathname.lstrip('/')
+        log = (record.levelname, pathname.replace(curdir_abspath, "").lstrip("/"), record.funcName, record.getMessage())
         if getattr(self, "expected_logs", None):
           if log in self.expected_logs:
             continue
