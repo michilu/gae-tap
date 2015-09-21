@@ -199,7 +199,7 @@ then access to:
 ## Dependencies
 
 * Python 2.7
-  * [pip <7.x](https://pypi.python.org/pypi/pip/6.1.1)
+  * [pip 6.x](https://pypi.python.org/pypi/pip/6.1.1)
 * Google App Engine
   * [Third-party Libraries in Python 2.7](https://cloud.google.com/appengine/docs/python/tools/libraries27) on Google App Engine
   * [libxml2](http://www.xmlsoft.org/)
