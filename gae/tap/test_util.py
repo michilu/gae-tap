@@ -7,6 +7,7 @@ import doctest
 import logging
 import os
 import pdb
+import platform
 import re
 import sys
 import unittest
@@ -72,6 +73,9 @@ if os.path.basename(os.path.abspath(".")) != "gae":
 
 get_tail = re.compile("^(.*/google_appengine([^/]+)?/)?(?P<tail>.*)$").match
 is_server_error = re.compile(r"^.*?\s5\d{2}\s.*?$").match
+is_mac = platform.mac_ver()[0] != ""
+mac_volumes_prefix = '/Volumes/'
+mac_volumes_prefix_length = len(mac_volumes_prefix)
 
 @contextmanager
 def set_config(**kwargv):
@@ -217,7 +221,16 @@ class TestCase(unittest.TestCase):
             except UnicodeEncodeError:
               record.args[2].args = [unicode(arg) for arg in exception.args]
         pathname = get_tail(record.pathname).group("tail")
-        log = (record.levelname, pathname.replace(os.path.abspath(os.curdir), "").lstrip("/"), record.funcName, record.getMessage())
+        curdir_abspath = os.path.abspath(os.curdir)
+        if is_mac:
+          if curdir_abspath.startswith(mac_volumes_prefix):
+            curdir_abspath = curdir_abspath[mac_volumes_prefix_length:]
+          if pathname.startswith(mac_volumes_prefix):
+            pathname = pathname[mac_volumes_prefix_length:]
+        else:
+          curdir_abspath = curdir_abspath.lstrip('/')
+          pathname = pathname.lstrip('/')
+        log = (record.levelname, pathname.replace(curdir_abspath, "").lstrip("/"), record.funcName, record.getMessage())
         if getattr(self, "expected_logs", None):
           if log in self.expected_logs:
             continue
