@@ -73,6 +73,9 @@ if os.path.basename(os.path.abspath(".")) != "gae":
 
 get_tail = re.compile("^(.*/google_appengine([^/]+)?/)?(?P<tail>.*)$").match
 is_server_error = re.compile(r"^.*?\s5\d{2}\s.*?$").match
+is_mac = platform.mac_ver()[0] != ""
+mac_volumes_prefix = '/Volumes/'
+mac_volumes_prefix_length = len(mac_volumes_prefix)
 
 @contextmanager
 def set_config(**kwargv):
@@ -219,12 +222,11 @@ class TestCase(unittest.TestCase):
               record.args[2].args = [unicode(arg) for arg in exception.args]
         pathname = get_tail(record.pathname).group("tail")
         curdir_abspath = os.path.abspath(os.curdir)
-        if platform.mac_ver()[0] != "":
-          prefix = '/Volumes/'
-          if curdir_abspath.startswith(prefix):
-            curdir_abspath = curdir_abspath[len(prefix):]
-          if pathname.startswith(prefix):
-            pathname = pathname[len(prefix):]
+        if is_mac:
+          if curdir_abspath.startswith(mac_volumes_prefix):
+            curdir_abspath = curdir_abspath[mac_volumes_prefix_length:]
+          if pathname.startswith(mac_volumes_prefix):
+            pathname = pathname[mac_volumes_prefix_length:]
         else:
           curdir_abspath = curdir_abspath.lstrip('/')
           pathname = pathname.lstrip('/')
