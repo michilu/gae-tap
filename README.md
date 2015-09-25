@@ -182,6 +182,18 @@ Then, type `make shell` command as below:
     Doctest mode is: ON
     >>>
 
+Access to the Datastore on the development environment in the iPython shell:
+
+    (gae-tap)$ make shell
+    >>> from google.appengine.ext import testbed
+    >>> tb = testbed.Testbed()
+    >>> tb.setup_env(app_id='dev~your-app-id')
+    >>> tb.activate()
+    >>> tb.init_datastore_v3_stub(datastore_file='../assets/tmp/datastore.db', use_sqlite=True)
+    >>> tb.init_memcache_stub()
+    >>> tb.init_taskqueue_stub()
+    >>> from your-app import model
+
 ## Deploy
 
     (gae-tap)$ make deploy
