@@ -168,7 +168,7 @@ then access to:
 * instance server: [http://localhost:8080](http://localhost:8080)
 * API Explorer: [http://localhost:8080/_ah/api/explorer](http://localhost:8080/_ah/api/explorer)
 
-## iPython shell with the Google App Engine enviroment
+## iPython shell with the Google App Engine environment
 
 First, you must be install iPython:
 
