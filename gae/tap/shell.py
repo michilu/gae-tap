@@ -47,3 +47,5 @@ try:
   import warmup
 except ImportError:
   import tap.warmup
+
+import tap

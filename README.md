@@ -180,7 +180,7 @@ Then, type `make shell` command as below:
     Python 2.7.5 (default, Mar  9 2014, 22:15:05)
     IPython 2.3.1 -- An enhanced Interactive Python.
     Doctest mode is: ON
-    >>> import tap
+    >>>
 
 ## Deploy
 
