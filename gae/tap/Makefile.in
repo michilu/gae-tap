@@ -160,12 +160,6 @@ html: $(HTML) $(MOBHTML) $(DARTHTML)
 
 mo: html $(PYMAPPING) $(JSMAPPING) $(POT) $(MO)
 
-discovery_doc:
-	endpointscfg.py get_discovery_doc -a gae -o assets $(shell cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) PYTHONSTARTUP=./tap/printer.py ipython $(gce))
-
-discovery_lib:
-	endpointscfg.py get_client_lib java -a gae -o assets $(shell cd $(GAE_DIR); PYTHONPATH=$(GAE_PATH) PYTHONSTARTUP=./tap/printer.py ipython $(gce))
-
 
 $(GAE_LIB_DIR):
 	mkdir -p $@
