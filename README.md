@@ -10,10 +10,10 @@ Let's finish the work quickly and go TAP BEER!
 
 Looking for sponsors:
 
-1. [$120 - I will get 30L barrel beer!!!](https://www.gittip.com/MiCHiLU/)
-2. [ $60 - I will get 15L barrel beer!! ](https://www.gittip.com/MiCHiLU/)
-3. [ $12 - I will get  1   pint  beer!  ](https://www.gittip.com/MiCHiLU/)
-4. [  $6 - I will get 1/2  pint  beer!  ](https://www.gittip.com/MiCHiLU/)
+1. [$120 - I get 30L barrel beer!](https://www.gittip.com/MiCHiLU/)
+2. [ $60 - I get 15L barrel beer! ](https://www.gittip.com/MiCHiLU/)
+3. [ $12 - I get a 1-pint beer!  ](https://www.gittip.com/MiCHiLU/)
+4. [  $6 - I get 1/2  pint beer!  ](https://www.gittip.com/MiCHiLU/)
 
 ## Status
 
@@ -115,19 +115,19 @@ It need the `GOOGLE_APPENGINE` environ args. Default `GOOGLE_APPENGINE` as below
 
     GOOGLE_APPENGINE=$HOME/google-cloud-sdk/platform/google_appengine
 
-If you want to set other path, define `GOOGLE_APPENGINE` in environ as below:
+If you want to set another path, define `GOOGLE_APPENGINE` in environ as below:
 
     $ GOOGLE_APPENGINE=<path to your gae> make
 
 ## Docker
 
-or, Quickly set up environment via Docker:
+Alternatively, Quickly set up environment via Docker:
 
     $ docker pull michilu/gae-tap
 
-## First time build
+## First-time build
 
-First, you must be build core library:
+First, you must have been build core library:
 
     (gae-tap)$ (cd gae/tap && make release)
 
@@ -142,7 +142,7 @@ Then, if you want to add templates of gae-tap to git repository:
       gae/tap/static/js/utils.js \
       gae/tap/static/js/utils.min.js
 
-Or, update core library from releases:
+Alternatively, update the core library from releases:
 
 1. Download `gaetap-<release-number>.zip` file from https://github.com/MiCHiLU/gae-tap/releases
 2. Then replace with files and directories in your repository.
@@ -200,7 +200,7 @@ Access to the Datastore on the development environment in the iPython shell:
 
 Auto deploy via Wercker CI:
 
-If you want to auto deploy to the Google App Engine, add a `APP_ENGINE_TOKEN` variable to `Deploy pipeline` of `Deploy targets` in your `App` on the Wercker CI.
+If you want to auto-deploy to the Google App Engine, add an `APP_ENGINE_TOKEN` variable to `Deploy pipeline` of `Deploy targets` in your `App` on the Wercker CI.
 
 then access to:
 
