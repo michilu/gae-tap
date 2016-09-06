@@ -201,6 +201,10 @@ Access to the Datastore on the development environment in the iPython shell:
 Auto deploy via Wercker CI:
 
 If you want to auto-deploy to the Google App Engine, add an `APP_ENGINE_TOKEN` variable to `Deploy pipeline` of `Deploy targets` in your `App` on the Wercker CI.
+The `APP_ENGINE_TOKEN` value is a `refresh_token` of your `$HOME/.appcfg_oauth2_tokens`, like follow:
+
+    $ jq .refresh_token ~/.appcfg_oauth2_tokens
+    "1/ABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890"
 
 then access to:
 
