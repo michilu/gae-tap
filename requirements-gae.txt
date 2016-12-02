@@ -1,10 +1,10 @@
 # for Google App Engine
-# https://cloud.google.com/appengine/docs/python/tools/libraries27
+# https://cloud.google.com/appengine/docs/python/tools/built-in-libraries-27
 
 PyYAML==3.10
 WebOb==1.2.3
 django<1.6
-pycrypto==2.6
+pycrypto==2.6.1
 
 
 # Bundle to Google App Engine
@@ -17,3 +17,4 @@ https://pythonfutures.googlecode.com/archive/168453acb1ee.zip #pythonfutures==16
 jinja2==2.6
 lxml==2.3
 oauth2==1.5.170
+pytz==2016.4
